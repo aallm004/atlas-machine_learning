@@ -1,4 +1,4 @@
-#1/usr/bin/env python3
+#!/usr/bin/env python3
 """function that adds two martrices elemt-wise"""
 
 
