@@ -13,7 +13,6 @@ def line():
 
     plt.xlabel('x')
     plt.xlabel('y')
-    plt.title('Cubic Function')
 
     plt.savefig('line_plot.png')
     plt.close()
