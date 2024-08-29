@@ -11,8 +11,5 @@ def line():
 
     plt.xlim(0,10)
 
-    plt.xlabel('x')
-    plt.xlabel('y')
-
     plt.savefig('line_plot.png')
     plt.close()
