@@ -8,7 +8,7 @@ def matrix_shape(matrix):
     """
     Function to calculate the shape of a matrix.
     """
-    shape = []
+    matrix = []
     while isinstance(matrix, list):
         shape.append(len(matrix))
         matrix = matrix[0]
