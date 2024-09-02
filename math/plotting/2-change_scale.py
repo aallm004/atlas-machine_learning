@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
+"""line graph"""
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def change_scale():
+    """line graph"""
     x = np.arange(0, 28651, 5730)
     r = np.log(0.5)
     t = 5730
