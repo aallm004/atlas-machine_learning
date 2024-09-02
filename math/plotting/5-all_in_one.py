@@ -27,4 +27,48 @@ def all_in_one():
     np.random.seed(5)
     student_grades = np.random.normal(68, 15, 50)
 
-    # your code here
+    fig, axs = plt.subplots(3, 2, figsize=(12, 15))
+    fig.suptitle('All in One', fontsize='x-small')
+
+    # First plot - line
+    axs[0, 0].plot(np.arange(0, 11), y0, 'r-')
+    axs[0, 0].set_xlim(0, 10)
+    axs[0, 0].set_xlabel('x', fontsize='x-small')
+    axs[0, 0].set_ylabel('y', fontsize='x-small')
+    axs[0, 0].set_title('y = x^3', fontsize='x-small')
+
+    # Second plot - scatter
+    axs[0, 1].scatter(x1, y1, c='m', s=10)
+    axs[0, 1].set_xlabel('Height (in)', fontsize='x-small')
+    axs[0, 1].set_ylabel('Weight (lbs)', fontsize='x-small')
+    axs[0, 1].set_title("Men's Height vs Weight", fontsize='x-small')
+
+    # Third plot - line graph with log
+    axs[1, 0].plot(x2, y2)
+    axs[1, 0].set_xlabel('Time (years)', fontsize='x-small')
+    axs[1, 0].set_ylabel('Fraction Remaining', fontsize='x-small')
+    axs[1, 0].set_title('Exponential Decay of C-14', fontsize='x-small')
+    axs[1, 0].set_yscale('log')
+    axs[1, 0].set_xlim(0, 28650)
+
+    # Fourth plot - two line graphs
+    axs[1, 1].plot(x3, y31, 'r--', label='C-14')
+    axs[1, 1].plot(x3, y32, 'g-', label='Ra-226')
+    axs[1, 1].set_xlabel('Time (years)', fontsize='x-small')
+    axs[1, 1].set_ylabel('Fraction Remaining', fontsize='x-small')
+    axs[1, 1].set_title('Exponential Decay of Radioactive Elements', fontsize='x-small')
+    axs[1, 1].legend(loc='upper right', fontsize='x-small')
+    axs[1, 1].set_xlim(0, 20000)
+    axs[1, 1].set_ylim(0, 1)
+
+    # Fifth plot - Histogram
+    axs[2, 0] = plt.subplot2grid((3, 2), (2, 0), colspan=2)
+    axs[2, 0].hist(student_grades, bins=range(0, 101, 10), edgecolor='black')
+    axs[2, 0].set_xlabel('Grades', fontsize='x-small')
+    axs[2, 0].set_ylabel('Number of Students', fontsize='x-small')
+    axs[2, 0].set_title('Project A', fontsize='x-small')
+    axs[2, 0].set_xlim(0, 100)
+    axs[2, 0].set_ylim(0, 30)
+
+    plt.tight_layout()
+    plt.show()
