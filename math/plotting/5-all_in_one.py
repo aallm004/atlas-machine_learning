@@ -33,8 +33,8 @@ def all_in_one():
     # First plot - line
     axs[0, 0].plot(np.arange(0, 11), y0, 'r-')
     axs[0, 0].set_xlim(0, 10)
-    axs[0, 0].set_xlabel('x', fontsize='x-small')
     axs[0, 0].set_ylabel('y', fontsize='x-small')
+    axs[0, 0].set_xlabel('x', fontsize='x-small')
     axs[0, 0].set_title('y = x^3', fontsize='x-small')
 
     # Second plot - scatter
