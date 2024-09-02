@@ -20,7 +20,7 @@ def two():
     plt.ylabel('Fraction Remaining')
     plt.title('Exponential Decay of Radioactive Elements')
     plt.xlim(0, 20000)
-    plt.ylim(0, 1.1)
+    plt.ylim(0, 1)
     plt.legend(loc='upper right')
     plt.plot(x, y1, 'r--', label='C-14')
     plt.plot(x, y2, 'g-', label='Ra-226')
