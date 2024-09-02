@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+"""plot stacked bar graph"""
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def bars():
+    """plot stacked bar graph"""
     np.random.seed(5)
-    fruit = np.random.randint(0, 20, (4,3))
+    fruit = np.random.randint(0, 20, (4, 3))
     plt.figure(figsize=(6.4, 4.8))
 
     plt.ylabel('Quantity of Fruit')
@@ -18,7 +21,8 @@ def bars():
 
     bottom = np.zeros(3)
     for i, fruit_type in enumerate(fruit_types):
-        plt.bar(people, fruit[i], bottom=bottom, color=colors[i], width=0.5, label=fruit_type)
+        plt.bar(people, fruit[i], bottom=bottom,
+                color=colors[i], width=0.5, label=fruit_type)
         bottom += fruit[i]
 
     plt.title('Number of Fruit per Person')
