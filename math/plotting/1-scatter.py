@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
+"""Scatter plot"""
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def scatter():
+    """Scatter plot"""
 
     mean = [69, 0]
     cov = [[15, 8], [8, 15]]
