@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
+"""histogram of student scores for a project"""
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def frequency():
+    """histogram of student scores for a project"""
 
     np.random.seed(5)
     student_grades = np.random.normal(68, 15, 50)
