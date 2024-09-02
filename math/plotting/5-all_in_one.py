@@ -28,7 +28,7 @@ def all_in_one():
     student_grades = np.random.normal(68, 15, 50)
 
     fig, axs = plt.subplots(3, 2, figsize=(12, 15))
-    fig.suptitle('All in One', fontsize='x-small')
+    fig.suptitle('All in One', fontsize='large')
 
     # First plot - line
     axs[0, 0].plot(np.arange(0, 11), y0, 'r-')
