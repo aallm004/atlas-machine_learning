@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """fogotten documentation"""
 
+
 class Exponential:
     """Exponential class"""
     def __init__(self, data=None, lambtha=1.):
