@@ -17,9 +17,7 @@ class Normal:
                 raise TypeError("data must be a list")
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
-            else:
-                self.mean = sum(data) / len(data)
-                variance = sum((x - self.mean) ** 2 for x in data) / (len(data) - 1)
-                self.stddev = variance ** 0.5
-
+            self.mean = sum(data) / len(data)
+            self.stddev = ((sum((x - self.mean) ** 2 for x in data) / len(data)) ** 0.5)
+            self.stddev = float(self.stddev)
 
