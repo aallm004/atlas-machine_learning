@@ -26,4 +26,3 @@ class Binomial:
             self.n = round(max(data) / self.p)
 
             self.p = sum(data) / (self.n * len(data))
-
