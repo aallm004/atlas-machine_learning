@@ -37,3 +37,7 @@ class Normal:
         pdf = (e ** (-((x - self.mean) ** 2) / (2 * self.stddev ** 2))
                / (self.stddev * ((2 * pi) ** 0.5)))
         return pdf
+
+    def cdf(self, x):
+        """calculates the value of the CDF for a given x-value"""
+
