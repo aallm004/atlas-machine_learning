@@ -6,7 +6,7 @@ class Normal:
     """class for normal distribution"""
     def __init__(self, data=None, mean=0., stddev=1.):
         """constructor"""
-        
+
         if data is None:
             if stddev <= 0:
                 raise ValueError("stddev must be a positive value")
@@ -18,6 +18,6 @@ class Normal:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
             self.mean = sum(data) / len(data)
-            self.stddev = ((sum((x - self.mean) ** 2 for x in data) / len(data)) ** 0.5)
+            self.stddev = ((sum((x - self.mean) ** 2 for x in data)
+                            / len(data)) ** 0.5)
             self.stddev = float(self.stddev)
-
