@@ -29,3 +29,24 @@ class Binomial:
             self.n = round(mean / self.p)
 
             self.p = mean / self.n
+
+    def factorial(self, x):
+        """finds the factorial"""
+        if x == 0 or x == 1:
+            return 1
+        result = 1
+        for i in range(2, x + 1):
+            result *= i
+        return result
+
+    def comb(self, n, k):
+        """finds the binomial coefficient"""
+        return self.factorial(n) // (self.factorial(k) * self.factorial(n - k))
+
+    def pmf(self, k):
+        """calculates the value of the PMF for a given number of successes"""
+        k = int(k)
+        if k < 0 or k > self.n:
+            return 0
+        binomial_coefficient = self.comb(self.n, k)
+        return binomial_coefficient * (self.p ** k) * ((1 - self.p) ** (self.n - k))
