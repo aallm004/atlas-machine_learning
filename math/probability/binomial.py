@@ -51,3 +51,15 @@ class Binomial:
         binomial_coefficient = self.comb(self.n, k)
         return binomial_coefficient * (self.p ** k) * (
             (1 - self.p) ** (self.n - k))
+
+    def cdf(self, k):
+        """calculates the value of the CDF for a given number of successes"""
+        k = int(k)
+        if k < 0:
+            return 0
+        
+        cdf = 0
+        for i in range(k + 1):
+            cdf += self.pmf(i)
+        
+            return cdf
