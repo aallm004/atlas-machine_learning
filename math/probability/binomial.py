@@ -45,7 +45,8 @@ class Binomial:
 
     def pmf(self, k):
         """calculates the value of the PMF for a given number of successes"""
-        k = int(k)
+        if not isinstance(k, int):
+            k = int(k)
         if k < 0 or k > self.n:
             return 0
         binomial_coefficient = 1
@@ -65,4 +66,4 @@ class Binomial:
         for i in range(k + 1):
             cdf += self.pmf(i)
 
-            return cdf
+        return cdf
