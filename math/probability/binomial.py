@@ -49,6 +49,8 @@ class Binomial:
         if k < 0 or k > self.n:
             return 0
         binomial_coefficient = 1
+        for x in range(k):
+            binomial_coefficient *= (self.n - x) / (x + 1)
         return binomial_coefficient * (self.p ** k) * (
             (1 - self.p) ** (self.n - k))
 
