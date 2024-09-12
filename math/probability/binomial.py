@@ -48,7 +48,7 @@ class Binomial:
         k = int(k)
         if k < 0 or k > self.n:
             return 0
-        binomial_coefficient = self.comb(self.n, k)
+        binomial_coefficient = 1
         return binomial_coefficient * (self.p ** k) * (
             (1 - self.p) ** (self.n - k))
 
