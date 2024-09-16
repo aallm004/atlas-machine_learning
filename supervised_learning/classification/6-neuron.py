@@ -54,7 +54,8 @@ class Neuron:
         self.__W -= alpha * dw
         self.__b -= alpha * db
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=False):
+    def train(self, X, Y, iterations=5000, alpha=0.05,
+              verbose=True, graph=False):
         """Trains the neuron using gradient descent"""
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
