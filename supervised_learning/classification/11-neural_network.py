@@ -54,11 +54,11 @@ class NeuralNetwork:
         Z2 = np.dot(self.__W2, self.__A1) + self.__b2
         self.__A2 = 1 / (1 + np.exp(-Z2))
         return self.__A1, self.__A2
-    
+
     def cost(self, Y, A):
         """calculates the cost of the model using logistic regression"""
         m = Y.shape[1]
         cost = -(1 / m) * np.sum(
-            Y * np.log(A) + (1 - Y) * 
+            Y * np.log(A) + (1 - Y) *
             np.log(1.0000001 - A))
         return cost
