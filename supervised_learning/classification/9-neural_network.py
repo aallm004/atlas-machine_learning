@@ -26,7 +26,7 @@ class NeuralNetwork:
     @property
     def W1(self):
         return self.__W1
-    
+
     @property
     def b1(self):
         return self.__b1
