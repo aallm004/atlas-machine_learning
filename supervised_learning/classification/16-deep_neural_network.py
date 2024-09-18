@@ -16,7 +16,6 @@ class DeepNeuralNetwork:
             raise TypeError("layers must be a list of positive integers")
         
         self.L = len(layers)
-        layers.insert(0, nx)
 
         self.cache = {}
         self.weights = {}
