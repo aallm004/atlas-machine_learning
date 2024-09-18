@@ -16,10 +16,10 @@ class NeuralNetwork:
         if nodes < 1:
             raise ValueError("nodes must be a positive integer")
 
-        self.__W1 = np.random.randn(nodes, nx) * np.sqrt(2 / nx)
+        self.__W1 = np.random.randn(nodes, nx)
         self.__b1 = np.zeros((nodes, 1))
         self.__A1 = 0
-        self.__W2 = np.random.randn(1, nodes) * np.sqrt(2 / nodes)
+        self.__W2 = np.random.randn(1, nodes)
         self.__b2 = 0
         self.__A2 = 0
 
@@ -72,7 +72,7 @@ class NeuralNetwork:
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
         """defines a neural network with one hidden layer """
-        m = Y.shape[1]
+        m = X.shape[1]
 
         dZ2 = A2 - Y
         dW2 = (1 / m) * np.dot(dZ2, A1.T)
@@ -82,7 +82,7 @@ class NeuralNetwork:
         dW1 = (1 / m) * np.dot(dZ1, X.T)
         db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
 
-        self.__W1 = alpha * dW1
-        self.__b1 = alpha * db1
         self.__W2 = alpha * dW2
         self.__b2 = alpha * db2
+        self.__W1 = alpha * dW1
+        self.__b1 = alpha * db1
