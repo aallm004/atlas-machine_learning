@@ -15,6 +15,11 @@ class DeepNeuralNetwork:
         if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
 
+        if layers[-1] == -1:
+            layers[-1] = 1
+        elif layers[-1] <= 0:
+            raise ValueError("layers must be a list of positive integers")
+        
         self.L = len(layers)
 
         self.cache = {}
