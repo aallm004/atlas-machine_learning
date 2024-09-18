@@ -58,21 +58,21 @@ class NeuralNetwork:
     def cost(self, Y, A):
         """calculates the cost of the model using logistic regression"""
         m = Y.shape[1]
-        cost = -(1 / m) * np.sum(
+        cost = -1 / m * np.sum(
             Y * np.log(A) + (1 - Y) *
             np.log(1.0000001 - A))
         return cost
 
     def evaluate(self, X, Y):
         """defines a neutal network with one hidden layer"""
-        A1, A2 = self.forward_prop(X)
+        self.forward_prop(X)
         cost = self.cost(Y, self.__A2)
         prediction = np.where(self.__A2 >= 0.5, 1, 0)
         return prediction, cost
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
         """defines a neural network with one hidden layer """
-        m = X.shape[1]
+        m = Y.shape[1]
 
         dZ2 = A2 - Y
         dW2 = (1 / m) * np.dot(dZ2, A1.T)
