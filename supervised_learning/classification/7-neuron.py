@@ -84,7 +84,7 @@ class Neuron:
                 self.gradient_descent(X, Y, A, alpha=alpha)
 
         if graph:
-            plt.plot(np.arange(0, iterations, step), cost)
+            plt.plot(iteration, cost)
             plt.xlabel("Iteration")
             plt.ylabel("Cost")
             plt.title("Training Cost")
