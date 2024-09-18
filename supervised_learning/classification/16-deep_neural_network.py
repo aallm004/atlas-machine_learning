@@ -20,17 +20,14 @@ class DeepNeuralNetwork:
         self.cache = {}
         self.weights = {}
 
-        for i in range(1, self.L + 1):
+        for i in range(1, self.L):
             layer_size = layers[i - 1]
         
             prev_layer_size = nx if i == 1 else layers[i - 2]
 
-            try:
-                self.weights['W' + str(i)] = (
-                    np.random.randn(layer_size, prev_layer_size) *
-                    np.sqrt(2 / prev_layer_size)
-                )
-                self.weights['b' + str(i)] = np.zeros((layer_size, 1))
-            except ValueError:
-                self.weights['W' + str(i)] = np.array([])
-                self.weights['b' + str(i)] = np.array([])
+            self.weights['W' + str(i)] = (
+                np.random.randn(layer_size, prev_layer_size) *
+                np.sqrt(2 / prev_layer_size)
+            )
+
+            self.weights['b' + str(i)] = np.zeros((layer_size, 1))
