@@ -72,7 +72,7 @@ class NeuralNetwork:
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
         """defines a neural network with one hidden layer """
-        m = X.shape[1]
+        m = Y.shape[1]
 
         dZ2 = A2 - Y
         dW2 = 1 / m * np.dot(dZ2, A1.T)
