@@ -64,7 +64,7 @@ class NeuralNetwork:
         return cost
 
     def evaluate(self, X, Y):
-        """defines a neutal network with one hidden layer performing binnary classification"""
+        """defines a neutal network with one hidden layer"""
         A1, A2 = self.forward_prop(X)
         cost = self.cost(Y, A2)
         prediction = np.where(A2 >= 0.5, 1, 0)
