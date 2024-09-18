@@ -21,11 +21,12 @@ class DeepNeuralNetwork:
         self.weights = {}
 
         for i in range(1, self.L + 1):
-            layer_size = layers[i]
-        
-            prev_layer_size = nx if i == 0 else layers[i - 1]
+            layer_size = layers[i - 1]
 
-            self.weights['W' + str(i + 1)] = (
+            
+            prev_layer_size = nx if i == 1 else layers[i - 2]
+
+            self.weights['W' + str(i)] = (
                 np.random.randn(layer_size, prev_layer_size) *
                 np.sqrt(2 / prev_layer_size)
             )
