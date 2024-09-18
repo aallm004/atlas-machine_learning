@@ -17,6 +17,8 @@ class DeepNeuralNetwork:
 
         self.L = len(layers)
 
+        layers.insert(0, nx)
+        
         self.cache = {}
         self.weights = {}
         
