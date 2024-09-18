@@ -22,10 +22,7 @@ class DeepNeuralNetwork:
 
         for i in range(1, self.L + 1):
             layer_size = layers[i - 1]
-
-            if not isinstance(layer_size, int) or layer_size <= 0:
-                raise ValueError("layers must be a list of positive integers")
-            
+        
             prev_layer_size = nx if i == 1 else layers[i - 2]
 
             self.weights['W' + str(i)] = (
