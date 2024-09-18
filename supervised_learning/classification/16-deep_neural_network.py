@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import numpy as np
 """Module for DeepNeuralNetwork"""
+import numpy as np
 
 
 class DeepNeuralNetwork:
