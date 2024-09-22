@@ -121,8 +121,8 @@ class NeuralNetwork:
 
         if graph:
             plt.plot(iteration_list, costs, 'b-')
-            plt.xlabel('itration')
-            plt.ylabel('cost')
+            plt.xlabel('Iteration')
+            plt.ylabel('C                                                                               ost')
             plt.title('Training Cost')
             plt.show()
 
