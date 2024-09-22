@@ -71,3 +71,9 @@ class DeepNeuralNetwork:
         m = Y.shape[1]
         cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
+
+    def evaluate(self, X, Y):
+        """Evaluates the neural network's predictions"""
+        A, _ = self.forward_prop(X)
+        cost = self.cost(Y, A)
+        return A, cost
