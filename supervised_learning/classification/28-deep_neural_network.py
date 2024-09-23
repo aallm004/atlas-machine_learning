@@ -8,7 +8,7 @@ import pickle
 class DeepNeuralNetwork:
     """class for DeepNeuralNetwork"""
 
-    def __init__(self, nx, layers):
+    def __init__(self, nx, layers, activation='sig'):
         """Constructor"""
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
