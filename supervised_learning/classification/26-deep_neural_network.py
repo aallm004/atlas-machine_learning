@@ -2,6 +2,7 @@
 """Module for DeepNeuralNetwork"""
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
 
 
 class DeepNeuralNetwork:
@@ -137,19 +138,16 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """Saves the instance object to a file"""
-        import pickle
-        
         if not filename.endswith('.pkl'):
             filename += '.pkl'
         
         with open(filename, 'wb') as file:
             pickle.dump(self, file)
 
-
+    @staticmethod
     def load(filename):
         """Loads a pickled DeepNeuralNetwork object"""
-        import pickle
-        
+
         if not filename.endswith('.pkl'):
             filename += '.pkl'
 
