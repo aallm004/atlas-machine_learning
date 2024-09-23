@@ -85,16 +85,13 @@ class DeepNeuralNetwork:
 
         for i in range(self.__L, 0, -1):
             A_prev = cache[f'A{i-1}']
-            A = cache[f'A{i}']
 
-            if i == self.__L:
-                dZ = A - Y
-            else:
-                dZ = np.dot(self.__weights[f'W{i+1}'].T, dZ) *\
-                (A * (1.0000001 - A))
-
-            dW = (1 / m) * np.matmul(dZ, A_prev.T)
+            dW = (1 / m) * np.dot(dZ, A_prev.T)
             db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
+            
+            dZ = dA_prev * A_prev * (1 - A_prev)
+            dA_prev = np.dot(self.__weights[f'W{i}'].T, dZ)
+
 
             self.__weights[f'W{i}'] -= alpha * dW
             self.__weights[f'b{i}'] -= alpha * db
