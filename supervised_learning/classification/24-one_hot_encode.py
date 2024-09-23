@@ -3,12 +3,12 @@
 import numpy as np
 
 
-def one_hot_encode(array):
+def one_hot_encode(encoded):
     """Converts a numeric label vector into a one-hot matrix"""
-    if not isinstance(array, np.array):
+    if not isinstance(encoded, np.ndarray):
         return None
-    if array.ndim < 2:
+    if encoded.ndim < 2:
         return None
     
-    new_array = np.argmax(array, axis=0)
+    new_array = np.argmax(encoded, axis=0)
     return new_array
