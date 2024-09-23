@@ -10,7 +10,6 @@ def one_hot_decode(one_hot):
         return None
     if len(one_hot.shape) != 2:
         return None
-    
     try:
         return np.argmax(one_hot, axis=0)
     except Exception:
