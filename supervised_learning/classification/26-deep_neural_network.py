@@ -113,7 +113,8 @@ class DeepNeuralNetwork:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
-                raise ValueError("step must be a positive integer less than or equal to iterations")
+                raise ValueError("step must be a positive integer\
+                                 less than or equal to iterations")
 
         graph_matrix = [[],[]]
         for i in range(iterations + 1):
