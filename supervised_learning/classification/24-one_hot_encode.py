@@ -9,7 +9,7 @@ def one_hot_encode(Y, classes):
         return None
     if not isinstance(classes, int) or classes < 1:
         return None
-    
+
     try:
         m = Y.shape[0]
         one_hot = np.zeros((classes, m))
@@ -17,4 +17,3 @@ def one_hot_encode(Y, classes):
         return one_hot
     except IndexError:
         return None
-
