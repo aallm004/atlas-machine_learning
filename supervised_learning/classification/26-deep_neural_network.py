@@ -116,7 +116,7 @@ class DeepNeuralNetwork:
                 raise ValueError("step must be a positive integer\
                                  less than or equal to iterations")
 
-        graph_matrix = [[],[]]
+        graph_matrix = [[], []]
         for i in range(iterations + 1):
             A, self.__cache = self.forward_prop(X)
             self.gradient_descent(Y, self.__cache, alpha)
@@ -134,14 +134,14 @@ class DeepNeuralNetwork:
             plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
-        
+
         return self.evaluate(X, Y)
 
     def save(self, filename):
         """Saves the instance object to a file"""
         if not filename.endswith('.pkl'):
             filename += '.pkl'
-        
+
         with open(filename, 'wb') as file:
             pickle.dump(self, file)
 
