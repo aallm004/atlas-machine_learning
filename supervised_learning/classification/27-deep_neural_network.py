@@ -62,24 +62,31 @@ class DeepNeuralNetwork:
             A_prev = self.__cache['A' + str(i - 1)]
 
             z = np.dot(W, A_prev) + b
-            A = 1 / (1 + np.exp(-z))
+            
+            if i == self.__L:
+               t = np.exp(z - np.max(z, axis=0, keepdims=True))
+               A = t / np.sum(t, axis=0, keepdims=True)
+            else:
 
-            self.__cache[f'A{i}'] = A
+                A = 1 / (1 + np.exp(-z))
+
+            self.__cache['A' + str(i)] = A
 
         return A, self.__cache
 
     def cost(self, Y, A):
         """calculates the cost of the model using log reason"""
         m = Y.shape[1]
-        cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
+        cost = -1 / m * np.sum(Y * np.log(A + 1e-8))
         return cost
 
     def evaluate(self, X, Y):
         """Evaluates the neural network's predictions"""
         A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)
-        guess = np.where(A >= 0.5, 1, 0)
-        return guess, cost
+        predictions = np.argmax(A, axis=0)
+        one_hot_predictions = np.eye(Y.shape[0])[predictions].T
+        return one_hot_predictions, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates gradient descent on one pass of neural network"""
@@ -92,8 +99,9 @@ class DeepNeuralNetwork:
             dW = (1 / m) * np.dot(dZ, A_prev.T)
             db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
-            dA_prev = np.dot(self.__weights[f'W{i}'].T, dZ)
-            dZ = dA_prev * A_prev * (1 - A_prev)
+            if i > 1:
+                dA_prev = np.dot(self.__weights[f'W{i}'].T, dZ)
+                dZ = dA_prev * A_prev * (1 - A_prev)
 
             self.__weights[f'W{i}'] -= alpha * dW
             self.__weights[f'b{i}'] -= alpha * db
