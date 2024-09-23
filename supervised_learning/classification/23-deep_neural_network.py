@@ -88,16 +88,16 @@ class DeepNeuralNetwork:
         for i in range(self.__L, 0, -1):
             A_prev = cache[f'A{i-1}']
 
-            dW = (1 / m) * np.dot(dZ, A_prev.T)
+            dW = (1 / m) * np.matmul(dZ, A_prev.T)
             db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
-            dA_prev = np.dot(self.__weights[f'W{i}'].T, dZ)
-            dZ = dA_prev * A_prev * (1 - A_prev)
+            dA_prev = np.matmul(self.__weights[f'W{i}'].T, dZ)
+            dZ = dA_prev * (A_prev * (1 - A_prev))
 
             self.__weights[f'W{i}'] -= alpha * dW
             self.__weights[f'b{i}'] -= alpha * db
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
+    def train(self, X, Y, iterations=2000, alpha=0.05, verbose=True,
               graph=True, step=100):
         """Trains the deep neural network"""
         if not isinstance(iterations, int):
@@ -107,12 +107,13 @@ class DeepNeuralNetwork:
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
-            raise ValueError("alpha must be a positive float")
+            raise ValueError("alpha must be positive")
         if verbose or graph:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
-                raise ValueError("step must be a positive integer less than or equal to iterations")
+                raise ValueError("step must be a positive integer " +
+                                 "less than or equal to iterations")
 
         graph_matrix = [[],[]]
         for i in range(iterations + 1):
