@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import tensorflow.compat.v1 as tf
-import numpy as np
+
 
 def create_placeholders(nx, classes):
     """Returns placeholders for the input data and labels."""
