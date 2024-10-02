@@ -9,5 +9,5 @@ def forward_prop(x, layer_sizes=[], activations=[]):
     """function that creates the forward propagation"""
     prev = x
     for i in range(len(layer_sizes)):
-        prev = create_layer(prev, layer_sizes[i], activations[i])
-    return prev
+        previous = create_layer(prev, layer_sizes[i], activations[i])
+    return previous
