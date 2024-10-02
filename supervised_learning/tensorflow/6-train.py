@@ -3,6 +3,8 @@
 import tensorflow.compat.v1 as tf
 tf.disable_eager_execution()
 
+tf.set_random_seed(1234)
+
 create_placeholders = __import__('0-create_placeholders').create_placeholders
 forward_prop = __import__('2-forward_prop').forward_prop
 calculate_accuracy = __import__('3-calculate_accuracy').calculate_accuracy
