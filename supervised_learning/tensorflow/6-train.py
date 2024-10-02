@@ -9,7 +9,9 @@ calculate_accuracy = __import__('3-calculate_accuracy').calculate_accuracy
 calculate_loss = __import__('4-calculate_loss').calculate_loss
 create_train_op = __import__('5-create_train_op').create_train_op
 
-def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, iterations, save_path="/tmp/model.ckpt"):
+
+def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
+          activations, alpha, iterations, save_path="/tmp/model.ckpt"):
     """builds, trains, and saves a neural network classifier"""
     def build_graph():
         """build graph function"""
@@ -29,7 +31,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, i
     tf.add_to_collection('loss', loss)
     tf.add_to_collection('accuracy', accuracy)
     tf.add_to_collection('train_op', train_op)
-    
+
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
@@ -37,8 +39,10 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, i
         sess.run(init)
 
         for i in range(iterations + 1):
-            train_cost, train_accuracy = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
-            valid_cost, valid_accuracy = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            train_cost, train_accuracy = \
+                sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
+            valid_cost, valid_accuracy = \
+                sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
 
             if i % 100 == 0 or i == iterations:
                 print(f"After {i} iterations:")
