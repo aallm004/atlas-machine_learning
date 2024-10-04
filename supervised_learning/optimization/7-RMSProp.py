@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
-import tensorflow as tf
+import numpy as np
 
 
 def updated_variables_RMSProp(alpha, beta2, epsilon, var, grad, s):
