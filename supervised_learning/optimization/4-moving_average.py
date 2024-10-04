@@ -15,6 +15,6 @@ def moving_average(data, beta):
     weighted_average = 0
     moving_average = []
     for x, i in enumerate(data, 1):
-        weighted_average = beta * weighted_average + (1 - beta) * i
+        weighted_average = beta * weighted_average + (1 - beta) * x
         moving_average.append(weighted_average / (1 - beta**i))
     return moving_average
