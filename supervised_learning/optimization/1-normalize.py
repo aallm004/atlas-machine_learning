@@ -8,10 +8,10 @@ import numpy as np
         d is the number of data points
         nx is the number of features
     m is a numpy.nd of shape (nx,) that contains the mean of all features of X
-    s is a numpy.ndarray of shape (nx,) that contains the standard deviation 
+    s is a numpy.ndarray of shape (nx,) that contains the standard deviation
     of all features of X
 
-    Returns: The normalized X matrix    
+    Returns: The normalized X matrix
     """
 
 
