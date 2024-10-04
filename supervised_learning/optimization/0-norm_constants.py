@@ -15,7 +15,7 @@ def normalization_constants(X):
     """
     m, nx = X.shape
 
-    mean = [sum(X[i][:, j] / m for j in range(nx)]
+    mean = [sum(X[:, j] / m for j in range(nx))]
 
     var = [sum((X[i, j] - mean[j])**2 for i in range(m)) /
            m for j in range(nx)]
