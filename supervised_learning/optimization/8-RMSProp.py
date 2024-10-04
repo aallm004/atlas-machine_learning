@@ -12,10 +12,8 @@ def create_RMSProp_op(alpha, beta2, epsilon):
     Returns: optimizer
     """
 
-    optimizer = tf.keras.optimizers.RMSprop(
+    return tf.keras.optimizers.RMSprop(
         learning_rate=alpha,
-        decay=beta2,
+        rho=beta2,
         epsilon=epsilon
     )
-
-    return optimizer
