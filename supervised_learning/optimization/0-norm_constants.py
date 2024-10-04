@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """documentation"""
-import numpy as np
 import tensorflow as tf
 
 
@@ -14,8 +13,13 @@ def normalization_constants(X):
 
     Returns: the mean and standard deviation of each feature, respectively    
     """
-    mean = np.mean(X, axis=0)
+    m = len(X)
+    nx = len(X[0])
 
-    std = np.std(X, axis=0)
+    mean = [sum(X[i][j] for i in range(m)) / m for j in range(nx)]
+
+    var = [sum((X[i][j] - mean[j])**2 for i in range(m)) / m for j in range(nx)]
+
+    std = [var[j]**0.5 for j in range(nx)]
 
     return mean, std
