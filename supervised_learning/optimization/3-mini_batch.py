@@ -4,6 +4,7 @@ import numpy as np
 
 shuffle_data = __import__('2-shuffle_data').shuffle_data
 
+
 def create_mini_batches(X, Y, batch_size):
     """
     Creates mini-batches to be used for training a nn using mini-batch gd
@@ -18,7 +19,6 @@ def create_mini_batches(X, Y, batch_size):
 
     Returns: list of mini_batches containing tuples(X_batch, Y_batch)
     """
-
 
     m = X.shape[0]
 
