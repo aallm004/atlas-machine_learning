@@ -13,12 +13,11 @@ def normalization_constants(X):
 
     Returns: the mean and standard deviation of each feature, respectively
     """
-    m = len(X)
-    nx = len(X[0])
+    m, nx = X.shape
 
-    mean = [sum(X[i][j] for i in range(m)) / m for j in range(nx)]
+    mean = [sum(X[i][:, j] / m for j in range(nx)]
 
-    var = [sum((X[i][j] - mean[j])**2 for i in range(m)) /
+    var = [sum((X[i, j] - mean[j])**2 for i in range(m)) /
            m for j in range(nx)]
 
     std = [var[j]**0.5 for j in range(nx)]
