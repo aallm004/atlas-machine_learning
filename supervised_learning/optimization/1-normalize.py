@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
-import tensorflow as tf
+import numpy as np
 
 
 """Function that normalizes a matrix
