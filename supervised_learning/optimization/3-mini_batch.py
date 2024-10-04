@@ -19,6 +19,7 @@ def create_mini_batches(X, Y, batch_size):
     Returns: list of mini_batches containing tuples(X_batch, Y_batch)
     """
 
+
     m = X.shape[0]
 
     X_shuffled, Y_shuffled = shuffle_data(X, Y)
@@ -40,4 +41,4 @@ def create_mini_batches(X, Y, batch_size):
         Y_batch = Y_shuffled[start:]
         mini_batches.append((X_batch, Y_batch))
 
-    return mini_batches 
+    return mini_batches
