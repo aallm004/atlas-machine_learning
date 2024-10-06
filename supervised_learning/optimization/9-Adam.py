@@ -26,5 +26,5 @@ def update_variables_Adam(alpha, beta1, beta2, epsilon, var, grad, v, s, t):
     new_s = s / (1 - beta2 ** t)
 
     var -= alpha * new_v / (np.sqrt(new_s) + epsilon)
-    
+
     return var, v, s
