@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def bach_norm(Z, gamma, beta, epsilon):
+def batch_norm(Z, gamma, beta, epsilon):
     """Z is a numpy.ndarray of shape (m, n) that should be normalized
         m is the number of data points
         n is the number of features in Z
