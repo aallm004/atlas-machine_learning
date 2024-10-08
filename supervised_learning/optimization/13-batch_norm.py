@@ -18,6 +18,6 @@ def bach_norm(Z, gamma, beta, epsilon):
     mean = np.mean(Z, axis=0)
     variance = np.var(Z, axis=0)
     Z_norm = (Z - mean) / np.sqrt(variance + epsilon)
-    Z_tilde = gamma * Z_norm + beta
+    Z_norm = gamma * Z_norm + beta
 
-    return Z_tilde
+    return Z_norm
