@@ -21,14 +21,15 @@ def create_batch_norm_layer(prev, n, activation):
     """
     dense = tf.keras.layers.Dense(
         units=n,
-        kernel_initializer=tf.keras.initializers.VarianceScaling(mode='fan_avg')
+        kernel_initializer=tf.keras.initializers.VarianceScaling(
+            mode='fan_avg')
     )(prev)
-    
+
     mean, variance = tf.nn.moments(dense, axes=[0])
-    
+
     gamma = tf.Variable(tf.ones([n]), trainable=True)
     beta = tf.Variable(tf.zeros([n]), trainable=True)
-    
+
     bn = tf.nn.batch_normalization(
         dense,
         mean=mean,
@@ -37,5 +38,5 @@ def create_batch_norm_layer(prev, n, activation):
         scale=gamma,
         variance_epsilon=1e-7
     )
-    
+
     return activation(bn)
