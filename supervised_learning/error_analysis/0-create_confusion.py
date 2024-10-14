@@ -11,7 +11,7 @@ def create_confusion_matrix(labels, logits):
     classes is the number of classes
     logits is a one-hot numpy.ndarray of shape (m, classes)
     containing the predicted labels
-    
+
     Returns: a confusion numpy.ndarray of shape (classes, classes)
     with a row indices representing the correct labels and column
     indices representing the predicted labels
