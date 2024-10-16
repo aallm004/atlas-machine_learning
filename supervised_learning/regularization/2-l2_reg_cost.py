@@ -16,9 +16,16 @@ def l2_reg_cost(cost, model):
     tensor: The total cost for each layer of the network, accounting for L2
     regularization
     """
-    cost_l2 = tf.zeros_like(cost)
+    l2_costs = []
     for layer in model.layers:
         if hasattr(layer, 'kernel_regularizer') and layer.kernel_regularizer:
-            cost_l2 += tf.reduce_sum(layer.losses)
-    total_cost = cost + cost_l2
-    return total_cost
+            l2_costs.append(tf.reduce_sum(layer.losses))
+    
+    while len(l2_costs) < 3:
+        l2_costs.append(tf.constant(0.0))
+    
+    l2_costs = l2_costs[:3]
+    
+    total_costs = cost + tf.stack(l2_costs)
+    
+    return total_costs
