@@ -20,6 +20,5 @@ def l2_reg_cost(cost, model):
     for layer in model.layers:
         if hasattr(layer, 'kernel_regularizer') and layer.kernel_regularizer:
             cost_l2 += tf.reduce_sum(layer.losses)
-
     total_cost = cost + cost_l2
     return total_cost
