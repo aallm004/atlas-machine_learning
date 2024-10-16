@@ -16,26 +16,23 @@ def dropout_forward_prop(X, weights, L, keep_prob):
         Returns: the output of the network after dropout is applied
     """
 
-    cache = {}
-    cache['A0'] = X
-    for l in range(1, L + 1):
-        W = weights[f'W{l}']
-        b = weights[f'b{l}']
-        A_prev = cache[f'A{l-1}']
-        Z = np.matmul(W, A_prev) + b
-        
-        if l == L:
-            t = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-            cache[f'A{l}'] = t / np.sum(t, axis=0, keepdims=True)
-        else:
-            A = np.tanh(Z)
-            D = np.random.rand(*A.shape) < keep_prob
-            A *= D
-            A /= keep_prob
-            cache[f'A{l}'] = A
-            cache[f'D{l}'] = D
-    
-    return cache
+    cache = {'A0': X}
+    A = X
 
-if __name__ == "__main__":
-    np.random.seed(0)
+    for layer in range(1, L + 1):
+        W = weights[f'W{layer}']
+        b = weights[f'b{layer}']
+        z = np.matmul(W, A) + b
+
+        if layer == L:
+            A = np.exp(z)
+            cache[f'A{layer}'] = A / np.sum(A, axis=0, keepdims=True)
+        else:
+            A = np.tanh(z)
+            dropout_mask = (np.random.rand(*A.shape) < keep_prob).astype(int)
+            A *= dropout_mask
+            A /= keep_prob
+            cache[f'A{layer}'] = A
+            cache[f'D{layer}'] = dropout_mask
+
+    return cache
