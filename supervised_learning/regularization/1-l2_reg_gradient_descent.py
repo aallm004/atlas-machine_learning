@@ -11,7 +11,7 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
         classes is the umber of classes
         m is the number of data points
         weights is a dictionary of the weights and biases of the neural network
-        cache is a dictionary of the outputs of each layer of the neural 
+        cache is a dictionary of the outputs of each layer of the neural
         network
         alpha is the learning rate
         lambtha is the regularization parameter
