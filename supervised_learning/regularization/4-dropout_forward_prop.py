@@ -15,12 +15,29 @@ def droupout_forward_prop(X, weights, L, keep_prob):
         keep_prob is the probability that a node will be kept
         Returns: the output of the network after dropout is applied
     """
-    A = X
-    for i in range(1, L):
-        Z = tf.matmul(A, weights['W' + str(i)]) + weights['b' + str(i)]
-        if i < L - 1:
-            A = tf.nn.tanh(Z)
-            A = tf.nn.dropout(A, rate=1 - keep_prob)
+    cache = {}
+    cache['A0'] = X
+
+    for l in range(1, L + 1):
+        W = weights['W' + str(l)]
+        b = weights['b' + str(l)]
+        A_prev = cache['A' + str(l - 1)]
+        Z = np.matmul(W, A_prev) + b
+        
+        if l < L:
+            A = np.tanh(Z)
+            D = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
+            A *= D
+            A /= keep_prob
+            cache['D' + str(l)] = D
         else:
-            A = tf.nn.softmax(Z)
-    return A
+            A = softmax(Z)
+        
+        cache['A' + str(l)] = A
+
+    return cache
+
+def softmax(Z):
+    """Compute softmax activation"""
+    exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
+    return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
