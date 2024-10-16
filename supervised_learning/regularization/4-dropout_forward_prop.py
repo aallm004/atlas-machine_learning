@@ -23,7 +23,7 @@ def droupout_forward_prop(X, weights, L, keep_prob):
         b = weights[f'b{l}']
         A_prev = cache[f'A{l-1}']
         Z = np.matmul(W, A_prev) + b
-        
+
         if l == L:
             cache[f'A{l}'] = softmax(Z)
         else:
@@ -37,5 +37,11 @@ def droupout_forward_prop(X, weights, L, keep_prob):
     return cache
 
 def softmax(Z):
+    """Compute softmax activation"""
     t = np.exp(Z - np.max(Z, axis=0, keepdims=True))
     return t / np.sum(t, axis=0, keepdims=True)
+
+if __name__ == "__main__":
+    pass
+else:
+    globals()['dropout_forward_prop'] = dropout_forward_prop
