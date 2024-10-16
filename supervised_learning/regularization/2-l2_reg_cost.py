@@ -15,9 +15,12 @@ def l2_reg_cost(cost, model):
     """
     cost_l2 = []
     for layer in model.layers:
-        if hasattr(layer, 'kernel'):
-            cost_l2 += tf.math.reduce_sum(layer.losses)
+        if hasattr(layer, 'kernel') and layer.kerel_regularizer:
+            cost_l2 += tf.math.reduce_sum(layer.kernel_regularizer(layer.kernel))
 
-    total_cost = cost + cost_l2
+        if hasattr(layer, 'bias_regularizer') and layer.bias_regularizer:
+            l2_cost += tf.math.reduce_sum(layer.bias_regularizer(layer.bias))
 
+    total_cost = cost + l2_cost
+    
     return total_cost
