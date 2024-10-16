@@ -26,7 +26,7 @@ def droupout_forward_prop(X, weights, L, keep_prob):
         
         if l < L:
             A = np.tanh(Z)
-            D = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
+            D = np.random.rand(*A.shape) < keep_prob
             A *= D
             A /= keep_prob
             cache['D' + str(l)] = D
@@ -38,6 +38,5 @@ def droupout_forward_prop(X, weights, L, keep_prob):
     return cache
 
 def softmax(Z):
-    """Compute softmax activation"""
-    exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-    return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
+    t = np.exp(Z - np.max(Z, axis=0, keepdims=True))
+    return t / np.sum(t, axis=0, keepdims=True)
