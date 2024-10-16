@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """documentaion"""
-import numpy as np
+
 import tensorflow as tf
-import os
-import random
 
 
 def l2_reg_cost(cost, model):
