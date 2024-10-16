@@ -19,21 +19,20 @@ def droupout_forward_prop(X, weights, L, keep_prob):
     cache['A0'] = X
 
     for l in range(1, L + 1):
-        W = weights['W' + str(l)]
-        b = weights['b' + str(l)]
-        A_prev = cache['A' + str(l - 1)]
+        W = weights[f'W{l}']
+        b = weights[f'b{l}']
+        A_prev = cache[f'A{l-1}']
         Z = np.matmul(W, A_prev) + b
         
-        if l < L:
+        if l == L:
+            cache[f'A{l}'] = softmax(Z)
+        else:
             A = np.tanh(Z)
             D = np.random.rand(*A.shape) < keep_prob
             A *= D
             A /= keep_prob
-            cache['D' + str(l)] = D
-        else:
-            A = softmax(Z)
-        
-        cache['A' + str(l)] = A
+            cache[f'D{l}'] = D
+            cache[f'A{l}'] = A
 
     return cache
 
