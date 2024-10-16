@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def droupout_forward_prop(X, weights, L, keep_prob):
+def dropout_forward_prop(X, weights, L, keep_prob):
     """
     function that conducts forward propagation using Dropout
         X is a numpy.ndarray with shape (nx, m) containing the input data
