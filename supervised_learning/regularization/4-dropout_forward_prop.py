@@ -16,32 +16,23 @@ def droupout_forward_prop(X, weights, L, keep_prob):
         Returns: the output of the network after dropout is applied
     """
 
-    cache = {"A0": X}
-    dropout_mask = {}
-    A_prev = X
-
+    cache = {}
+    cache['A0'] = X
     for l in range(1, L + 1):
-        W = weights[f"W{l}"]
-        b = weights[f"b{l}"]
+        W = weights[f'W{l}']
+        b = weights[f'b{l}']
+        A_prev = cache[f'A{l-1}']
+        Z = np.matmul(W, A_prev) + b
         
-        Z = np.dot(W, A_prev) + b
-        
-        if l == L:  # Output layer
-            A = softmax(Z)
-        else:  # Hidden layers
+        if l == L:
+            t = np.exp(Z)
+            cache[f'A{l}'] = t / np.sum(t, axis=0, keepdims=True)
+        else:
             A = np.tanh(Z)
-            
-            # Apply dropout
-            mask = (np.random.rand(*A.shape) < keep_prob) / keep_prob
-            A *= mask
-            dropout_mask[f"D{l}"] = mask
-        
-        cache[f"A{l}"] = A
-        A_prev = A
-
-    return cache, dropout_mask
-
-def softmax(Z):
-    """Compute softmax activation."""
-    exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-    return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
+            D = np.random.rand(*A.shape) < keep_prob
+            A *= D
+            A /= keep_prob
+            cache[f'A{l}'] = A
+            cache[f'D{l}'] = D
+    
+    return cache
