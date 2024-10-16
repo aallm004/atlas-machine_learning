@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
-import tensorflow as tf
+import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
@@ -21,3 +21,13 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
     """
     m = Y.shape[1]
     dz = {}
+    for i in range(L, 0, -1):
+        if i == L:
+            dz['dz' + str(i)] = cache['A' + str(i)] - Y
+        else:
+            dz['dz' + str(i)] = da * tf.nn.tanh(cache['Z' + str(i)])
+            da = np.dot(weights['W' + str(i + 1)].T, dz['dz' + str(i + 1)]) * (1 - cache['A' + str(i)] * cache['A' + str(i)])
+        dw = np.dot(dz['dz' + str(i)], cache['A' + str(i - 1)].T) / m
+        db = np.sum(dz['dz' + str(i)], axis=1, keepdims=True) / m
+        weights['W' + str(i)] -= alpha * dw
+        weights['b' + str(i)] -= alpha * db
