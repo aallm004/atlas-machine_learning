@@ -25,7 +25,7 @@ def dropout_forward_prop(X, weights, L, keep_prob):
         Z = np.matmul(W, A_prev) + b
         
         if l == L:
-            t = np.exp(Z)
+            t = np.exp(Z - np.max(Z, axis=0, keepdims=True))
             cache[f'A{l}'] = t / np.sum(t, axis=0, keepdims=True)
         else:
             A = np.tanh(Z)
@@ -36,3 +36,6 @@ def dropout_forward_prop(X, weights, L, keep_prob):
             cache[f'D{l}'] = D
     
     return cache
+
+if __name__ == "__main__":
+    np.random.seed(0)
