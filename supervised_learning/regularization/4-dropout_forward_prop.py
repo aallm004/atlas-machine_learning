@@ -15,8 +15,8 @@ def droupout_forward_prop(X, weights, L, keep_prob):
         keep_prob is the probability that a node will be kept
         Returns: the output of the network after dropout is applied
     """
-    cache = {}
-   cache = {"A0": X}
+
+    cache = {"A0": X}
     dropout_mask = {}
     A_prev = X
 
