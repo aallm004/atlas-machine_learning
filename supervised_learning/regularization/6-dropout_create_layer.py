@@ -23,5 +23,7 @@ def dropout_create_layer(prev, n, activation, keep_prob,training=True):
     
     if training:
         A = tf.nn.dropout(A, rate=1 - keep_prob)
+    else:
+        A = A * keep_prob
     
     return A
