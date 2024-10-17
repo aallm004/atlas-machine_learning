@@ -20,14 +20,18 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
         The weights of the network should be updated in place
     """
     m = Y.shape[1]
-    dz = {}
-    for i in range(L, 0, -1):
-        if i == L:
-            dz['dz' + str(i)] = cache['A' + str(i)] - Y
+    
+    for layer in reversed(range(1, L + 1)):
+        A_curr = cache[f'A{layer}']
+        if layer == L:
+            dZ = A_curr - Y
         else:
-            dz['dz' + str(i)] = da * tf.nn.tanh(cache['Z' + str(i)])
-            da = np.dot(weights['W' + str(i + 1)].T, dz['dz' + str(i + 1)]) * (1 - cache['A' + str(i)] * cache['A' + str(i)])
-        dw = np.dot(dz['dz' + str(i)], cache['A' + str(i - 1)].T) / m
-        db = np.sum(dz['dz' + str(i)], axis=1, keepdims=True) / m
-        weights['W' + str(i)] -= alpha * dw
-        weights['b' + str(i)] -= alpha * db
+            dA = np.matmul(weights[f'W{layer + 1}'].T, dZ) * (1 - np.power(A_curr, 2))
+            dZ = dA * cache[f'D{layer}'] / keep_prob
+        
+        A_prev = cache[f'A{layer - 1}']
+        dW = np.matmul(dZ, A_prev.T) / m
+        db = np.sum(dZ, axis=1, keepdims=True) / m
+        
+        weights[f'W{layer}'] -= alpha * dW
+        weights[f'b{layer}'] -= alpha * db
