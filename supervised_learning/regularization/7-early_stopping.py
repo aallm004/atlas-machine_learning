@@ -22,4 +22,3 @@ def early_stopping(cost, opt_cost, threshold, patience, count):
         return True, count
     else:
         return False, count
-
