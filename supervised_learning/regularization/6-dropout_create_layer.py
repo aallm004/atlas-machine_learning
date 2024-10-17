@@ -13,16 +13,14 @@ def dropout_create_layer(prev, n, activation, keep_prob,training=True):
         training is a boolean indicating whether the layer is in training mode
         Returns: the output of the new layer
     """
-        # Initialize weights and biases
+
     initializer = tf.keras.initializers.GlorotUniform()
     W = tf.Variable(initializer(shape=(prev.shape[1], n)), name="W")
     b = tf.Variable(tf.zeros(shape=(1, n)), name="b")
     
-    # Compute the layer output
     Z = tf.matmul(prev, W) + b
     A = activation(Z)
     
-    # Apply dropout only during training
     if training:
         A = tf.nn.dropout(A, rate=1 - keep_prob)
     
