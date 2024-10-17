@@ -23,7 +23,7 @@ def dropout_create_layer(prev, n, activation, keep_prob, training=True):
     A = activation(Z)
     
     if training:
-        mask = tf.cast(tf.random.uniform(tf.shape(A)) < keep_prob, A.dtype)
-        A = tf.divide(tf.multiply(A, mask), keep_prob)
+        mask = tf.random.uniform(tf.shape(A), seed=1) < keep_prob
+        A = tf.where(mask, A / keep_prob, 0.0)
     
     return A
