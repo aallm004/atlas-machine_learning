@@ -3,7 +3,7 @@
 import tensorflow as tf
 
 
-def dropout_create_layer(prev, n, activation, keep_prob,training=True):
+def dropout_create_layer(prev, n, activation, keep_prob, training=True):
     """
     Function that creates a layer of a neural network using dropout
         prev is the previous layer
