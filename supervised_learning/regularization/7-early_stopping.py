@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
-import tensorflow as tf
+import numpy as np
 
 
 def early_stopping(cost, opt_cost, threshold, patience, count):
