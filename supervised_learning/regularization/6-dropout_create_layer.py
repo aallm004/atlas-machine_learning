@@ -18,12 +18,12 @@ def dropout_create_layer(prev, n, activation, keep_prob, training=True):
     initializer = tf.keras.initializers.GlorotUniform(seed=1)
     W = tf.Variable(initializer(shape=(prev.shape[1], n)))
     b = tf.Variable(tf.zeros([n]))
-    
+
     Z = tf.matmul(prev, W) + b
     A = activation(Z)
-    
+
     if training:
         mask = tf.random.uniform(tf.shape(A), seed=1) < keep_prob
         A = tf.where(mask, A / keep_prob, 0.0)
-    
+
     return A
