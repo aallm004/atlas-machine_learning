@@ -20,18 +20,3 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
         The weights of the network should be updated in place
     """
     m = Y.shape[1]
-    
-    for layer in reversed(range(1, L + 1)):
-        A_curr = cache[f'A{layer}']
-        if layer == L:
-            dZ = A_curr - Y
-        else:
-            dA = np.matmul(weights[f'W{layer + 1}'].T, dZ) * (1 - np.power(A_curr, 2))
-            dZ = dA * cache[f'D{layer}'] / keep_prob
-        
-        A_prev = cache[f'A{layer - 1}']
-        dW = np.matmul(dZ, A_prev.T) / m
-        db = np.sum(dZ, axis=1, keepdims=True) / m
-        
-        weights[f'W{layer}'] -= alpha * dW
-        weights[f'b{layer}'] -= alpha * db
