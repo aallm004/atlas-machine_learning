@@ -14,7 +14,6 @@ def dropout_create_layer(prev, n, activation, keep_prob,training=True):
         Returns: the output of the new layer
     """
     tf.random.set_seed(1)
-    np.random.seed(1)
 
     initializer = tf.keras.initializers.GlorotUniform()
     W = tf.Variable(initializer(shape=(prev.shape[1], n)), name="W")
