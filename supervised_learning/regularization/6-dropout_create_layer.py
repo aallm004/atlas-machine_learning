@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """documentation"""
 import tensorflow as tf
+import numpy as np
 
 
 def dropout_create_layer(prev, n, activation, keep_prob,training=True):
@@ -13,6 +14,8 @@ def dropout_create_layer(prev, n, activation, keep_prob,training=True):
         training is a boolean indicating whether the layer is in training mode
         Returns: the output of the new layer
     """
+    tf.random.set_seed(1)
+    np.random.seed(1)
 
     initializer = tf.keras.initializers.GlorotUniform()
     W = tf.Variable(initializer(shape=(prev.shape[1], n)), name="W")
