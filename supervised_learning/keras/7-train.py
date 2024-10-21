@@ -31,12 +31,12 @@ def train_model(network, data, labels, batch_size, epochs,
     if learning_rate_decay and validation_data:
         def lr_schedule(epoch):
             return alpha / (1 + decay_rate * epoch)
-    
+
         callbacks.append(K.callbacks.LearningRateScheduler(lr_schedule,
                                                            verbose=1))
-    
+
     K.backend.set_value(network.optimizer.learning_rate, alpha)
-    
+
     return network.fit(
         data,
         labels,
