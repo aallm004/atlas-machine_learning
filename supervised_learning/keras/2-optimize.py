@@ -13,15 +13,11 @@ def optimize_model(network, alpha, beta1, beta2):
     
     Returns: None
     """
-    #create Adam optimizer
-    optimizer = K.optimizers.Adam(
-        learning_rate=alpha,
-        beta1=beta1,
-        beta2=beta2
-    )
+    # Set the loss function
+    network.compile(loss='categorical_crossentropy', optimizer='adam')
     
-    #set loss function
-    network.compile(
-        optimizer=optimizer,
-        loss='categorical_crossentropy'
-        metrics=['accuracy'])
+    # Create and set the Adam optimizer with custom parameters
+    optimizer = K.optimizers.Adam(learning_rate=alpha, beta_1=beta1, beta_2=beta2)
+    network.optimizer = optimizer
+    
+    return None
