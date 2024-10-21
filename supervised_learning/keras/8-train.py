@@ -31,7 +31,8 @@ def train_model(network, data, labels, batch_size, epochs,
         def lr_schedule(epoch):
             return alpha / (1 + decay_rate * epoch)
 
-        callbacks.append(K.callbacks.LearningRateScheduler(lr_schedule,
+        callbacks.append(K.callbacks.LearningRateScheduler(
+            lr_schedule, verbose=1))
 
     if save_best and filepath and validation_data:
         callbacks.append(K.callbacks.ModelCheckpoint(filepath,
