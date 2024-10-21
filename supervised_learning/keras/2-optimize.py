@@ -21,8 +21,7 @@ def optimize_model(network, alpha, beta1, beta2):
     )
     
     #set loss function
-    network.compile(optimizer=optimizer,
-                    loss='categorical_crossentropy'
-                    metrics=['accuracy'])
-    
-    return None
+    network.compile(
+        optimizer=optimizer,
+        loss='categorical_crossentropy'
+        metrics=['accuracy'])
