@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
-import numpy as np
-import tensorflow as tf
+import tensorflow.keras as K
 
 
 def optimize_model(network, alpha, beta1, beta2):
