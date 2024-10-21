@@ -20,8 +20,9 @@ def train_model(network, data, labels, batch_size, epochs, verbose=True,
 
     Returns: the History object generated after training the model
     """
-    network.compile(loss='categorical_crossentropy', optimizer=network.optimizer, metrics=['accuracy'])
-    
+    network.compile(loss='categorical_crossentropy',
+                    optimizer=network.optimizer, metrics=['accuracy'])
+
     return network.fit(
         data,
         labels,
