@@ -13,10 +13,17 @@ def optimize_model(network, alpha, beta1, beta2):
     
     Returns: None
     """
-    optimizer = tf.train.AdamOptimizer(
+    #set loss function
+    network.compile(loss='categorical_crossentropy')
+
+    #create Adam optimizer
+    optimizer = K.optimizers.Adam(
         learning_rate=alpha,
         beta1=beta1,
         beta2=beta2
     )
-    train_op = optimizer.minimize(network.loss)
-    return train_op, optimizer.variables()
+    
+    #sets optimizer for network
+    network.optimizer = optimizer
+
+    return None
