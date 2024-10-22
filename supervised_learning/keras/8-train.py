@@ -44,6 +44,11 @@ def train_model(network, data, labels, batch_size, epochs,
     K.backend.set_value(network.optimizer.learning_rate, alpha)
 
     return network.fit(
-        data, labels, batch_size=batch_size, epochs=epochs,
-        validation_data=validation_data, verbose=verbose,
-        shuffle=shuffle, callbacks=callbacks)
+        data,
+        labels,
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_data=validation_data,
+        verbose=verbose,
+        shuffle=shuffle,
+        callbacks=callbacks)
