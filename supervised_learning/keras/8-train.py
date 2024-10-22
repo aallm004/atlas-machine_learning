@@ -23,16 +23,19 @@ def train_model(network, data, labels, batch_size, epochs,
 
     Returns: the History object generated after training the model
     """
+    def schedule(epoch):
+            return alpha / (1 + decay_rate * epoch)
+    
     callbacks = []
+    
     if early_stopping and validation_data:
         callbacks.append(K.callbacks.EarlyStopping(
             monitor='val_loss', patience=patience))
 
     if learning_rate_decay and validation_data:
-        def lr_schedule(epoch):
-            return alpha / (1 + decay_rate * epoch)
+
         callbacks.append(K.callbacks.LearningRateScheduler(
-            lr_schedule, verbose=1))
+            schedule, verbose=1))
 
     if save_best and filepath and validation_data:
         callbacks.append(K.callbacks.ModelCheckpoint(
