@@ -24,10 +24,10 @@ def train_model(network, data, labels, batch_size, epochs,
     Returns: the History object generated after training the model
     """
     def schedule(epoch):
-            return alpha / (1 + decay_rate * epoch)
-    
+        return alpha / (1 + decay_rate * epoch)
+
     callbacks = []
-    
+
     if early_stopping and validation_data:
         callbacks.append(K.callbacks.EarlyStopping(
             monitor='val_loss', patience=patience))
