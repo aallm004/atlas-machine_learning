@@ -36,8 +36,11 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
     assert c == kc, "Image channels and kernel channels must match"
 
     if padding == 'same':
-        ph = ((h - 1) * sh + kh - h) // 2 + (kh % 2 == 0)
-        pw = ((w - 1) * sw + kw - w) // 2 + (kw % 2 == 0)
+        ph = ((h - 1) * sh + kh - h) // 2
+        pw = ((w - 1) * sw + kw - w) // 2
+        ph = max(0, ph)
+        pw = max(0, pw)
+        
     elif padding == 'valid':
         ph, pw = 0, 0
     else:
