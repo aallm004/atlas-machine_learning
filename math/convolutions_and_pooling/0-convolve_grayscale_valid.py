@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """documentation"""
-import numpy as mp
 import numpy as np
 
 
