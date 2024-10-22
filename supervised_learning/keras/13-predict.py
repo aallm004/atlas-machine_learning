@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import numpy as np
-import tensorflow as tf
+"""documentation"""
+import tensorflow.keras as K
 
 
 def predict(network, data, verbose=False):
