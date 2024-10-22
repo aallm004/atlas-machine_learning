@@ -26,14 +26,27 @@ def train_model(network, data, labels, batch_size, epochs,
     callbacks = []
     if early_stopping and validation_data:
         callbacks.append(K.callbacks.EarlyStopping(
-            monitor='val_loss', patience=patience))
+            monitor='val_loss',
+            patience=patience
+        ))
 
     if learning_rate_decay and validation_data:
         def lr_schedule(epoch):
             return alpha / (1 + decay_rate * epoch)
 
-        callbacks.append(K.callbacks.LearningRateScheduler(lr_schedule,
-                                                           verbose=1))
+        callbacks.append(K.callbacks.LearningRateScheduler(
+            lr_schedule,
+            verbose=1
+        ))
+
+    if save_best and validation_data and filepath:
+        callbacks.append(K.callbacks.ModelCheckpoint(
+            filepath=filepath,
+            save_best_only=True,
+            monitor='val_loss',
+            mode='min',
+            verbose=1
+        ))
 
     K.backend.set_value(network.optimizer.learning_rate, alpha)
 
