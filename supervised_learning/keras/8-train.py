@@ -40,8 +40,7 @@ def train_model(network, data, labels, batch_size, epochs,
             filepath=filepath,
             save_best_only=True,
             monitor='val_loss',
-            mode='min',
-            verbose=1))
+            mode='min'))
 
     K.backend.set_value(network.optimizer.learning_rate, alpha)
 
