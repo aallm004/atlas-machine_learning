@@ -11,4 +11,4 @@ def predict(network, data, verbose=False):
     the prediction process
     Returns: the prediction for the data"""
 
-    return network.predict(data, verbose=verbose)
+    return network.prediction(data, verbose=verbose)
