@@ -25,7 +25,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     RETURNS: the output of the convolutional layer
         """
     m, h_prev, w_prev, c_prev = A_prev.shape
-    kh, kw, c_prev, c_new = W.shape
+    kh, kw, _, c_new = W.shape
     sh, sw = stride
 
     if padding == 'same':
@@ -36,18 +36,21 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     else:
         ph, pw = padding
 
-    padded = np.pad(A_prev, ((0,0), (ph, ph), (pw, pw), (0, 0)), mode='constant')
+    A_prev_padded = np.pad(A_prev, ((0,0), (ph, ph), (pw, pw), (0, 0)), mode='constant')
 
     output_h = (h_prev + 2 * ph - kh) // sh + 1
     output_w = (w_prev + 2 * pw - kw) // sw + 1
-    output = np.zeros((m, output_h, output_w, c_new))
+    Z = np.zeros((m, output_h, output_w, c_new))
+
 
     for i in range(output_h):
         for j in range(output_w):
             for k in range(c_new):
-                output[:, i, j, k] = np.sum(
-                    padded[:, i*sh:i*sh+kh, j*sw:j*sw+kw, :] * W.shape[ ..., k],
-                    axis=(1, 2, 3)
-                )
+                vert_start = i * sh
+                vert_end = vert_start + kh
+                horiz_start = j * sw
+                horiz_end = horiz_start + kw
+                A_slice = A_prev_padded[:, vert_start:vert_end, horiz_start:horiz_end, :]
+                Z[:, i, j, k] = np.sum(A_slice * W[..., k], axis=(1, 2, 3)) +b[:, :, :, k]
     
-    return output
+    A = activation(Z)
