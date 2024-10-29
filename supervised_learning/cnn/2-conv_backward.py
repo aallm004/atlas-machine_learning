@@ -57,8 +57,8 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                 db[:, :, :, k] += np.sum(dZ[:, i, j, k], axis=0)
 
     if padding == 'same':
-        dA_prev = dA_prev_padded[:, ph:-ph, pw:-pw, :]
-    elif padding == 'valid':
+        dA_prev = dA_prev_padded[:, ph:-ph or None, pw:-pw or None, :]
+    else:
         dA_prev = dA_prev_padded
 
         return dA_prev, dW, db
