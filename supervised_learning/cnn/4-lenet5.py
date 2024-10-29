@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """documentation"""
 import tensorflow.compat.v1 as tf
-import numpy as np
 
 
 def lenet5(x, y):
