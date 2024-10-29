@@ -31,26 +31,28 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     if padding == 'same':
         ph = ((h_prev - 1) * sh + kh - h_prev + 1) // 2
         pw = ((w_prev - 1) * sw + kw - w_prev + 1) // 2
+
     elif padding == 'valid':
         ph, pw = 0, 0
+
     else:
         ph, pw = padding
 
-    A_prev_padded = np.pad(A_prev, ((0,0), (ph, ph), (pw, pw), (0, 0)), mode='constant')
+    A_prev_padded = np.pad(A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), mode='constant')
 
     output_h = (h_prev + 2 * ph - kh) // sh + 1
     output_w = (w_prev + 2 * pw - kw) // sw + 1
     Z = np.zeros((m, output_h, output_w, c_new))
 
-
     for i in range(output_h):
         for j in range(output_w):
             for k in range(c_new):
-                vert_start = i * sh
-                vert_end = vert_start + kh
-                horiz_start = j * sw
-                horiz_end = horiz_start + kw
-                A_slice = A_prev_padded[:, vert_start:vert_end, horiz_start:horiz_end, :]
-                Z[:, i, j, k] = np.sum(A_slice * W[..., k], axis=(1, 2, 3)) +b[:, :, :, k]
-    
+                    location = A_prev_padded[:, i*sh:i*sh+kh, j*sw:j*sw+kw, :]
+
+                    Z[:, i, j, k] = np.sum(location * W[..., k],
+                                           axis=(1, 2, 3)) + b[..., k]
+
+
     A = activation(Z)
+
+    return A
