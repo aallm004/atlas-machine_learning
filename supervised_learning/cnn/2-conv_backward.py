@@ -65,8 +65,9 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                 A_slice = A_prev_padded[:, vert_start:vert_end,
                                         horiz_start:horiz_end, :]
                 dA_prev_padded[:, vert_start:vert_end,
-                               horiz_start:horiz_end, :]
-                dZ[:, i, j, k][:, np.newaxis, np.newaxis, np.newaxis]
+                               horiz_start:horiz_end, :] += \
+                    W[:, :, :, k] * dZ[:, i, j, k][:, np.newaxis, np.newaxis,
+                                                   np.newaxis]
                 dW[:, :, :, k] += np.sum(
                         A_slice * dZ[:, i, j, k]
                         [:, np.newaxis, np.newaxis, np.newaxis],
