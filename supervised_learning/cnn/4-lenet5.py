@@ -33,18 +33,19 @@ def lenet5(x, y):
     """
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
-    conv1 = tf.layers.conv2d(filters=6, kernel_size=5, padding='same',
+    conv1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)
     pool1 = tf.layers.max_pooling2D(inputs=conv1, pool_size=2, strides=2)
 
-    conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5, padding='valid',
+    conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5,
+                             padding='valid',
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)
     
     pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=2, strides=2)
 
-    flat = tf.layers.flatten(pool2)
+    flat = tf.layers.flatten(inputs=pool2)
 
     fcl1 = tf.layers.dense(inputs=flat, units=120, activation=tf.nn.relu,
                            kernel_initializer=he_normal)
@@ -52,14 +53,16 @@ def lenet5(x, y):
     fcl2 = tf.layers.dense(inputs=fcl1, units=84, activation=tf.nn.relu,
                            kernel_initializer=he_normal)
 
-    output = tf.layers.dense(inputs=fcl2, units=10, activation=tf.nn.softmax,
+    logits = tf.layers.dense(inputs=fcl2, units=10,
                              kernel_initializer=he_normal)
-    softmax = tf.nn.softmax(output)
+    
+    y_pred = tf.nn.softmax(logits)
 
-    loss = tf.losses.softmax_cross_entropy(onehot_labels=y, logits=output)
-    optimizer = tf.train.AdamOptimizer().minimize(loss)
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+                          logits=logits, labels=y))
+    train_op = tf.train.AdamOptimizer().minimize(loss)
 
-    correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
+    correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-    return output, optimizer, loss, accuracy
+    return y_pred, train_op, loss, accuracy
