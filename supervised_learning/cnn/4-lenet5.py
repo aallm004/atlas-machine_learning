@@ -57,17 +57,14 @@ def lenet5(x, y):
     logits = tf.layers.dense(inputs=fcl2, units=10,
                              kernel_initializer=he_normal)
     
-    predictions = tf.nn.softmax(logits)
+    y_pred = tf.nn.softmax(logits)
 
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
                           logits=logits, labels=y))
     
-    optimizer = tf.train.AdamOptimizer()
-    train_op = optimizer.minimize(loss)
+    train_op = tf.train.AdamOptimizer().minimize(loss)
 
-    correct = tf.equal(tf.argmax(predictions, 1), tf.argmax(y, 1))
+    correct = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
-
-    predicted_class = tf.argmax(predictions, 1)
     
-    return predicted_class, train_op, loss, accuracy
+    return y_pred, train_op, loss, accuracy
