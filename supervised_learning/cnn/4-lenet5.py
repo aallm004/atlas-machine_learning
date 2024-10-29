@@ -35,29 +35,31 @@ def lenet5(x, y):
 
     conv1 = tf.layers.conv2d(filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
-                             kernel_initializer=he_normal)(x)
-    pool1 = tf.layers.max_pooling2D(pool_size=2, strides=2)(conv1)
+                             kernel_initializer=he_normal)
+    pool1 = tf.layers.max_pooling2D(inputs=conv1, pool_size=2, strides=2)
 
-    conv2 = tf.layers.conv2d(filters=16, kernel_size=5, padding='valid',
+    conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5, padding='valid',
                              activation=tf.nn.relu,
-                             kernel_initializer=he_normal)(pool1)
-    pool2 = tf.layers.max_pooling2d(pool_size=2, strides=2)(conv2)
+                             kernel_initializer=he_normal)
+    
+    pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=2, strides=2)
 
+    flat = tf.layers.flatten(pool2)
 
-    fcl1 = tf.layers.dense(units=120, activation=tf.nn.relu,
-                           kernel_initializer=he_normal)(tf.layers.Flatten()(pool2))
+    fcl1 = tf.layers.dense(inputs=flat, units=120, activation=tf.nn.relu,
+                           kernel_initializer=he_normal)
 
-    fcl2 = tf.layers.dense(units=84, activation=tf.nn.relu,
-                           kernel_initializer=he_normal)(fcl1)
+    fcl2 = tf.layers.dense(inputs=fcl1, units=84, activation=tf.nn.relu,
+                           kernel_initializer=he_normal)
 
-    output = tf.layers.dense(units=10, activation=tf.nn.softmax,
-                             kernel_initializer=he_normal)(fcl2)
+    output = tf.layers.dense(inputs=fcl2, units=10, activation=tf.nn.softmax,
+                             kernel_initializer=he_normal)
     softmax = tf.nn.softmax(output)
-    
-    loss = tf.losses.softmax_cross_entropy(y, output)
+
+    loss = tf.losses.softmax_cross_entropy(onehot_labels=y, logits=output)
     optimizer = tf.train.AdamOptimizer().minimize(loss)
-    
-    correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(output, 1))
+
+    correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     return output, optimizer, loss, accuracy
