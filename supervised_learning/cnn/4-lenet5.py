@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """documentation"""
 import tensorflow.compat.v1 as tf
+import numpy as np
 
 
 def lenet5(x, y):
@@ -36,6 +37,7 @@ def lenet5(x, y):
     conv1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)
+    
     pool1 = tf.layers.max_pooling2D(inputs=conv1, pool_size=2, strides=2)
 
     conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5,
@@ -56,13 +58,17 @@ def lenet5(x, y):
     logits = tf.layers.dense(inputs=fcl2, units=10,
                              kernel_initializer=he_normal)
     
-    y_pred = tf.nn.softmax(logits)
+    predictions = tf.nn.softmax(logits)
 
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
                           logits=logits, labels=y))
-    train_op = tf.train.AdamOptimizer().minimize(loss)
+    
+    optimizer = tf.train.AdamOptimizer()
+    train_op = tf.train.minimize(loss)
 
-    correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    correct = tf.equal(tf.argmax(predictions, 1), tf.argmax(y, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
-    return y_pred, train_op, loss, accuracy
+    predicted_class = tf.argmax(predictions, 1)
+    
+    return predicted_class, train_op, loss, accuracy
