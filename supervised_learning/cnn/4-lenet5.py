@@ -33,6 +33,8 @@ def lenet5(x, y):
     """
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
+    x  = tf.cast(x, tf.float32)
+
     conv1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)
@@ -62,9 +64,13 @@ def lenet5(x, y):
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
                           logits=logits, labels=y))
     
-    train_op = tf.train.AdamOptimizer().minimize(loss)
+    optimizer = tf.train.AdamOptimizer()
+    train_op = optimizer.minimize(loss)
 
     correct = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+
+    y_pred = tf.clip_by_value(y_pred, 1e-10, 1.0)
+    y_pred = y_pred / tf.reduce_sum(y_pred, axis=1, keepdims=True)
     
     return y_pred, train_op, loss, accuracy
