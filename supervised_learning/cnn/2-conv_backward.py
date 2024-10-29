@@ -38,9 +38,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     kh, kw, _, _ = W.shape
     sh, sw = stride
 
-    dA_prev = np.zeros_like(A_prev)
+    dA_prev = np.zeros_like(A_prev_padded)
     dW = np.zeros_like(W)
-    db = np.zeros_like(b)
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
+
 
     if padding == 'same':
         ph = ((h_prev - 1) * sh + kh - h_prev + 1) // 2
@@ -54,31 +55,26 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                            mode='constant')
     dA_prev_padded = np.pad(dA_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)),
                             mode='constant')
-
-    for i in range(h_new):
-        for j in range(w_new):
-            vert_start = i * sh
-            vert_end = vert_start + kh
-            horiz_start = j * sw
-            horiz_end = horiz_start + kw
-            for k in range(c_new):
-                A_slice = A_prev_padded[:, vert_start:vert_end,
-                                        horiz_start:horiz_end, :]
-                dA_prev_padded[:, vert_start:vert_end,
-                               horiz_start:horiz_end, :] += \
-                    W[:, :, :, k] * dZ[:, i, j, k][:, np.newaxis, np.newaxis,
-                                                   np.newaxis]
-                dW[:, :, :, k] += np.sum(
-                        A_slice * dZ[:, i, j, k]
-                        [:, np.newaxis, np.newaxis, np.newaxis],
-                        axis=0
-                        )
-                db[:, :, :, k] += np.sum(dZ[:, i, j, k], axis=0)
-
+    
+    for i in range(m):
+        for j in range(h_new):
+            for k in range(w_new):
+                for c in range(c_new):
+                    vert_start = j * sh
+                    vert_end = vert_start + kh
+                    horiz_start = k * sw
+                    horiz_end = horiz_start + kw
+                    A_slice = A_prev_padded[i, vert_start:vert_end,
+                                            horiz_start:horiz_end, :]
+                    dA_prev_padded[i, vert_start:vert_end,
+                                   horiz_start:horiz_end, :] += \
+                        W[:, :, :, c] * dZ[i, j, k, c]
+                    dW[:, :, :, c] += A_slice * dZ[i, j, k, c]
     if padding == 'same':
-        dA_prev = dA_prev_padded[:, ph:-ph or None, pw:-pw or
-                                 None, :]
+        dA_prev = dA_prev_padded[:, ph:-ph or None, pw:-pw or None, :]
     else:
-        dA_prev = dA_prev_padded
+        dA_prev = dA_prev_padded[:, :h_prev, :w_prev, :]
 
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
+    
     return dA_prev, dW, db
