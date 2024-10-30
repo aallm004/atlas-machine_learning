@@ -4,9 +4,9 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 
-
 def lenet5(x, y):
-    """Function that builds a modified version of the LeNet-5 architecture using
+    """Function that builds a modified version of the LeNet-5 architecture
+    using
     tensorflow
     x is a tf.placeholder of shape (m, 28, 28, 1) containing the input images
     for the network
