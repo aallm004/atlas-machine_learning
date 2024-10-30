@@ -46,13 +46,13 @@ def lenet5(x, y):
 
     flat = tf.layers.flatten(pool2)
 
-    fc1 = tf.layers.dense(flat, units=120, activation=tf.nn.relu,
+    fcl1 = tf.layers.dense(flat, units=120, activation=tf.nn.relu,
                           kernel_initializer=he_normal)
 
-    fc2 = tf.layers.dense(fc1, units=84, activation=tf.nn.relu,
+    fcl2 = tf.layers.dense(fcl1, units=84, activation=tf.nn.relu,
                           kernel_initializer=he_normal)
 
-    logits = tf.layers.dense(fc2, units=10, kernel_initializer=he_normal)
+    logits = tf.layers.dense(fcl2, units=10, kernel_initializer=he_normal)
     output = tf.nn.softmax(logits)
 
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2
@@ -60,7 +60,7 @@ def lenet5(x, y):
 
     train_op = tf.train.AdamOptimizer().minimize(loss)
 
-    correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    correct = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
     return output, train_op, loss, accuracy
