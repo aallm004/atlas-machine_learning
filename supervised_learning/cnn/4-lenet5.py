@@ -31,6 +31,8 @@ def lenet5(x, y):
             a tensor for the loss of the network
             a tensor for the accuracy of the network
     """
+    tf.disable_eager_execution()
+    
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
 
