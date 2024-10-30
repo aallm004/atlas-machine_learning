@@ -35,11 +35,11 @@ def lenet5(x, y):
 
     x  = tf.cast(x, tf.float32)
 
-    conv1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
+    C1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
-                             kernel_initializer=he_normal)
+                             kernel_initializer=he_normal)(x)
     
-    pool1 = tf.layers.max_pooling2D(inputs=conv1, pool_size=2, strides=2)
+    pool1 = tf.layers.max_pooling2D(inputs=C1, pool_size=2, strides=2)
 
     conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5,
                              padding='valid',
