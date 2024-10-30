@@ -38,25 +38,25 @@ def lenet5(x, y):
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)(x)
     
-    pool1 = tf.layers.max_pooling2D(inputs=C1, pool_size=2, strides=2)
+    pool1 = tf.layers.max_pooling2D(pool_size=2, strides=2)(C1)
 
-    conv2 = tf.layers.conv2d(inputs=pool1, filters=16, kernel_size=5,
+    conv2 = tf.layers.conv2d(filters=16, kernel_size=5,
                              padding='valid',
                              activation=tf.nn.relu,
-                             kernel_initializer=he_normal)
+                             kernel_initializer=he_normal)(pool1)
     
-    pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=2, strides=2)
+    pool2 = tf.layers.max_pooling2d(pool_size=2, strides=2)(conv2)
 
-    flat = tf.layers.flatten(inputs=pool2)
+    #flat = tf.layers.flatten(inputs=pool2)
 
-    fcl1 = tf.layers.dense(inputs=flat, units=120, activation=tf.nn.relu,
-                           kernel_initializer=he_normal)
+    fcl1 = tf.layers.dense(units=120, activation=tf.nn.relu,
+                           kernel_initializer=he_normal)(pool2)
 
-    fcl2 = tf.layers.dense(inputs=fcl1, units=84, activation=tf.nn.relu,
-                           kernel_initializer=he_normal)
+    fcl2 = tf.layers.dense(units=84, activation=tf.nn.relu,
+                           kernel_initializer=he_normal)(fcl1)
 
-    logits = tf.layers.dense(inputs=fcl2, units=10,
-                             kernel_initializer=he_normal)
+    logits = tf.layers.dense(units=10,
+                             kernel_initializer=he_normal)(fcl2)
     
     y_pred = tf.nn.softmax(logits)
 
