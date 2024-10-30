@@ -31,12 +31,11 @@ def lenet5(x, y):
             a tensor for the loss of the network
             a tensor for the accuracy of the network
     """
-    tf.disable_eager_execution()
     
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
 
-    C1 = tf.layers.Conv2D(inputs=x, filters=6, kernel_size=5, padding='same',
+    C1 = tf.layers.Conv2D(filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
                              kernel_initializer=he_normal)(x)
     
@@ -49,10 +48,10 @@ def lenet5(x, y):
     
     P2 = tf.layers.MaxPooling2d(pool_size=2, strides=2)(C2)
 
-    #flat = tf.layers.flatten(inputs=pool2)
+    flat = tf.layers.flatten(inputs=P2)
 
     F3 = tf.layers.dense(units=120, activation=tf.nn.relu,
-                           kernel_initializer=he_normal)(tf.layers.Flatten)(P2)
+                           kernel_initializer=he_normal)(tf.layers.Flatten)(flat)
 
     F4 = tf.layers.dense(units=84, activation=tf.nn.relu,
                            kernel_initializer=he_normal)(F3)
@@ -62,11 +61,11 @@ def lenet5(x, y):
     
     y_pred = tf.nn.softmax(logits)
 
-    loss = tf.reduce_mean(tf.losses.softmax_cross_entropy(y, logits))
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy(y, logits))
     
     optimizer = tf.train.AdamOptimizer().minimize(loss)
 
-    correct = tf.equal(tf.argmax(y_pred, 1), tf.argmax(logits, 1))
+    correct = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, axis=1))
     accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
     #y_pred = tf.clip_by_value(y_pred, 1e-10, 1.0)
