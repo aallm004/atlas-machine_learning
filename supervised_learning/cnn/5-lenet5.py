@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 "documentation"
-import tensorflow.compat.v1 as tf
+import tensorflow import keras as k
 tf.disable_v2_behavior()
 
 
