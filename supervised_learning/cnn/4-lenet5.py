@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+"documentation"
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-"""
-Function that builds a modified version of the LeNet-5 architecture using
-tensorflow
+
+
+
+def lenet5(x, y):
+    """Function that builds a modified version of the LeNet-5 architecture using
+    tensorflow
     x is a tf.placeholder of shape (m, 28, 28, 1) containing the input images
     for the network
         m is the number of images
@@ -25,11 +29,7 @@ tensorflow
         a tensor for the softmax activated output
         a training operation that utilizes Adam optimization
         a tensor for the loss of the network
-        a tensor for the accuracy of the network
-"""
-
-
-def lenet5(x, y):
+        a tensor for the accuracy of the network"""
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
     conv1 = tf.layers.conv2d(x, filters=6, kernel_size=5, padding='same',
