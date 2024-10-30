@@ -68,7 +68,7 @@ def lenet5(x, y):
     correct = tf.equal(tf.argmax(y, 1), tf.argmax(logits, 1))
     accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
-    y_pred = tf.clip_by_value(y_pred, 1e-10, 1.0)
-    y_pred = y_pred / tf.reduce_sum(y_pred, axis=1, keepdims=True)
+    #y_pred = tf.clip_by_value(y_pred, 1e-10, 1.0)
+    #y_pred = y_pred / tf.reduce_sum(y_pred, axis=1, keepdims=True)
     
     return y_pred, optimizer, loss, accuracy
