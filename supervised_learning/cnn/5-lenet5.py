@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 "documentation"
 from tensorflow import keras as K
-tf.disable_v2_behavior()
 
 
 def lenet5(X):
