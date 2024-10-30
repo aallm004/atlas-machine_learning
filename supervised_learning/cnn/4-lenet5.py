@@ -33,7 +33,6 @@ def lenet5(x, y):
     """
     he_normal = tf.keras.initializers.VarianceScaling(scale=2.0)
 
-    x  = tf.cast(x, tf.float32)
 
     C1 = tf.layers.conv2d(inputs=x, filters=6, kernel_size=5, padding='same',
                              activation=tf.nn.relu,
