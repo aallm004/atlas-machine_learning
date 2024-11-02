@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """documentation"""
-import numpy as np
-import tensorflow as tf
 from tensorflow import keras as K
 
 
