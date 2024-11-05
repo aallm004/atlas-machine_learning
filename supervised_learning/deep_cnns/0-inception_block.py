@@ -16,17 +16,17 @@ def inception_block(A_prev, filters):
         Returns: the concatenated output of the inception block"""
     
     F1, F3R, F3, F5R, F5, FPP = filters
-    initializer = K.initializers.he_normal(seed=None)
+    initializer = K.initializers.he_normal(seed=0)
     conv1 = K.layers.Conv2D(filters=F1, kernel_size=(1, 1), padding='same',
-                             activation='relu', kernel_initializer=initializer)(A_prev)
+                             activation='relu')(A_prev)
     conv3r = K.layers.Conv2D(filters= F3R, kernel_size=(1, 1), padding='same',
-                            activation='relu', kernel_initializer=initializer)(A_prev)
+                            activation='relu')(A_prev)
     conv3 = K.layers.Conv2D(filters=F3, kernel_size=(3, 3), padding='same',
-                             activation='relu', kernel_initializer=initializer)(conv3r)
+                             activation='relu')(conv3r)
     conv5r = K.layers.Conv2D(filters=F5R, kernel_size=(1, 1), padding='same',
-                             activation='relu', kernel_initializer=initializer)(A_prev)
+                             activation='relu')(A_prev)
     
-    conv5 = K.layers.Conv2D(filters=F5, kernel_size=(1, 1), padding='same',
+    conv5 = K.layers.Conv2D(filters=F5, kernel_size=(5, 5), padding='same',
                              activation='relu', kernel_initializer=initializer)(conv5r)
     pool = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding='same')(A_prev)
 
