@@ -34,7 +34,7 @@ def inception_network():
 
     inception2b = inception_block(inception2a, [160, 112, 224, 24, 64, 64])
 
-    inception2c = inception_block(inception2b, [128, 128, 256, 12, 64, 64])
+    inception2c = inception_block(inception2b, [128, 128, 256, 24, 64, 64])
 
     inception2d = inception_block(inception2c, [112, 144, 288, 32, 64, 64])
 
@@ -48,7 +48,7 @@ def inception_network():
 
     pool_avg = K.layers.GlobalAveragePooling2D()(inception3b)
 
-    dropout = K.layers.Dropout(0.4)(pool_avg)
+    dropout = K.layers.Dropout(rate=0.4)(pool_avg)
 
     output_layer = K.layers.Dense(units=1000, activation='softmax', kernel_initializer=init)(dropout)
 
