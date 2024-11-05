@@ -11,12 +11,12 @@ def inception_network():
     a ReLU activation
     
     Returns: the keras model"""
-    input = K.Input(shape=(244, 244, 3))
-    init = K.initializer.he_normal()
+    input = K.Input(shape=(224, 224, 3))
+    init = K.initializers.he_normal()
 
     conv = K.layers.Conv2D(64, (7, 7), strides=(2, 2), padding='same', activation='relu', kernel_initializer=init)(input)
 
-    max_pool = K.layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same')(conv)
+    max_pool = K.layers.MaxPooling2d((3, 3), strides=(2, 2), padding='same')(conv)
 
     conv2 = K.layers.Conv2D(64, (1, 1), activation='relu', kernel_initializer=init)(max_pool)
 
@@ -46,12 +46,12 @@ def inception_network():
 
     inception3b = inception_block(inception3a, [384, 192, 384, 48, 128, 128])
 
-    pool_avg = K.layers.GlobalAveragePooling2d()(inception3b)
+    pool_avg = K.layers.GlobalAveragePooling2D()(inception3b)
 
-    dropout = K.layers.dropout(0.4)(pool_avg)
+    dropout = K.layers.Dropout(0.4)(pool_avg)
 
-    output_layer = K.layers.Dense(1000, activations='softmax', kernel_initializer=init)(dropout)
+    output_layer = K.layers.Dense(1000, activation='softmax', kernel_initializer=init)(dropout)
 
-    model = K.model(input=input, outputs=output_layer)
+    model = K.Model(input=input, outputs=output_layer)
     
     return model
