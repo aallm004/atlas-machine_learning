@@ -12,16 +12,17 @@ def inception_network():
     
     Returns: the keras model"""
     input = K.Input(shape=(244, 244, 3))
+    init = K.initializer.he_normal()
 
-    conv = K.layers.Conv2D(64, (7, 7), strides=(2, 2), padding='same', activation='relu')(input)
+    conv = K.layers.Conv2D(64, (7, 7), strides=(2, 2), padding='same', activation='relu', kernel_initializer=init)(input)
 
     max_pool = K.layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same')(conv)
 
-    conv2 = K.layers.Conv2D(64, (1, 1), activation='relu')(max_pool)
+    conv2 = K.layers.Conv2D(64, (1, 1), activation='relu', kernel_initializer=init)(max_pool)
 
-    conv3 = K.layers.Conv2D(192, (3, 3), padding='same', activation='relu')(conv2)
+    conv3 = K.layers.Conv2D(192, (3, 3), padding='same', activation='relu', kernel_initializer=init)(conv2)
 
-    max_pool2 = K.layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same')(conv3)
+    max_pool2 = K.layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same', kernel_initializer=init)(conv3)
 
     inception = inception_block(max_pool2, [64, 96, 128, 16, 32, 32])
 
@@ -49,8 +50,8 @@ def inception_network():
 
     dropout = K.layers.dropout(0.4)(pool_avg)
 
-    output_layer = K.layers.Dense(1000, activations='softmax')(dropout)
+    output_layer = K.layers.Dense(1000, activations='softmax', kernel_initializer=init)(dropout)
 
-    model = K.model(inputs=input, outputs=output_layer)
+    model = K.model(input=input, outputs=output_layer)
     
     return model
