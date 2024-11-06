@@ -22,7 +22,8 @@ def densenet121(growth_rate=32, compression=1.0):
 
     norm1 = K.layers.BatchNormalization(axis=3)(input_layer)
     act1 = K.layers.Activation('relu')(norm1)
-    conv1 = K.layers.Conv2D(64, kernel_size=(7, 7), strides=(2, 2), padding='same',
+    conv1 = K.layers.Conv2D(64, kernel_size=(7, 7), strides=(2, 2),
+                            padding='same',
                             kernel_initializer=init)(act1)
     pool1 = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2),
                                   padding='same')(conv1)
