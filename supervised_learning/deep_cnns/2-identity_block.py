@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""documentation"""
+"""defines the identity_block method"""
 from tensorflow import keras as K
 
 
