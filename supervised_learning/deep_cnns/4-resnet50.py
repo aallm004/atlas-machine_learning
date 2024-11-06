@@ -6,16 +6,12 @@ projection_block = __import__('3-projection_block').projection_block
 
 
 def resnet50():
-    """Function that builds the ResNet-5- architecture
+    """Function that builds the ResNet-5 architecture
         Assume the input data will have shape (224, 224, 3)
         All convolutions inside and outside the blocks should be followed by
         batch normalization along the channels axis and a ReLU activation
         All weights should use he normal initialization
         The seed for the he_normal initializer should be set to zero
-        May be used:
-            identity_block = __import__('2-identity_block').identity_block
-            projection_block = __import__
-            ('3-projection_block').projection_block
 
         Returns: the keras model
             """
