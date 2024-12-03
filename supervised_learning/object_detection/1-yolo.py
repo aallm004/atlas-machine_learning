@@ -1,96 +1,80 @@
 #!/usr/bin/env python3
 """Module for class Yolo"""
-import numpy as np
 from tensorflow import keras as K
+import numpy as np
 
 
 class Yolo:
-    """Class Yolo that uses the Yolo v3 algorithm to perform object
-    detection"""
+    """Class Yolo that uses the Yolo v3 algorithm for object detection"""
 
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
-        """Class Constructor:
-                model_path: the path to where a Darknet Keras model is stored
-
-                classes_path: the path to where the list of class names used
-                for the Darknet model, listed in order of index, can be found
-
-                class_t: a float representing the box score threshold for the
-                initial filtering step
-
-                nms_t: a float representing the IOU threshold for non-max
-                suppression
-                anchors: a numpy.ndarray of shape (outputs, anchor_boxes, 2)
-                containing all of the anchor boxes:
-                    outputs: the number of outputs (predictions) made by the
-                    Darknet model
-                    anchor_boxes: the number of anchor boxes used for each
-                    prediction
-                    2 => [anchor_nox_width, anchor_box_height]
-            Public instance attributes:
-                model: the Darknet Keras model
-                class_names: a list of the class names for the model
-                class_t:  the IOU threshold for non-max suppression
-                anchors: the anchor boxes
-            """
-        
+        """Initialize Yolo with model and parameters"""
         self.model = K.models.load_model(model_path)
-        with open(classes_path, 'r') as file:
-            self.class_names = [line.strip() for line in file]
-            self.class_t = class_t
-            self.nms_t = nms_t
-            self.anchors = anchors
-    
-    def process_outputs(self, outputs, image_size):
-        """Process the outputs from the YOLO model
+        self.class_t = class_t
+        self.nms_t = nms_t
+        self.anchors = anchors
         
-            outputs: List of numpy.ndarrays containing the predictions from the
-            Darknet model for a single image
-            image_size: numpy.ndarray containing the image's original size
-            [image_height, image_width]
+        with open(classes_path, 'r') as f:
+            self.class_names = [line.strip() for line in f]
+
+    def process_outputs(self, outputs, image_size):
+        """Process Darknet model outputs
+        
+        Args:
+            outputs: list of numpy.ndarrays containing predictions
+            image_size: numpy.ndarray of image dimensions [height, width]
             
-            Returns:
-                Tuple of (boxes, box_confidence, box_class_probs)"""
+        Returns:
+            Tuple of (boxes, box_confidences, box_class_probs)
+        """
         boxes = []
         box_confidences = []
         box_class_probs = []
-
-        input_w = int(self.model.input.shape[1])
-        input_h = int(self.model.input.shape[1])
         
         for idx, output in enumerate(outputs):
-            grid_height, grid_width, anchor_boxes, _ = output.shape
+            grid_height, grid_width, anchors_count = output.shape[:3]
             
-            #process boxes
-            box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4])
+            # Extract box confidence scores
+            box_conf = 1 / (1 + np.exp(-output[..., 4:5]))
+            box_confidences.append(box_conf)
             
-            #create grid
-            grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
-            grid = np.stack([grid_x, grid_y], axis=-1)
-            grid = np.expand_dims(grid, axis=2)
+            # Extract class probabilities
+            class_probs = 1 / (1 + np.exp(-output[..., 5:]))
+            box_class_probs.append(class_probs)
             
-            #add grid offsets to get coordinates relative to whole image
-            box_xy = (box_xy + grid) / np.array([grid_width, grid_height])
-            box_wh = box_wh * self.anchors[idx] / np.array([input_w, input_h])
-           
-            #scale width and height by anchors
-            box_xy = box_xy * self.anchors[idx]
-            box_wh = box_wh * np.array([image_size[1], image_size[0]])
-
-            #normalize coordinates
-            box_xy = box_xy * np.array([image_size[1], image_size[0]])
-            box_wh = box_wh * np.array([image_size[1], image_size[0]])
-
-            #transform to corner coordinantes
-            box_mins = box_xy - (box_wh / 2)
-            box_maxs = box_xy + (box_wh / 2)
-            box = np.concatenate((box_mins, box_maxs), axis=-1)
+            # Extract box coordinates
+            tx = output[..., 0:1]
+            ty = output[..., 1:2]
+            tw = output[..., 2:3]
+            th = output[..., 3:4]
+            
+            # Create grid indices
+            cx = np.tile(np.arange(grid_width), grid_height)
+            cx = cx.reshape(grid_width, grid_width, 1)
+            cy = np.tile(np.arange(grid_height), grid_width)
+            cy = cy.reshape(grid_height, grid_height).T
+            cy = cy.reshape(grid_height, grid_height, 1)
+            
+            # Calculate bounding box coordinates
+            bx = (1 / (1 + np.exp(-tx))) + cx
+            by = (1 / (1 + np.exp(-ty))) + cy
+            bw = np.exp(tw) * self.anchors[idx, :, 0]
+            bh = np.exp(th) * self.anchors[idx, :, 1]
+            
+            # Normalize to grid
+            bx = bx / grid_width
+            by = by / grid_height
+            bw = bw / grid_width
+            bh = bh / grid_height
+            
+            # Calculate corner coordinates (x1, y1, x2, y2)
+            x1 = (bx - bw/2) * image_size[1]
+            y1 = (by - bh/2) * image_size[0]
+            x2 = (bx + bw/2) * image_size[1]
+            y2 = (by + bh/2) * image_size[0]
+            
+            # Stack coordinates
+            box = np.concatenate((x1, y1, x2, y2), axis=-1)
             boxes.append(box)
-
-            #process confidences and class probabilities (unchanged)
-            box_confidence.append(1 / (1 + np.exp(-output[..., 4:5])))
-            box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
-
+            
         return boxes, box_confidences, box_class_probs
-
