@@ -8,7 +8,7 @@ class Yolo:
     """Class Yolo that uses the Yolo v3 algorithm for object detection"""
 
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
-        """Initialize Yolo with model and parameters"""
+        """Initialize Yolo"""
         self.model = K.models.load_model(model_path)
         self.class_t = class_t
         self.nms_t = nms_t
@@ -26,35 +26,39 @@ class Yolo:
         for idx, output in enumerate(outputs):
             grid_height, grid_width, anchors_count = output.shape[:3]
             
-            # Box confidence sigmoid
-            box_confidences.append(1 / (1 + np.exp(-output[..., 4:5])))
-            
-            # Box class probabilities sigmoid
+            # Extract confidence and class probabilities
+            box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
+            box_confidences.append(box_confidence)
             box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
             
-            # Create meshgrid
-            grid_x = np.arange(grid_width).reshape(1, grid_width, 1)
-            grid_y = np.arange(grid_height).reshape(grid_height, 1, 1)
+            # Create grid coordinates
+            grid_x = np.tile(np.arange(grid_width), grid_height).reshape(grid_height, grid_width, 1, 1)
+            grid_y = np.tile(np.arange(grid_height).reshape(-1, 1), grid_width).reshape(grid_height, grid_width, 1, 1)
+
+            # Get box coords and dimensions
+            tx = output[..., 0:1]
+            ty = output[..., 1:2]
+            tw = output[..., 2:3]
+            th = output[..., 3:4]
+
+            # Apply sigmoid to tx, ty and get center coordinates
+            bx = (1 / (1 + np.exp(-tx))) + grid_x
+            by = (1 / (1 + np.exp(-ty))) + grid_y
             
-            # Tile to match shape
-            box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
-            
-            # Add grid offsets
-            box_xy[..., 0] = (box_xy[..., 0] + grid_x) / grid_width
-            box_xy[..., 1] = (box_xy[..., 1] + grid_y) / grid_height
-            
-            # Normalize to image size
-            box_wh[..., 0] /= grid_width
-            box_wh[..., 1] /= grid_height
-            
+            # Get width and height
+            pw = self.anchors[idx, :, 0].reshape(1, 1, anchors_count, 1)
+            ph = self.anchors[idx, :, 1].reshape(1, 1, anchors_count, 1)
+            bw = pw * np.exp(tw)
+            bh = ph * np.exp(th)
+
             # Convert to corner coordinates
-            box_x1y1 = box_xy - box_wh / 2
-            box_x2y2 = box_xy + box_wh / 2
-            box = np.concatenate((box_x1y1, box_x2y2), axis=-1)
-            
-            # Scale to image size
-            box = box * np.tile(image_size, 2)
+            x1 = (bx - bw/2) * image_size[1] / grid_width
+            y1 = (by - bh/2) * image_size[0] / grid_height
+            x2 = (bx + bw/2) * image_size[1] / grid_width
+            y2 = (by + bh/2) * image_size[0] / grid_height
+
+            # Stack coordinates
+            box = np.concatenate((x1, y1, x2, y2), axis=-1)
             boxes.append(box)
 
         return boxes, box_confidences, box_class_probs
