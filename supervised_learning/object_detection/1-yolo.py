@@ -27,38 +27,32 @@ class Yolo:
             grid_height, grid_width, anchors_count = output.shape[:3]
             
             # Extract confidence and class probabilities
-            box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
-            box_confidences.append(box_confidence)
+            box_confidences.append(1 / (1 + np.exp(-output[..., 4:5])))
             box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
+
+           # Process box coordinates
+            box = np.zeros(output[..., :4].shape)
             
-            # Create grid coordinates
-            grid_x = np.tile(np.arange(grid_width), grid_height).reshape(grid_height, grid_width, 1, 1)
-            grid_y = np.tile(np.arange(grid_height).reshape(-1, 1), grid_width).reshape(grid_height, grid_width, 1, 1)
-
-            # Get box coords and dimensions
-            tx = output[..., 0:1]
-            ty = output[..., 1:2]
-            tw = output[..., 2:3]
-            th = output[..., 3:4]
-
-            # Apply sigmoid to tx, ty and get center coordinates
-            bx = (1 / (1 + np.exp(-tx))) + grid_x
-            by = (1 / (1 + np.exp(-ty))) + grid_y
+            # Center coordinates
+            box[..., 0] = (1 / (1 + np.exp(-output[..., 0])) + 
+                          np.tile(np.arange(grid_width), grid_height).reshape(grid_height, grid_width, 1))
+            box[..., 1] = (1 / (1 + np.exp(-output[..., 1])) + 
+                          np.tile(np.arange(grid_height), grid_width).reshape(grid_width, grid_height).T.reshape(grid_height, grid_width, 1))
             
-            # Get width and height
-            pw = self.anchors[idx, :, 0].reshape(1, 1, anchors_count, 1)
-            ph = self.anchors[idx, :, 1].reshape(1, 1, anchors_count, 1)
-            bw = pw * np.exp(tw)
-            bh = ph * np.exp(th)
+            # Width and height
+            box[..., 2] = np.exp(output[..., 2]) * self.anchors[idx, :, 0]
+            box[..., 3] = np.exp(output[..., 3]) * self.anchors[idx, :, 1]
 
-            # Convert to corner coordinates
-            x1 = (bx - bw/2) * image_size[1] / grid_width
-            y1 = (by - bh/2) * image_size[0] / grid_height
-            x2 = (bx + bw/2) * image_size[1] / grid_width
-            y2 = (by + bh/2) * image_size[0] / grid_height
+            box[..., 0] *= image_size[1] / grid_width
+            box[..., 1] *= image_size[0] / grid_height
+            box[..., 2] *= image_size[1] / grid_width
+            box[..., 3] *= image_size[0] / grid_height
 
-            # Stack coordinates
-            box = np.concatenate((x1, y1, x2, y2), axis=-1)
+            box[..., 0] -= box[..., 2] / 2
+            box[..., 1] -= box[..., 3] / 2
+            box[..., 2] += box[..., 0]
+            box[..., 3] += box[..., 1]
+
             boxes.append(box)
 
         return boxes, box_confidences, box_class_probs
