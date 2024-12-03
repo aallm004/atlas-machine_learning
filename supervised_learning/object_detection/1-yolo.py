@@ -72,19 +72,17 @@ class Yolo:
             box_xy += grid
 
             #normalize coordinates
-            box_xy /= np.array([grid_width, grid_height])  # Scale to 0-1
-            box_wh /= np.array([image_size[1], image_size[0]])  # Scale to relative size
+            box_xy *= np.array([image_size[1], image_size[0]]) / np.array([grid_width, grid_height]) # Scale to 0-1
+            box_wh *= np.array([image_size[1], image_size[0]])  # Scale to relative size
 
             #transform to corner coordinantes
             box_mins = box_xy - (box_wh / 2)
             box_maxs = box_xy + (box_wh / 2)
             box = np.concatenate((box_mins, box_maxs), axis=-1)
 
-            #scale to image dimensions
-            box *= np.array([image_size[1], image_size[0], image_size[1], image_size[0]])
             boxes.append(box)
 
-            #box confidences
+            #process confidences and class probabilities (unchanged)
             box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
             box_confidences.append(box_confidence)
 
