@@ -13,7 +13,6 @@ class Yolo:
         self.nms_threshold = nms_threshold
         self.anchors = anchors
 
-
     def process_outputs(self, outputs, image_size):
         """Process YOLO model outputs for object detection"""
         boxes, confidences, class_probs = [], [], []
@@ -21,7 +20,7 @@ class Yolo:
 
         for i, output in enumerate(outputs):
             grid_h, grid_w, anchors_count, _ = output.shape
-            
+
             # Generate coordinate grids
             grid_x = np.arange(grid_w).reshape(1, grid_w, 1)
             grid_y = np.arange(grid_h).reshape(grid_h, 1, 1)
@@ -41,7 +40,7 @@ class Yolo:
             # Convert to corner coordinates
             box_mins = box_xy - (box_wh / 2)
             box_maxes = box_xy + (box_wh / 2)
-            
+
             # Scale to image size
             boxes_output = np.concatenate([
                 box_mins[..., 0:1] * img_width,
