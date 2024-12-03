@@ -60,7 +60,8 @@ class Yolo:
             
             #process boxes
             box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
+            box_wh = np.exp(output[..., 2:4]) 
+            box_wh *= self.anchors[idx]
 
             #create grid
             grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
@@ -70,17 +71,17 @@ class Yolo:
             #add grid to box_xy
             box_xy += grid
 
-            #normalize
-            box_xy /= [grid_height, grid_width]
-            box_wh /= [image_size[1], image_size[0]]
+            #scale before normalizing
+            box_wh *= np.array([image_size[1], image_size[0]])  # Scale width,height first
+            box_xy *= np.array([image_size[1], image_size[0]]) / np.array([grid_width, grid_height])
+            
 
             #transform to corner coordinantes
-            box_x1y1 = box_xy - (box_wh / 2)
-            box_x2y2 = box_xy + (box_wh / 2)
-            box = np.concatenate((box_x1y1, box_x2y2), axis=-1)
+            box_mins = box_xy - (box_wh / 2)
+            box_maxs = box_xy + (box_wh / 2)
+            box = np.concatenate((box_mins, box_maxs), axis=-1)
 
-            #scale to image size
-            box *= np.tile(([image_size[1], image_size[0]]), 2)
+
             boxes.append(box)
 
             #box confidences
