@@ -5,8 +5,34 @@ from tensorflow import keras
 
 
 class Yolo:
+    """Class Yolo that uses the Yolo v3 algorithm to perform object
+    detection"""
     def __init__(self, model_path, classes_path, class_threshold,
                  nms_threshold, anchors):
+                """Class Constructor:
+                model_path: the path to where a Darknet Keras model is stored
+
+                classes_path: the path to where the list of class names used
+                for the Darknet model, listed in order of index, can be found
+
+                class_t: a float representing the box score threshold for the
+                initial filtering step
+
+                nms_t: a float representing the IOU threshold for non-max
+                suppression
+                anchors: a numpy.ndarray of shape (outputs, anchor_boxes, 2)
+                containing all of the anchor boxes:
+                    outputs: the number of outputs (predictions) made by the
+                    Darknet model
+                    anchor_boxes: the number of anchor boxes used for each
+                    prediction
+                    2 => [anchor_nox_width, anchor_box_height]
+            Public instance attributes:
+                model: the Darknet Keras model
+                class_names: a list of the class names for the model
+                class_t:  the IOU threshold for non-max suppression
+                anchors: the anchor boxes
+            """
         self.model = keras.models.load_model(model_path)
         self.class_names = [line.strip() for line in open(classes_path)]
         self.class_threshold = class_threshold
@@ -14,7 +40,7 @@ class Yolo:
         self.anchors = anchors
 
     def process_outputs(self, outputs, image_size):
-        """Process YOLO model outputs for object detection"""
+        """Process Yolo model outputs for object detection"""
         boxes, confidences, class_probs = [], [], []
         img_height, img_width = image_size
 
