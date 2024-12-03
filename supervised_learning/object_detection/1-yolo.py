@@ -60,17 +60,15 @@ class Yolo:
             
             #process boxes
             box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4]) 
-            box_wh = box_wh * self.anchors[idx]
-
+            box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
+            
             #create grid
             grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
             grid = np.stack([grid_x, grid_y], axis=-1)
             grid = np.expand_dims(grid, axis=2)
-            box_xy = box_xy + grid
-
-            #add grid to box_xy
-            box_xy = box_xy / np.array([grid_width, grid_height])
+            
+            #add grid offsets to get coordinates relative to whole image
+            box_xy = (box_xy + grid) / np.array([grid_width, grid_height])
 
             #normalize coordinates
             box_xy = box_xy * np.array([image_size[1], image_size[0]]) / np.array([grid_width, grid_height]) # Scale to 0-1
