@@ -75,7 +75,7 @@ class Yolo:
 
             #normalize coordinates
             box_xy = box_xy * np.array([image_size[1]/grid_width, image_size[0]/grid_height])
-            box_wh = box_wh * np.array([image_size[1], image_size[0]])  # Scale to relative size
+            box_wh = box_wh * np.array([image_size[1]/grid_width, image_size[0]/grid_height])  # Scale to relative size
 
             #transform to corner coordinantes
             box_mins = box_xy - (box_wh / 2)
