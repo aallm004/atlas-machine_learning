@@ -3,7 +3,8 @@ import numpy as np
 from tensorflow import keras
 
 class Yolo:
-    def __init__(self, model_path, classes_path, class_threshold, nms_threshold, anchors):
+    def __init__(self, model_path, classes_path, class_threshold,
+                 nms_threshold, anchors):
         self.model = keras.models.load_model(model_path)
         self.class_names = [line.strip() for line in open(classes_path)]
         self.class_threshold = class_threshold
