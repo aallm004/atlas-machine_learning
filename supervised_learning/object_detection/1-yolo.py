@@ -69,9 +69,11 @@ class Yolo:
             
             #add grid offsets to get coordinates relative to whole image
             box_xy = box_xy + grid
-
+            box_xy = box_xy / np.array([grid_width, grid_height])
+            box_xy = box_xy * np.array([image_size[1], image_size[0]])
             #scale width and height by anchors
             box_wh = box_wh * self.anchors[idx]
+            box_wh = box_wh * np.array([image_size[1], image_size[0]])
 
             #normalize coordinates
             box_xy = box_xy * np.array([image_size[1]/grid_width, image_size[0]/grid_height])
