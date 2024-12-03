@@ -60,7 +60,7 @@ class Yolo:
             
             #process boxes
             box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
+            box_wh = np.exp(output[..., 2:4])
             
             #create grid
             grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
@@ -68,31 +68,18 @@ class Yolo:
             grid = np.expand_dims(grid, axis=2)
             
             #add grid offsets to get coordinates relative to whole image
-            box_xy = box_xy + grid
-            box_xy = box_xy / np.array([grid_width, grid_height])
+            box_xy = (box_xy + grid) / np.array([grid_width, grid_height])
+            box_wh = box_wh * self.anchors[idx] / np.array([input_w, input_h])
            
-            #scale width and height by anchors
-            box_wh = box_wh * self.anchors[idx]
-            box_wh = box_wh * np.array([image_size[1], image_size[0]])
+       box_xy = box_xy * np.array([image_size[1], image_size[0]])
+        box_wh = box_wh * np.array([image_size[1], image_size[0]])
 
-            #normalize coordinates
-            box_xy = box_xy * np.array([image_size[1]/grid_width, image_size[0]/grid_height])
-            box_wh = box_wh * np.array([image_size[1]/grid_width, image_size[0]/grid_height])  # Scale to relative size
+        box_mins = box_xy - (box_wh / 2)
+        box_maxs = box_xy + (box_wh / 2)
+        box = np.concatenate((box_mins, box_maxs), axis=-1)
+        boxes.append(box)
 
-            #transform to corner coordinantes
-            box_mins = box_xy - (box_wh / 2)
-            box_maxs = box_xy + (box_wh / 2)
-            box = np.concatenate((box_mins, box_maxs), axis=-1)
-
-            boxes.append(box)
-
-            #process confidences and class probabilities (unchanged)
-            box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
-            box_confidences.append(box_confidence)
-
-            #get class prob
-            box_class_prob = 1 / (1 + np.exp(-output[..., 5:]))
-            box_class_probs.append(box_class_prob)
+        box_confidences.append(1 / (1 + np.exp(-output[..., 4:5])))
+        box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
 
         return boxes, box_confidences, box_class_probs
-
