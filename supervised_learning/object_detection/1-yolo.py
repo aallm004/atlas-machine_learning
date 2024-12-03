@@ -64,15 +64,15 @@ class Yolo:
 
             #create grid
             grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
-            grid = np.stack([grid_y, grid_x], axis=-1)
+            grid = np.stack([grid_x, grid_y], axis=-1)
             grid = np.expand_dims(grid, axis=2)
 
             #add grid to box_xy
             box_xy += grid
 
             #normalize
-            box_wh /= [image_size[1], image_size[0]]
             box_xy /= [grid_height, grid_width]
+            box_wh /= [image_size[1], image_size[0]]
 
             #transform to corner coordinantes
             box_x1y1 = box_xy - (box_wh / 2)
