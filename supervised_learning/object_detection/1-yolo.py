@@ -71,7 +71,7 @@ class Yolo:
             box_xy = box_xy + grid
 
             #scale width and height by anchors
-            box_wh = box_wh * self.anchor[idx]
+            box_wh = box_wh * self.anchors[idx]
 
             #normalize coordinates
             box_xy = box_xy * np.array([image_size[1]/grid_width, image_size[0]/grid_height])
