@@ -55,6 +55,9 @@ class Yolo:
         box_confidences = []
         box_class_probs = []
 
+        input_w = int(self.model.input.shape[1])
+        input_h = int(self.model.input.shape[1])
+        
         for idx, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
             
@@ -71,15 +74,23 @@ class Yolo:
             box_xy = (box_xy + grid) / np.array([grid_width, grid_height])
             box_wh = box_wh * self.anchors[idx] / np.array([input_w, input_h])
            
-       box_xy = box_xy * np.array([image_size[1], image_size[0]])
-        box_wh = box_wh * np.array([image_size[1], image_size[0]])
+            #scale width and height by anchors
+            box_xy = box_xy * self.anchors[idx]
+            box_wh = box_wh * np.array([image_size[1], image_size[0]])
 
-        box_mins = box_xy - (box_wh / 2)
-        box_maxs = box_xy + (box_wh / 2)
-        box = np.concatenate((box_mins, box_maxs), axis=-1)
-        boxes.append(box)
+            #normalize coordinates
+            box_xy = box_xy * np.array([image_size[1], image_size[0]])
+            box_wh = box_wh * np.array([image_size[1], image_size[0]])
 
-        box_confidences.append(1 / (1 + np.exp(-output[..., 4:5])))
-        box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
+            #transform to corner coordinantes
+            box_mins = box_xy - (box_wh / 2)
+            box_maxs = box_xy + (box_wh / 2)
+            box = np.concatenate((box_mins, box_maxs), axis=-1)
+            boxes.append(box)
+
+            #process confidences and class probabilities (unchanged)
+            box_confidence.append(1 / (1 + np.exp(-output[..., 4:5])))
+            box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
 
         return boxes, box_confidences, box_class_probs
+
