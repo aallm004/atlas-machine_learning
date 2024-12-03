@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+"""module for process_outputs and yoloooo"""
 import numpy as np
 from tensorflow import keras
+
 
 class Yolo:
     def __init__(self, model_path, classes_path, class_threshold,
@@ -10,6 +12,7 @@ class Yolo:
         self.class_threshold = class_threshold
         self.nms_threshold = nms_threshold
         self.anchors = anchors
+
 
     def process_outputs(self, outputs, image_size):
         """Process YOLO model outputs for object detection"""
