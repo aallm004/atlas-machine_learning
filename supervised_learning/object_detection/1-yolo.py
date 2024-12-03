@@ -59,9 +59,8 @@ class Yolo:
             grid_height, grid_width, anchor_boxes, _ = output.shape
             
             #process boxes
-            box_xy = 1 / (1 + np.exp(-output[..., :2]))
-            box_wh = np.exp(output[..., 2:4])
-            box_wh *= self.anchors[idx]
+            box_wh *= self.anchors[idx].reshape(1, 1, -1, 2)
+            box_wh /= np.array([image_size[1], image_size[0]])
 
             #create grid
             grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
