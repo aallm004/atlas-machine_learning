@@ -42,46 +42,57 @@ class Yolo:
             self.anchors = anchors
     
     def process_outputs(self, outputs, image_size):
-    """Process the outputs from the YOLO model"""
-    boxes = []
-    box_confidences = []
-    box_class_probs = []
+        """Process the outputs from the YOLO model
+        
+            outputs: List of numpy.ndarrays containing the predictions from the
+            Darknet model for a single image
+            image_size: numpy.ndarray containing the image's original size
+            [image_height, image_width]
+            
+            Returns:
+                Tuple of (boxes, box_confidence, box_class_probs)"""
+        boxes = []
+        box_confidences = []
+        box_class_probs = []
 
-    for idx, output in enumerate(outputs):
-        grid_height, grid_width, anchor_boxes, _ = output.shape
-        
-        # Process boxes
-        box_xy = 1 / (1 + np.exp(-output[..., :2]))
-        box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
-        
-        # Create grid
-        grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
-        grid = np.stack([grid_x, grid_y], axis=-1)
-        grid = np.expand_dims(grid, axis=2)
-        
-        # Get coordinates relative to grid
-        box_xy = box_xy + grid
-        box_xy = box_xy / np.array([grid_width, grid_height])
-        
-        # Scale width and height relative to input size
-        box_wh = box_wh / np.array([self.model.input.shape[1], self.model.input.shape[2]])
-        
-        # Scale to image size
-        box_xy = box_xy * np.array([image_size[1], image_size[0]])
-        box_wh = box_wh * np.array([image_size[1], image_size[0]])
+        for idx, output in enumerate(outputs):
+            grid_height, grid_width, anchor_boxes, _ = output.shape
+            
+            #process boxes
+            box_xy = 1 / (1 + np.exp(-output[..., :2]))
+            box_wh = np.exp(output[..., 2:4]) * self.anchors[idx]
+            
+            #create grid
+            grid_x, grid_y = np.meshgrid(np.arange(grid_width), np.arange(grid_height))
+            grid = np.stack([grid_x, grid_y], axis=-1)
+            grid = np.expand_dims(grid, axis=2)
+            
+            #add grid offsets to get coordinates relative to whole image
+            box_xy = box_xy + grid
+            box_xy = box_xy / np.array([grid_width, grid_height])
+           
+            #scale width and height by anchors
+            box_wh = box_wh * self.anchors[idx]
+            box_wh = box_wh * np.array([image_size[1], image_size[0]])
 
-        # Transform to corner coordinates
-        box_mins = box_xy - (box_wh / 2)
-        box_maxs = box_xy + (box_wh / 2)
-        box = np.concatenate((box_mins, box_maxs), axis=-1)
-        
-        boxes.append(box)
-        
-        # Process confidences and class probabilities
-        box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
-        box_confidences.append(box_confidence)
-        
-        box_class_prob = 1 / (1 + np.exp(-output[..., 5:]))
-        box_class_probs.append(box_class_prob)
+            #normalize coordinates
+            box_xy = box_xy * np.array([image_size[1]/grid_width, image_size[0]/grid_height])
+            box_wh = box_wh * np.array([image_size[1]/grid_width, image_size[0]/grid_height])  # Scale to relative size
 
-    return boxes, box_confidences, box_class_probs
+            #transform to corner coordinantes
+            box_mins = box_xy - (box_wh / 2)
+            box_maxs = box_xy + (box_wh / 2)
+            box = np.concatenate((box_mins, box_maxs), axis=-1)
+
+            boxes.append(box)
+
+            #process confidences and class probabilities (unchanged)
+            box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
+            box_confidences.append(box_confidence)
+
+            #get class prob
+            box_class_prob = 1 / (1 + np.exp(-output[..., 5:]))
+            box_class_probs.append(box_class_prob)
+
+        return boxes, box_confidences, box_class_probs
+
