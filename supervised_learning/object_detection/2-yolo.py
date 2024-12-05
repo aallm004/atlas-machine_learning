@@ -97,8 +97,8 @@ class Yolo:
             box_classes.append(box_class[mask])
             box_scores.append(box_score[mask])
 
-            filtered_boxes = np.concatenate(filtered_boxes)
-            box_classes = np.concatenate(box_classes)
-            box_scores = np.concatenate(box_scores)
+        filtered_boxes = np.concatenate(filtered_boxes, axis=0)
+        box_classes = np.concatenate(box_classes, axis=0)
+        box_scores = np.concatenate(box_scores, axis=0)
 
-            return filtered_boxes, box_classes, box_scores
+        return filtered_boxes, box_classes, box_scores
