@@ -60,7 +60,9 @@ class Yolo:
         for raw_image in images:
             original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
         
-            
+            reordered_image = raw_image[:, :, ::-1]
+
+
             resized_image = cv2.resize(raw_image,
                                 (model_width, model_height),
                                 interpolation=cv2.INTER_CUBIC)
