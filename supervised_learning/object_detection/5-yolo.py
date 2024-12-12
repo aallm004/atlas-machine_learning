@@ -51,8 +51,8 @@ class Yolo:
                     heights and widths of images
                     2 => (image_height, image_width)
         """
-        model_height = self.model.input.shape[1]
-        model_width = self.model.input.shape[2]
+        model_width = self.model.input.shape[1]
+        model_height = self.model.input.shape[2]
 
         processed_images = []
         original_dimensions = []
