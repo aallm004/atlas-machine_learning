@@ -130,8 +130,8 @@ class Yolo:
 
                 xx1 = np.maximum(cls_boxes[i, 0], cls_boxes[order[1:], 0])
                 yy1 = np.maximum(cls_boxes[i, 1], cls_boxes[order[1:], 1])
-                xx2 = np.maximum(cls_boxes[i, 2], cls_boxes[order[1:], 2])
-                yy2 = np.maximum(cls_boxes[i, 3], cls_boxes[order[1:], 3])
+                xx2 = np.minimum(cls_boxes[i, 2], cls_boxes[order[1:], 2])
+                yy2 = np.minimum(cls_boxes[i, 3], cls_boxes[order[1:], 3])
 
                 w = np.maximum(0, xx2 - xx1)
                 h = np.maximum(0, yy2 - yy1)
@@ -140,7 +140,7 @@ class Yolo:
                 box_area = (cls_boxes[i, 2] - cls_boxes[i, 0]) * \
                     (cls_boxes[i, 3] - cls_boxes[i, 1])
                 other_areas = (cls_boxes[order[:1], 2] - cls_boxes[order[1:], 0]) * \
-                    (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
+                            (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
                 union = box_area + other_areas - inter
 
                 iou = inter / union
@@ -148,8 +148,14 @@ class Yolo:
                 inds = np.where(iou <= self.nms_t)[0]
                 order = order[inds + 1]
 
-        box_predictions = np.array(box_predictions)
-        predicted_box_classes = np.array(predicted_box_classes)
-        predicted_box_scores = np.array(predicted_box_scores)
+        if box_predictions:
+            box_predictions = np.array(box_predictions)
+            predicted_box_classes = np.array(predicted_box_classes)
+            predicted_box_scores = np.array(predicted_box_scores)
+
+        else:
+            box_predictions = np.array([])
+            predicted_box_classes = np.array(predicted_box_classes)
+            predicted_box_scores - np.array([])
 
         return box_predictions, predicted_box_classes, predicted_box_scores
