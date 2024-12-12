@@ -94,10 +94,10 @@ class Yolo:
             box_width_raw = current_output[..., 2]
             box_height_raw = current_output[..., 3]
 
-            box_center_x = (1 / (1 + np.exp(-box_x_offset)) + grid_x) /
-            grid_width
-            box_center_y = (1 / (1 + np.exp(-box_y_offset)) + grid_y) /
-            grid_height
+            box_center_x = (1 / (1 + np.exp(-box_x_offset)) +
+                            grid_x) / grid_width
+            box_center_y = (1 / (1 + np.exp(-box_y_offset)) +
+                            grid_y) / grid_height
 
             anchor_widths = self.anchors[output_idx, :, 0]
             anchor_heights = self.anchors[output_idx, :, 1]
