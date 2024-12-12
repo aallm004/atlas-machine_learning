@@ -106,9 +106,12 @@ class Yolo:
     def non_max_suppression(self, filtered_boxes, box_classes, box_scores):
         """
         Function to apply non_max suppression to filter ou t overlapping boxes
-            filtered_boxes: a numpy.ndarray of shape (?, 4) containing all of the filtered bounding boxes
-            box_classes: a numpy.ndarray of shape (?,) containing the class number that each  box in filtered_boxes predicts, respectively
-            box_scores: a numpy.ndarray of shape (?) containing the box scores for each box in filtered_boxes, respectively
+            filtered_boxes: a numpy.ndarray of shape (?, 4) containing all of
+            the filtered bounding boxes
+            box_classes: a numpy.ndarray of shape (?,) containing the class
+            number that each  box in filtered_boxes predicts, respectively
+            box_scores: a numpy.ndarray of shape (?) containing the box scores
+            for each box in filtered_boxes, respectively
         """
         box_predictions = []
         predicted_box_classes = []
@@ -136,11 +139,13 @@ class Yolo:
                 w = np.maximum(0, xx2 - xx1)
                 h = np.maximum(0, yy2 - yy1)
                 inter = w * h
-                
+
                 box_area = (cls_boxes[i, 2] - cls_boxes[i, 0]) * \
                     (cls_boxes[i, 3] - cls_boxes[i, 1])
-                other_areas = (cls_boxes[order[:1], 2] - cls_boxes[order[1:], 0]) * \
-                            (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
+                other_areas = (cls_boxes[order[:1], 2] -
+                               cls_boxes[order[1:], 0]) * \
+                              (cls_boxes[order[1:], 3] -
+                               cls_boxes[order[1:], 1])
                 union = box_area + other_areas - inter
 
                 iou = inter / union
