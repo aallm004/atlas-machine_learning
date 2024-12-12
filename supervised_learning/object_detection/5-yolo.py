@@ -199,7 +199,7 @@ class Yolo:
 
                 box_area = (cls_boxes[i, 2] - cls_boxes[i, 0]) * \
                     (cls_boxes[i, 3] - cls_boxes[i, 1])
-                other_areas = (cls_boxes[order[:1], 2] - cls_boxes[order[1:], 0]) * \
+                other_areas = (cls_boxes[order[1:], 2] - cls_boxes[order[1:], 0]) * \
                               (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
                 union = box_area + other_areas - inter
 
