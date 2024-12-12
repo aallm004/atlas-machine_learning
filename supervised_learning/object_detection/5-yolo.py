@@ -50,8 +50,8 @@ class Yolo:
                     heights and widths of images
                     2 => (image_height, image_width)
         """
-        input_h = self.model.input.shape[1].value
-        input_w = self.model.input.shape[2].value
+        input_h = self.model.input.shape[1]
+        input_w = self.model.input.shape[2]
 
         pimages = []
         image_shapes = []
@@ -65,7 +65,7 @@ class Yolo:
             
             preprocessed = resized / 255.0
 
-            p.images.append(preprocessed)
+            pimages.append(preprocessed)
 
         pimages = np.array(pimages)
         image_shapes = np.array(image_shapes)
