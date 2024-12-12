@@ -59,8 +59,6 @@ class Yolo:
         for img in images:
             image_shapes.append([img.shape[0], img.shape[1]])
 
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
             resized = cv2.resize(img,
                                 (input_w, input_h),
                                 interpolation=cv2.INTER_CUBIC)
