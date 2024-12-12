@@ -177,6 +177,10 @@ class Yolo:
             filtered_classes = np.concatenate(filtered_classes, axis=0)
             filtered_scores = np.concatenate(filtered_scores, axis=0)
 
+        else:
+            filtered_boxes = np.array([])
+            filtered_classes = np.array([])
+            filtered_scores = np.array([])
         return filtered_boxes, filtered_classes, filtered_scores
 
     def non_max_suppression(self, filtered_boxes, box_classes, box_scores):
