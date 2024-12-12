@@ -9,7 +9,6 @@ import cv2
 class Yolo:
     """Class Yolo that uses the Yolo v3 algorithm to perform object
     detection"""
-
     def __init__(self, model_path, classes_path, class_t,
                  nms_t, anchors):
         self.model = keras.models.load_model(model_path)
@@ -61,17 +60,17 @@ class Yolo:
         for raw_image in images:
             original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
 
-            resized_image = cv2.resize(raw_image,
-                                       (model_width, model_height),
-                                       interpolation=cv2.INTER_CUBIC)
 
+            resized_image = cv2.resize(raw_image,
+                                (model_width, model_height),
+                                interpolation=cv2.INTER_CUBIC)
+
+            
             normalized_image = np.round(resized_image / 255.0, decimals=8)
 
             processed_images.append(normalized_image)
 
-        processed_images = np.array(processed_images)
-        original_dimensions = np.array(original_dimensions)
-
+            processed_images = np.array(processed_images)
         return (processed_images, original_dimensions)
 
     def process_outputs(self, outputs, image_size):
@@ -99,7 +98,7 @@ class Yolo:
 
             anchor_widths = self.anchors[output_idx, :, 0]
             anchor_heights = self.anchors[output_idx, :, 1]
-
+            
             box_width = anchor_widths * np.exp(box_width_raw) / self.model.input.shape[1]
             box_height = anchor_heights * np.exp(box_height_raw) / self.model.input.shape[2]
 
@@ -124,6 +123,7 @@ class Yolo:
             class_probabilities.append(class_probs)
 
         return detected_boxes, detection_confidences, class_probabilities
+
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
         """
@@ -153,7 +153,7 @@ class Yolo:
         for i in range(len(boxes)):
             # Get dimensions for reshaping
             grid_h, grid_w, num_anchors, _ = boxes[i].shape
-
+            
             # Reshape arrays
             flat_confidences = confidences[i].reshape(-1, 1)
             flat_class_probs = class_probs[i].reshape(-1, class_probs[i].shape[-1])
@@ -177,10 +177,6 @@ class Yolo:
             filtered_classes = np.concatenate(filtered_classes, axis=0)
             filtered_scores = np.concatenate(filtered_scores, axis=0)
 
-        else:
-            filtered_boxes = np.array([])
-            filtered_classes = np.array([])
-            filtered_scores = np.array([])
         return filtered_boxes, filtered_classes, filtered_scores
 
     def non_max_suppression(self, filtered_boxes, box_classes, box_scores):
@@ -222,11 +218,11 @@ class Yolo:
 
                 # Calculate areas
                 intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * \
-                    np.maximum(0, intersect_y2 - intersect_y1)
+                               np.maximum(0, intersect_y2 - intersect_y1)
                 current_box_area = (current_box[2] - current_box[0]) * \
-                    (current_box[3] - current_box[1])
-                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) *
-                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
+                                 (current_box[3] - current_box[1])
+                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * \
+                                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
                 union_area = current_box_area + remaining_box_areas - intersect_area
 
                 # Calculate IoU
