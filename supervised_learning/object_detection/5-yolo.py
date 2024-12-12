@@ -63,15 +63,15 @@ class Yolo:
 
             resized_image = cv2.resize(raw_image,
                                 (model_width, model_height),
-                                interpolation=cv2.INTER_AREA)
+                                interpolation=cv2.INTER_CUBIC)
 
             
-            normalized_image = resized_image / 255.0
+            normalized_image = np.round(resized_image / 255.0, decimals=8)
 
             processed_images.append(normalized_image)
 
-        processed_images = np.array(processed_images, dtype=np.float32)
-        original_dimensions = np.array(original_dimensions, dtype=np.int32)
+        processed_images = np.array(processed_images)
+        original_dimensions = np.array(original_dimensions)
 
         return (processed_images, original_dimensions)
 
