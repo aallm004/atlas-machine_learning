@@ -213,7 +213,7 @@ class Yolo:
         if box_predictions:
             box_predictions = np.array(box_predictions)
             predicted_box_classes = np.array(predicted_box_classes)
-            predicted_box_scores = np.array(predicted_box_scores)
+            predicted_box_scores = np.array([])
 
         else:
             box_predictions = np.array([])
