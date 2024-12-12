@@ -58,19 +58,20 @@ class Yolo:
         original_dimensions = []
 
         for raw_image in images:
-            original_dimensions.append([raw_image.shape[0],
-                                        raw_image.shape[1]])
+            original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
+
 
             resized_image = cv2.resize(raw_image,
-                                       (model_width, model_height),
-                                       interpolation=cv2.INTER_CUBIC)
+                                (model_width, model_height),
+                                interpolation=cv2.INTER_CUBIC)
 
-        normalized_image = np.round(resized_image / 255.0, decimals=8)
+            
+            normalized_image = np.round(resized_image / 255.0, decim
 
             processed_images.append(normalized_image)
 
-        processed_images = np.array(processed_images)
-        original_dimensions = np.array(original_dimensions)
+        processed_images = np.array(processed_images, dtype=np.float32)
+        original_dimensions = np.array(original_dimensions, dtype=np.int32)
 
         return (processed_images, original_dimensions)
 
