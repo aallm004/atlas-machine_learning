@@ -58,26 +58,21 @@ class Yolo:
         original_dimensions = []
 
         for raw_image in images:
-            original_dimensions.append([raw_image.shape[0],
-                                        raw_image.shape[1]])
+            original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
 
 
             resized_image = cv2.resize(raw_image,
                                 (model_width, model_height),
-                                interpolation=cv2.INTER_AREA)
+                                interpolation=cv2.INTER_CUBIC)
 
             
-            normalized_image = resized_image / 255.0
+            normalized_image = np.round(resized_image / 255.0, decimals=8)
 
             processed_images.append(normalized_image)
 
-<<<<<<< HEAD
-            processed_images = np.array(processed_images)
-=======
-        processed_images = np.array(processed_images, dtype=np.float32)
-        original_dimensions = np.array(original_dimensions, dtype=np.int32)
+        processed_images = np.array(processed_images)
+        original_dimensions = np.array(original_dimensions)
 
->>>>>>> parent of 9422080... fair not fair
         return (processed_images, original_dimensions)
 
     def process_outputs(self, outputs, image_size):
@@ -224,9 +219,12 @@ class Yolo:
                 intersect_y2 = np.minimum(current_box[3], sorted_boxes[1:, 3])
 
                 # Calculate areas
-                intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * np.maximum(0, intersect_y2 - intersect_y1)
-                current_box_area = (current_box[2] - current_box[0]) * (current_box[3] - current_box[1])
-                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
+                intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * \
+                               np.maximum(0, intersect_y2 - intersect_y1)
+                current_box_area = (current_box[2] - current_box[0]) * \
+                                 (current_box[3] - current_box[1])
+                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * \
+                                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
                 union_area = current_box_area + remaining_box_areas - intersect_area
 
                 # Calculate IoU
