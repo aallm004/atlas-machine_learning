@@ -60,12 +60,12 @@ class Yolo:
             image_shapes.append([img.shape[0], img.shape[1]])
 
             img = cv2.cvtColor(img, cv2.COLOR_PGR2RBG)
-            
+
             resized = cv2.resize(img,
                                 (input_w, input_h),
                                 interpolation=cv2.INTER_CUBIC)
             
-            preprocessed = resized / 255.0
+            preprocessed = resized.astype(np.float32) / 255.0
 
             pimages.append(preprocessed)
 
