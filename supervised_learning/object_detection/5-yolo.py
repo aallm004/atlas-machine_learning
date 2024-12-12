@@ -65,7 +65,7 @@ class Yolo:
                                 interpolation=cv2.INTER_CUBIC)
 
             
-            normalized_image = resized_image(np.float32) / 255.0
+            normalized_image = resized_image.astype(np.float32) / 255.0
             processed_images.append(normalized_image)
 
         processed_images = np.array(processed_images)
