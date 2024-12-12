@@ -64,8 +64,7 @@ class Yolo:
             resized = cv2.resize(rgb_img,
                                 (input_w, input_h),
                                 interpolation=cv2.INTER_CUBIC)
-            
-            resized = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+
             
             preprocessed = resized.astype(np.float32) / 255.0
 
