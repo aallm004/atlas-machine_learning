@@ -199,10 +199,8 @@ class Yolo:
 
                 box_area = (cls_boxes[i, 2] - cls_boxes[i, 0]) * \
                     (cls_boxes[i, 3] - cls_boxes[i, 1])
-                other_areas = (cls_boxes[order[:1], 2] -
-                               cls_boxes[order[1:], 0]) * \
-                              (cls_boxes[order[1:], 3] -
-                               cls_boxes[order[1:], 1])
+                other_areas = (cls_boxes[order[:1], 2] - cls_boxes[order[1:], 0]) * \
+                              (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
                 union = box_area + other_areas - inter
 
                 iou = inter / union
@@ -213,11 +211,11 @@ class Yolo:
         if box_predictions:
             box_predictions = np.array(box_predictions)
             predicted_box_classes = np.array(predicted_box_classes)
-            predicted_box_scores = np.array([])
+            predicted_box_scores = np.array(predicted_box_scores)
 
         else:
             box_predictions = np.array([])
-            predicted_box_classes = np.array(predicted_box_classes)
-            predicted_box_scores - np.array([])
+            predicted_box_classes = np.array([])
+            predicted_box_scores = np.array([])
 
         return box_predictions, predicted_box_classes, predicted_box_scores
