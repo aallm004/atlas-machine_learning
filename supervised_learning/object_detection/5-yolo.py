@@ -69,6 +69,8 @@ class Yolo:
 
             
             normalized_image = resized_image.astype(np.float32) / 255.0
+            normalized_image = np.clip(normalized_image, 1e-6, 1.0 - 1e-6)
+            
             processed_images.append(normalized_image)
 
         processed_images = np.array(processed_images)
