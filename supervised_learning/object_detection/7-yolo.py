@@ -156,6 +156,7 @@ class Yolo:
         for i in range(len(boxes)):
             grid_h, grid_w = boxes[i].shape[1:3]
             
+            flat_boxes = boxes[i].reshape(-1, 4)
             flat_confidences = box_confidences[i].reshape(-1, 1)
             flat_class_probs = box_class_probs[i].reshape(-1, box_class_probs[i].shape[-1])
 
@@ -165,8 +166,7 @@ class Yolo:
 
             threshold_mask = max_class_scores >= self.class_t
 
-            if len(threshold_mask) > 0:
-                flat_boxes = boxes[i].reshape(-1, 4)
+            if np.any(threshold_mask):
                 filtered_boxes.append(flat_boxes[threshold_mask])
                 filtered_classes.append(class_predictions[threshold_mask])
                 filtered_scores.append(max_class_scores[threshold_mask])
@@ -175,6 +175,11 @@ class Yolo:
             filtered_boxes = np.concatenate(filtered_boxes, axis=0)
             filtered_classes = np.concatenate(filtered_classes, axis=0)
             filtered_scores = np.concatenate(filtered_scores, axis=0)
+
+        else:
+            filtered_boxes = np.array([])
+            filtered_classes = np.array([])
+            filtered_scores = np.array([])
 
         return filtered_boxes, filtered_classes, filtered_scores
 
@@ -269,6 +274,7 @@ class Yolo:
 
             cv2.putText(draw_img, text, (text_x, text_y), font, font_scale, (0, 0, 255), font_thickness, cv2.LINE_AA)
 
+            base_name = os.path.basename(file_name)
             cv2.imshow(file_name, draw_img)
 
             key = cv2.waitKey(0)
