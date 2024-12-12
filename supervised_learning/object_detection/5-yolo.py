@@ -59,8 +59,7 @@ class Yolo:
         original_dimensions = []
 
         for raw_image in images:
-            original_dimensions.append(
-                [raw_image.shape[0], raw_image.shape[1]])
+            original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
 
             resized_image = cv2.resize(raw_image,
                                        (model_width, model_height),
@@ -103,10 +102,8 @@ class Yolo:
             anchor_widths = self.anchors[output_idx, :, 0]
             anchor_heights = self.anchors[output_idx, :, 1]
 
-            box_width = anchor_widths * \
-                np.exp(box_width_raw) / self.model.input.shape[1]
-            box_height = anchor_heights * \
-                np.exp(box_height_raw) / self.model.input.shape[2]
+            box_width = anchor_widths * np.exp(box_width_raw) / self.model.input.shape[1]
+            box_height = anchor_heights * np.exp(box_height_raw) / self.model.input.shape[2]
 
             # Calculate corner coordinates
             box_x1 = (box_center_x - box_width / 2) * image_width
@@ -161,8 +158,7 @@ class Yolo:
 
             # Reshape arrays
             flat_confidences = confidences[i].reshape(-1, 1)
-            flat_class_probs = class_probs[i].reshape(
-                -1, class_probs[i].shape[-1])
+            flat_class_probs = class_probs[i].reshape(-1, class_probs[i].shape[-1])
 
             # Calculate scores
             combined_scores = flat_confidences * flat_class_probs
