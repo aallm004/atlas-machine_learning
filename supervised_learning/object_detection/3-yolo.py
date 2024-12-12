@@ -7,12 +7,12 @@ from tensorflow import keras
 class Yolo:
     """Class Yolo that uses the Yolo v3 algorithm to perform object
     detection"""
-    def __init__(self, model_path, classes_path, class_threshold,
-                 nms_threshold, anchors):
+    def __init__(self, model_path, classes_path, class_t,
+                 nms_t, anchors):
         self.model = keras.models.load_model(model_path)
         self.class_names = [line.strip() for line in open(classes_path)]
-        self.class_threshold = class_threshold
-        self.nms_threshold = nms_threshold
+        self.class_t = class_t
+        self.nms_t = nms_t
         self.anchors = anchors
 
     def process_outputs(self, outputs, image_size):
@@ -91,7 +91,7 @@ class Yolo:
             box_class = np.argmax(box_scores_combined, axis=-1)
             box_score = np.max(box_scores_combined, axis=-1)
 
-            mask = box_score >= self.class_threshold
+            mask = box_score >= self.class_t
 
             filtered_boxes.append(box[mask])
             box_classes.append(box_class[mask])
@@ -133,17 +133,23 @@ class Yolo:
                 xx2 = np.maximum(cls_boxes[i, 2], cls_boxes[order[1:], 2])
                 yy2 = np.maximum(cls_boxes[i, 3], cls_boxes[order[1:], 3])
 
-                w = np.maximum(0, xx2 = xx1)
+                w = np.maximum(0, xx2 - xx1)
                 h = np.maximum(0, yy2 - yy1)
                 inter = w * h
-                iou = inteer / ((cls_boxes[i, 2] - cls_boxes[i, 0]) * (cls_boxes[i, 3] - cls_boxes[i, 1]) +
-                                (cls_boxes[order[1:], 2] - cls_boxes[order[1:], 0]) * (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1]) - inter)
+                
+                box_area = (cls_boxes[i, 2] - cls_boxes[i, 0]) * \
+                    (cls_boxes[i, 3] - cls_boxes[i, 1])
+                other_areas = (cls_boxes[order[:1], 2] - cls_boxes[order[1:], 0]) * \
+                    (cls_boxes[order[1:], 3] - cls_boxes[order[1:], 1])
+                union = box_area + other_areas - inter
 
-                inds = np.where(iou <= self.nms_threshold)[0]
+                iou = inter / union
+
+                inds = np.where(iou <= self.nms_t)[0]
                 order = order[inds + 1]
 
-                box_predictions = np.array(box_predictions)
-                predicted_box_classes = np.array(predicted_box_classes)
-                predicted_box_scores = np.array(predicted_box_scores)
+        box_predictions = np.array(box_predictions)
+        predicted_box_classes = np.array(predicted_box_classes)
+        predicted_box_scores = np.array(predicted_box_scores)
 
-                return box_predictions, predicted_box_classes, predicted_box_scores
+        return box_predictions, predicted_box_classes, predicted_box_scores
