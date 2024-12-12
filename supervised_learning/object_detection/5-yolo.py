@@ -63,10 +63,10 @@ class Yolo:
 
             resized_image = cv2.resize(raw_image,
                                 (model_width, model_height),
-                                interpolation=cv2.INTER_LINEAR)
+                                interpolation=cv2.INTER_AREA)
 
             
-            normalized_image = resized_image.astype(np.float32) / 255.0
+            normalized_image = resized_image / 255.0
 
             processed_images.append(normalized_image)
 
