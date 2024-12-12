@@ -60,12 +60,12 @@ class Yolo:
         for raw_image in images:
             original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
             
-            resized_image = cv2.resize(raw_image,
+            resized_image = cv2.resize(raw_image[:, :, ::-1],
                                 (model_width, model_height),
                                 interpolation=cv2.INTER_CUBIC)
 
             
-            normalized_image = resized_image.astype(np.float32) / 255.0
+            normalized_image = resized_image / 255.0
             processed_images.append(normalized_image)
 
         processed_images = np.array(processed_images)
