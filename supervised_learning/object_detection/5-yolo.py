@@ -58,14 +58,13 @@ class Yolo:
         original_dimensions = []
 
         for raw_image in images:
-            original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
-
+            original_dimensions.append([raw_image.shape[0],
+                                        raw_image.shape[1]])
 
             resized_image = cv2.resize(raw_image,
-                                (model_width, model_height),
-                                interpolation=cv2.INTER_CUBIC)
+                                       (model_width, model_height),
+                                       interpolation=cv2.INTER_CUBIC)
 
-            
             normalized_image = np.round(resized_image / 255.0, decimals=8)
 
             processed_images.append(normalized_image)
@@ -95,14 +94,18 @@ class Yolo:
             box_width_raw = current_output[..., 2]
             box_height_raw = current_output[..., 3]
 
-            box_center_x = (1 / (1 + np.exp(-box_x_offset)) + grid_x) / grid_width
-            box_center_y = (1 / (1 + np.exp(-box_y_offset)) + grid_y) / grid_height
+            box_center_x = (1 / (1 + np.exp(-box_x_offset)) + grid_x) /
+            grid_width
+            box_center_y = (1 / (1 + np.exp(-box_y_offset)) + grid_y) /
+            grid_height
 
             anchor_widths = self.anchors[output_idx, :, 0]
             anchor_heights = self.anchors[output_idx, :, 1]
-            
-            box_width = anchor_widths * np.exp(box_width_raw) / self.model.input.shape[1]
-            box_height = anchor_heights * np.exp(box_height_raw) / self.model.input.shape[2]
+
+            box_width = anchor_widths * np.exp(box_width_raw) /
+            self.model.input.shape[1]
+            box_height = anchor_heights * np.exp(box_height_raw) /
+            self.model.input.shape[2]
 
             # Calculate corner coordinates
             box_x1 = (box_center_x - box_width / 2) * image_width
@@ -125,7 +128,6 @@ class Yolo:
             class_probabilities.append(class_probs)
 
         return detected_boxes, detection_confidences, class_probabilities
-
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
         """
@@ -155,10 +157,11 @@ class Yolo:
         for i in range(len(boxes)):
             # Get dimensions for reshaping
             grid_h, grid_w, num_anchors, _ = boxes[i].shape
-            
+
             # Reshape arrays
             flat_confidences = confidences[i].reshape(-1, 1)
-            flat_class_probs = class_probs[i].reshape(-1, class_probs[i].shape[-1])
+            flat_class_probs =
+            class_probs[i].reshape(-1, class_probs[i].shape[-1])
 
             # Calculate scores
             combined_scores = flat_confidences * flat_class_probs
@@ -220,12 +223,14 @@ class Yolo:
 
                 # Calculate areas
                 intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * \
-                               np.maximum(0, intersect_y2 - intersect_y1)
+                    np.maximum(0, intersect_y2 - intersect_y1)
                 current_box_area = (current_box[2] - current_box[0]) * \
-                                 (current_box[3] - current_box[1])
-                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * \
-                                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
-                union_area = current_box_area + remaining_box_areas - intersect_area
+                    (current_box[3] - current_box[1])
+                remaining_box_areas = (sorted_boxes[1:, 2] -
+                                       sorted_boxes[1:, 0]) * \
+                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
+                union_area = current_box_area + remaining_box_areas -
+                intersect_area
 
                 # Calculate IoU
                 iou_scores = intersect_area / union_area
