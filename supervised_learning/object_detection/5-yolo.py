@@ -63,6 +63,8 @@ class Yolo:
                                 (input_w, input_h),
                                 interpolation=cv2.INTER_CUBIC)
             
+            resized = cv2.ctvColor(resized, cv2.COLOR_BGR2RGB)
+            
             preprocessed = resized.astype(np.float32) / 255.0
 
             pimages.append(preprocessed)
