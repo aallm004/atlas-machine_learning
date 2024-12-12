@@ -90,7 +90,11 @@ class Yolo:
                 grid_height, grid_width, num_anchors, _ = output_shape[0], output_shape[1], output_shape[2], output_shape[3]
 
             grid_x = np.arange(grid_width).reshape(1, grid_width, 1)
+            grid_x = np.repeat(grid_x, grid_height, axis=0)
+            grid_x = np.repeat(grid_x, num_anchors, axis=2)
             grid_y = np.arange(grid_height).reshape(grid_height, 1, 1)
+            grid_y = np.repeat(grid_y, grid_width, axis=1)
+            grid_y = np.repeat(grid_y, num_anchors, axis=2)
 
             box_x_offset = current_output[..., 0]
             box_y_offset = current_output[..., 1]
