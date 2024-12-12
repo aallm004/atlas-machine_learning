@@ -227,11 +227,9 @@ class Yolo:
                     np.maximum(0, intersect_y2 - intersect_y1)
                 current_box_area = (current_box[2] - current_box[0]) * \
                     (current_box[3] - current_box[1])
-                remaining_box_areas =
-                (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * \
+                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) *
                     (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
-                union_area = current_box_area + remaining_box_areas -
-                intersect_area
+                union_area = current_box_area + remaining_box_areas - intersect_area
 
                 # Calculate IoU
                 iou_scores = intersect_area / union_area
