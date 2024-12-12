@@ -58,7 +58,8 @@ class Yolo:
         original_dimensions = []
 
         for raw_image in images:
-            original_dimensions.append([raw_image.shape[0], raw_image.shape[1]])
+            original_dimensions.append([raw_image.shape[0],
+                                        raw_image.shape[1]])
 
 
             resized_image = cv2.resize(raw_image,
@@ -217,12 +218,9 @@ class Yolo:
                 intersect_y2 = np.minimum(current_box[3], sorted_boxes[1:, 3])
 
                 # Calculate areas
-                intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * \
-                               np.maximum(0, intersect_y2 - intersect_y1)
-                current_box_area = (current_box[2] - current_box[0]) * \
-                                 (current_box[3] - current_box[1])
-                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * \
-                                    (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
+                intersect_area = np.maximum(0, intersect_x2 - intersect_x1) * np.maximum(0, intersect_y2 - intersect_y1)
+                current_box_area = (current_box[2] - current_box[0]) * (current_box[3] - current_box[1])
+                remaining_box_areas = (sorted_boxes[1:, 2] - sorted_boxes[1:, 0]) * (sorted_boxes[1:, 3] - sorted_boxes[1:, 1])
                 union_area = current_box_area + remaining_box_areas - intersect_area
 
                 # Calculate IoU
