@@ -10,7 +10,7 @@ if __name__ == '__main__':
                         [[30, 61], [62, 45], [59, 119]],
                         [[10, 13], [16, 30], [33, 23]]])
     yolo = Yolo('yolo.h5', 'coco_classes.txt', 0.6, 0.5, anchors)
-    images, image_paths = yolo.load_images('yolo_images/yolo/')
+    images, image_paths = yolo.load_images('yolo/')
     image_paths, images = zip(*sorted(zip(image_paths, images)))
     pimages, image_shapes = yolo.preprocess_images(images)
     print(type(pimages), pimages.shape)
