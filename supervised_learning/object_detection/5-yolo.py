@@ -78,9 +78,9 @@ class Yolo:
         detected_boxes = []
         detection_confidences = []
         class_probabilities = []
-        imgage_height, imgage_width = image_dimensions
+        image_height, image_width = image_size
 
-        for output_idx, current_output in enumerate(model_outputs):
+        for output_idx, current_output in enumerate(outputs):
             grid_height, grid_width, num_anchors, _ = current_output.shape
 
             # Generate coordinate grids
@@ -91,10 +91,10 @@ class Yolo:
             box_x_offset = current_output[..., 0]
             box_y_offset = current_output[..., 1]
             box_width_raw = current_output[..., 2]
-            bo_height_raw = current_output[..., 3]
+            box_height_raw = current_output[..., 3]
 
-            box_center_x = (1 / (1 + np.exp(-box_x_offset)) + gird_x) / grid_width
-            box_center_y = (1 / (1 + np.exp(-box_y_offset)) + gird_y) / grid_height
+            box_center_x = (1 / (1 + np.exp(-box_x_offset)) + grid_x) / grid_width
+            box_center_y = (1 / (1 + np.exp(-box_y_offset)) + grid_y) / grid_height
 
             anchor_widths = self.anchors[output_idx, :, 0]
             anchor_heights = self.anchors[output_idx, :, 1]
