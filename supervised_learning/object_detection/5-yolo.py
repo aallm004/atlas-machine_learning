@@ -73,8 +73,6 @@ class Yolo:
         processed_images = np.array(processed_images)
         original_dimensions = np.array(original_dimensions)
 
-        normalized_image = processed_images.reshape(-1, model_width, model_height, 3)
-
         return (processed_images, original_dimensions)
 
     def process_outputs(self, outputs, image_size):
