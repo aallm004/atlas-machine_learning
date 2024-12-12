@@ -57,8 +57,8 @@ class Yolo:
         processed_images = []
         original_dimensions = []
 
-        for raw_image in input_images:
-            original_dimensions.append([img.shape[0], img.shape[1]])
+        for raw_image in images:
+            original_dimensions.append([raw_img.shape[0], raw_img.shape[1]])
             
             resized_image = cv2.resize(raw_img,
                                 (model_width, model_height),
