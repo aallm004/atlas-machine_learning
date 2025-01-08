@@ -6,11 +6,11 @@ def determinant(matrix):
     """Calculate the determinant of a matrix.
         matrix (list of lists): The matrix to calculate determinant for
 
-        Returns: float/int: The determinant of the matrix
+    Returns: float/int: The determinant of the matrix
     """
     # Is matrix a list of lists
-    if not isinstance(matrix, list) or
-    not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix, list) or not all(isinstance(row, list) for
+                                               row in matrix):
         raise TypeError("matrix must be a list of lists")
 
     # empty matrix case
