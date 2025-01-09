@@ -7,12 +7,12 @@ sub_matrix = __import__('1-minor').sub_matrix
 
 def cofactor(matrix):
     """function that calculates the cofactor matrix of a matrix
-    
+
     """
     n = len(matrix)
     result = [[0 for _ in range(n)] for _ in range(n)]
     new_matrix = minor(matrix)
-        
+
     for r in range(n):
         for c in range(n):
             x = sub_matrix(matrix, r, c)
@@ -20,4 +20,3 @@ def cofactor(matrix):
                 return [[1]]
             result[r][c] = determinant(x) * ((-1) ** (r + c))
     return result
-
