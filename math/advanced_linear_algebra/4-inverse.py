@@ -15,5 +15,5 @@ def inverse(matrix):
     result = [[0 for _ in range(n)] for _ in range(n)]
     for r in range(n):
         for c in range(n):
-            result[r][c] = ad_matrix[r][c] * ((-1) ** (r + c)) / d
+            result[r][c] = ad_matrix[r][c] * ((-1) ** (r + c + 1)) / d
     return result
