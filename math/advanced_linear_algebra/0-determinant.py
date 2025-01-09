@@ -20,7 +20,7 @@ def determinant(matrix):
     # Is matrix a square
     n = len(matrix)
     if not all(len(row) == n for row in matrix):
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
 
     # 1x1 matrix
     if n == 1:
