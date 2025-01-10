@@ -12,7 +12,7 @@ def definiteness(matrix):
         of those, respectively
     """
     if not isinstance(matrix, np.ndarray):
-        raise ValueError("Matrix must be a numpy.ndarray")
+        raise ValueError("matrix must be a numpy.ndarray")
 
     if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
         return None
