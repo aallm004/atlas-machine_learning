@@ -16,8 +16,8 @@ def mean_cov(X):
     if n < 2:
         raise ValueError("X must contain multiple data points")
 
-    #mean calculation
-    mean = np.mean(X, axis=0)
+    #mean calculation with reshape
+    mean = np.mean(X, axis=0).reshape(1, -1)
 
     #center data
     X_centered = X - mean
