@@ -26,8 +26,8 @@ class MultiNormal:
         # Calculate covariance and center data
         center = data - self.mean
 
-        # Calculate covariance matrix
-        self.cov =  np.dot(center, center.T) / (n - 1)
+        # Calculate covariance matrix (ASK SAJID)
+        self.cov = np.dot(center, center.T) / (n - 1)
         # self.cov = (1.0 / (n - 1)) * np.matmul(center, center.T)
 
     def pdf(self, x):
@@ -47,7 +47,6 @@ class MultiNormal:
 
         # deviation from mean
         diff = x - self.mean
-
 
         # calculating quadratic term in exponent
         exp = -0.5 * np.dot(np.dot(diff.T, inv), diff)
