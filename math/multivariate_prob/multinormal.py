@@ -27,7 +27,8 @@ class MultiNormal:
         center = data - self.mean
 
         # Calculate covariance matrix
-        self.cov = (1.0 / (n - 1)) * np.matmul(center, center.T)
+        self.cov =  np.dot(center, center.T) / (n - 1)
+        # self.cov = (1.0 / (n - 1)) * np.matmul(center, center.T)
 
     def pdf(self, x):
         """calculates the PDF at a data"""
