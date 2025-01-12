@@ -31,7 +31,7 @@ class MultiNormal:
 
     def pdf(self, x):
 
-        d = x.mean.shape[0]
+        d = x.cov.shape[0]
 
         if not isinstance(x, np.ndarray):
             raise TypeError(f"x must be a numpy.ndarray")
