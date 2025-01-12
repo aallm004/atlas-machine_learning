@@ -48,7 +48,7 @@ class MultiNormal:
         inv = np.linalg.inv(self.cov)
 
         # calculating quadratic term in exponent
-        exp = -0.5 * np.matmul(np.matmul(diff.T, inv), diff)
+        exp = -0.5 * np.dot(np.dot(diff.T, inv), diff)
 
         # Calculating normalizating constant
         norm = 1 / (np.sqrt((2 * np.pi) ** d * det))
