@@ -26,7 +26,7 @@ class MultiNormal:
         center = data - self.mean
 
         # Calculate covariance matrix
-        covariance = (1 / (n)) * np.matmul(center @ center.T)
+        covariance = (1 / (n)) * np.matmul(center, center.T)
 
         self.mean = mean
         self.covariance = covariance
