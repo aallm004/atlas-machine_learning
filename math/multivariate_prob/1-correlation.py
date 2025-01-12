@@ -9,7 +9,7 @@ def correlation(C):
     if not isinstance(C, np.ndarray):
         raise TypeError("C must be a numpy.ndarray")
 
-    if len(C) != len(C[0]):
+    if len(C) != 2 or C.shape[0] != C.shape[1]:
         raise ValueError("C must be a 2d square matrix")
 
     diag = np.diagonal(C)
