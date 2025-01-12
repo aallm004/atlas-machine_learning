@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""module 3"""
 import numpy as np
 
 
@@ -26,4 +27,4 @@ class MultiNormal:
         center = data - self.mean
 
         # Calculate covariance matrix
-        self.covariance = (1 / (n)) * np.matmul(center, center.T)
+        self.cov = (1 / (n)) * np.matmul(center, center.T)
