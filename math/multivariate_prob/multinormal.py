@@ -28,3 +28,31 @@ class MultiNormal:
 
         # Calculate covariance matrix
         self.cov = (1.0 / (n - 1)) * np.matmul(center, center.T)
+
+    def pdf(self, x):
+
+        d = x.mean.shape[0]
+
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must be a numpy.ndarray")
+
+        if x.shape != (d, 1):
+            raise ValueError(f"x must have the shape ({d}, 1)")
+
+        # deviation from mean
+        diff = x - self.mean
+
+        # get determinant and inverse
+        det = np.linalg.det(self.cov)
+        inv = np.linalg.inv(self.cov)
+
+        # calculating quadratic term in exponent
+        exp = -0.5 * np.matmul(np.matmul(diff.T, inv), diff)
+
+        # Calculating normalizating constant
+        norm = 1 / (np.sqrt((2 * np.pi) ** d * det))
+
+        # combining terms to get pdf value
+        pdf = float(norm * np.exp(exp))
+
+        return pdf
