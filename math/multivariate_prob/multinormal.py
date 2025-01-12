@@ -51,7 +51,7 @@ class MultiNormal:
         exp = -0.5 * np.dot(np.dot(diff.T, inv), diff)
 
         # Calculating normalizating constant
-        norm = 1 / (np.sqrt((2 * np.pi) ** d * det))
+        norm = 1 / np.sqrt((2 * np.pi) ** d * det)
 
         # combining terms to get pdf value
         pdf = float(norm * np.exp(exp))
