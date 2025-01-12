@@ -54,6 +54,6 @@ class MultiNormal:
         norm = 1 / (np.sqrt((2 * np.pi) ** d * det))
 
         # combining terms to get pdf value
-        pdf = float(norm * np.exp(exp))[0][0]
+        pdf = float(norm * np.exp(exp))
 
         return pdf
