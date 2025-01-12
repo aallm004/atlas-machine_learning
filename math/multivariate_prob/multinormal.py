@@ -21,7 +21,7 @@ class MultiNormal:
             raise ValueError("data must contain multiple data points")
 
         # Find mean
-        self.mean = np.sum(data, axis=1).reshape(d, 1)
+        self.mean = np.sum(data, axis=1).reshape(d, 1) / n
 
         # Calculate covariance and center data
         center = data - self.mean
