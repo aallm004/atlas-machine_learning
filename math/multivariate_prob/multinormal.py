@@ -40,12 +40,13 @@ class MultiNormal:
         if x.shape != (d, 1):
             raise ValueError(f"x must have the shape ({d}, 1)")
 
-        # deviation from mean
-        diff = x - self.mean
-
         # get determinant and inverse
         det = np.linalg.det(self.cov)
         inv = np.linalg.inv(self.cov)
+
+        # deviation from mean
+        diff = x - self.mean
+
 
         # calculating quadratic term in exponent
         exp = -0.5 * np.dot(np.dot(diff.T, inv), diff)
