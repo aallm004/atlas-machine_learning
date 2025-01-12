@@ -30,6 +30,7 @@ class MultiNormal:
         self.cov = (1.0 / (n - 1)) * np.matmul(center, center.T)
 
     def pdf(self, x):
+        """calculates the PDF at a data point"""
 
         d = self.mean.shape[0]
 
@@ -47,12 +48,12 @@ class MultiNormal:
         inv = np.linalg.inv(self.cov)
 
         # calculating quadratic term in exponent
-        exp = -0.5 * np.matmul(np.matmul(diff.T, inv), diff)
+        exponent = -0.5 * np.matmul(np.matmul(diff.T, inv), diff)
 
         # Calculating normalizating constant
         norm = 1 / (np.sqrt((2 * np.pi) ** d * det))
 
         # combining terms to get pdf value
-        pdf = float(norm * np.exp(exp))
+        pdf = float(norm * np.exp(exponent))
 
         return pdf
