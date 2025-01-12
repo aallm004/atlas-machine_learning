@@ -27,6 +27,5 @@ class MultiNormal:
 
         # Calculate covariance matrix
         covariance = (1 / (n)) * np.matmul(center, center.T)
-
-        self.mean = mean
+        
         self.covariance = covariance
