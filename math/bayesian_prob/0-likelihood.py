@@ -3,6 +3,8 @@ import numpy as np
 
 
 def likelihood(x, n, P):
+    """function that calculates the likelihood of obtaining this data given
+    various hypothetical probabiliies"""
 
     if not isinstance(n, int) or n <= 0:
         raise ValueError("n must be a positive integer")
