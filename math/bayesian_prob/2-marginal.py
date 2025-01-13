@@ -3,6 +3,8 @@ import numpy as np
 
 
 def marginal(x, n, P, Pr):
+    """function that calculates the marginal probability of obtaining the
+    data"""
 
     if not isinstance(n, int) or n <= 0:
         raise ValueError("n must be a positive integer")
