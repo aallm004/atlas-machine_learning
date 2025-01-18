@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from numpy import np
+import numpy as np
 
 
 def pca(X, var=0.95):
@@ -21,4 +21,4 @@ def pca(X, var=0.95):
     # Calculate covariance matrix (d x d)
     covariance = np.cov(X, rowvar=False)
 
-    
+
