@@ -22,7 +22,7 @@ def kmeans(X, k, iterations=1000):
             for each cluster
             clss is  numpy.ndarray of shape (n,) containing the index
             of the cluster in C that each data point belongs to"""
-    
+
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
 
