@@ -48,7 +48,7 @@ def kmeans(X, k, iterations=1000):
             for j in range(k):
                 points = X[clss == j]
                 if len(points) == 0:
-                    C[j] = initialize(X, j)[0]
+                    C[j] = initialize(X, 1)[j]
                 else:
                     C[j] = np.mean(points, axis=0)
 
