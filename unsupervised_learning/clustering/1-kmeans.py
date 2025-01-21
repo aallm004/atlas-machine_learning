@@ -33,9 +33,7 @@ def kmeans(X, k, iterations=1000):
         return None, None
 
     try:
-
-        np.random.seed(0)
-
+        
         C = initialize(X, k)
         if C is None:
             return None, None
@@ -51,8 +49,6 @@ def kmeans(X, k, iterations=1000):
             for j in range(k):
                 points = X[clss == j]
                 if len(points) == 0:
-                    
-                    np.random.seed(0)
                     C[j] = initialize(X, 1)[0]
                 else:
                     C[j] = np.mean(points, axis=0)
