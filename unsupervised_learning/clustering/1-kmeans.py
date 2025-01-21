@@ -42,7 +42,7 @@ def kmeans(X, k, iterations=1000):
 
             # Calculates distances and assign clusters
             distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
-            clss = np.argmin(distances, axis=1)
+            clss = np.argmin(distances, axis=0)
 
             # Update centroids
             for j in range(k):
