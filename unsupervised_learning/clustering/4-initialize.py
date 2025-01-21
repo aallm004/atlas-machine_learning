@@ -23,7 +23,7 @@ def initialize(X, k):
     # try:
     d = X.shape[1]
 
-    pi = np.ones(k) / K
+    pi = np.ones(k) / k
 
     m, _ = kmeans(X, k)
     if m is None:
