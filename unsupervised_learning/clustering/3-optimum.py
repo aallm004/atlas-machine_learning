@@ -22,10 +22,8 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     try:
         if not isinstance(X, np.ndarray) or len(X.shape) != 2:
             return None, None
-
         if not isinstance(kmin, int) or kmin <= 0:
             return None, None
-
         if kmax is not None:
             if not isinstance(kmax, int) or kmax <= 0:
                 return None, None
@@ -35,21 +33,17 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
             kmax = X.shape[0]
         if not isinstance(iterations, int) or iterations <= 0:
             return None, None
-
         # Initialize results lists
         results = []
         variances = []
         d_vars = []
-
         # Calculate k0means and variance for each k value
         for k in range(kmin, kmax + 1):
             # Get centroids and labels from k-means
             C, clss = kmeans(X, k, iterations)
             if C is None or clss is None:
                 return None, None
-
             results.append((C, clss))
-
             # Calculate variance for this k
             var = variance(X, C)
             if var is None:
@@ -58,8 +52,6 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
             if k == kmin:
                 first_var = var
             d_vars.append(first_var - var)
-
         return results, d_vars
-
     except Exception:
         return None, None
