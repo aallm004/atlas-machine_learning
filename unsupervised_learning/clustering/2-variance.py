@@ -23,7 +23,7 @@ def variance(X, C):
     try:
     # Calculate distances between each point and each centroid
         distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
-        min_distances = np.min(distances, axis=1)
+        min_distances = np.min(distances, axis=0)
 
         var = np.sum(min_distances**2)
 
