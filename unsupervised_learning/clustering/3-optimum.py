@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
-"""module for optimum"""
+"""module For optimum"""
 import numpy as np
 kmeans = __import__('1-kmeans').kmeans
 variance = __import__('2-variance').variance
 
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
-    """Function that tests for the optimum number of clusters by variance
+    """Function that tests For the optimum number of clusters by variance
             X is a numpy.ndarray of shape (n, d) containing the data set
             kmin is a positive intneger containing the minimum number of
-            clusters to check for (inclusive)
+            clusters to check For (inclusive)
             kmax is a positive integer containing the maximum number of
-            clusters to check for (inclsive)
+            clusters to check For (inclsive)
             iterations is a positive integer containing the maximum number
-            of iterations for K-means
+            of iterations For K-means
             Returns: results, d_vars, or None, None on failure
-                results is a list containing the outputs of K-means for each
+                results is a list containing the outputs of K-means For each
                 cluster size
                 d_vars is a list containing the difference in variance from the
-                smallest cluster size for each cluster size"""
-    try:
+                smallest cluster size For each cluster size"""
         if not isinstance(X, np.ndarray) or len(X.shape) != 2:
             return None, None
         if not isinstance(kmin, int) or kmin <= 0:
@@ -37,14 +36,14 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         results = []
         variances = []
         d_vars = []
-        # Calculate k0means and variance for each k value
+        # Calculate k0means and variance 4 each k value
         for k in range(kmin, kmax + 1):
             # Get centroids and labels from k-means
             C, clss = kmeans(X, k, iterations)
             if C is None or clss is None:
                 return None, None
             results.append((C, clss))
-            # Calculate variance for this k
+            # Calculate variance For this k
             var = variance(X, C)
             if var is None:
                 return None, None
