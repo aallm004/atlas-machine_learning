@@ -39,6 +39,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         # Initialize results lists
         results = []
         variances = []
+        d_vars = []
 
         # Calculate k0means and variance for each k value
         for k in range(kmin, kmax + 1):
@@ -54,9 +55,9 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
             if var is None:
                 return None, None
             variances.append(var)
-
-        d_vars = [0]
-        d_vars.extend([variances[0] - var for var in variances[1:]])
+            if k == kmin:
+                first_var = var
+            d_vars.append(first_var - var)
 
         return results, d_vars
 
