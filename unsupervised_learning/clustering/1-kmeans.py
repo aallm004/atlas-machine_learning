@@ -33,7 +33,7 @@ def kmeans(X, k, iterations=1000):
         return None, None
 
     try:
-        
+
         C = initialize(X, k)
         if C is None:
             return None, None
