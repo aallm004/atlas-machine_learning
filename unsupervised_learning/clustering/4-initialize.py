@@ -20,18 +20,18 @@ def initialize(X, k):
     if not isinstance(k, int) or k <= 0:
         return None, None, None
 
-    # try:
-    d = X.shape[1]
+    try:
+        d = X.shape[1]
 
-    pi = np.ones(k) / k
+        pi = np.ones(k) / k
 
-    m, _ = kmeans(X, k)
-    if m is None:
+        m, _ = kmeans(X, k)
+        if m is None:
+            return None, None, None
+
+        S = np.tile(np.identity(d), (k, 1, 1))
+
+        return pi, m, S
+
+    except Exception:
         return None, None, None
-
-    S = np.tile(np.identity(d), (k, 1, 1))
-
-    return pi, m, S
-
-    # except Exception:
-        # return None, None, None
