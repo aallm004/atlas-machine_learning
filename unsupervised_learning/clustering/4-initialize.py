@@ -21,7 +21,7 @@ def initialize(X, k):
         return None, None, None
 
     try:
-        n, d = X.shape[1]
+        d = X.shape[1]
 
         pi = np.ones(k) / K
 
