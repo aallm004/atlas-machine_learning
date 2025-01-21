@@ -22,7 +22,6 @@ def kmeans(X, k, iterations=1000):
             for each cluster
             clss is  numpy.ndarray of shape (n,) containing the index
             of the cluster in C that each data point belongs to"""
-    np.random.seed(0)
     
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
@@ -78,8 +77,7 @@ def initialize(X, k):
             You should use numpy.random.uniform exactly once
         Returns: a numpy.ndarray of shape (k, d) containing the initialized
         centroids for each cluster, or None on failure."""
-    np.random.seed(0)
-    
+
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
 
