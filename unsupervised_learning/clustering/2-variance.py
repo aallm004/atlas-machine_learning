@@ -25,7 +25,7 @@ def variance(X, C):
         distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
         min_distances = np.min(distances, axis=1)
 
-        var = np.sum(min_distances)
+        var = np.sum(min_distances**2)
 
         return var
     except Exception:
