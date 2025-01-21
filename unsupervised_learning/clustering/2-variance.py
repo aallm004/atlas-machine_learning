@@ -19,12 +19,14 @@ def variance(X, C):
 
     if C.shape[1] != X.shape[1]:
         return None
-    
+
     try:
-    # Calculate distances between each point and each centroid
+        # Calculate distances between each point and each centroid
         distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
+        # Calculate minimum squared dist for each point
         min_distances = np.min(distances, axis=0)
 
+        # Sum over all of the points
         var = np.sum(min_distances**2)
 
         return var
