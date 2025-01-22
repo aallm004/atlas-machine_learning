@@ -20,7 +20,7 @@ def expectation(X, pi, m, S):
             l is the total log likelihood"
     
     """
-    print(f'{x}, {pi}, {m}, {f}')
+    print(f'{X}, {pi}, {m}, {f}')
     try:
 
         # Get dimensions
