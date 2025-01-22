@@ -24,21 +24,31 @@ def expectation(X, pi, m, S):
 
         # Get dimensions
         # Number of data points
-        n = X.shape[0]
+        n, d = X.shape
         # Number of clusters 
         k = pi.shape[0]
+       
+        if len(pi.shape) != 1 or pi.shape[0] != k:
+            return None, None
+        if m.shape != (k, d):
+            return None, None
+        if S.shape != (k, d, d):
+            return None, None
+        
         # Initialization of array to store posterior probabilities
         g = np.zeros((k, n))
 
         # Calculate PDF For each cluster
         for i in range(k):
-            g[i] = pi[i] * pdf(X, m[i], S[i])
+            PDF = pdf(X, m[i], S[i])
+            if PDF is None:
+                return None, None
+            g[i] = p[i] * PDF
 
         # Calculate total probability For normalization
         total_prob = np.sum(g, axis=0, keepdims=True)
 
-        # No division by zero here
-        total_prob = np.where(total_prob == 0, 1e-300, total_prob)
+        total_prob = np.maximum(total_prob, np.finfo(float).eps)
 
         # Normalization to get posterior probabilities
         g = g / total_prob
