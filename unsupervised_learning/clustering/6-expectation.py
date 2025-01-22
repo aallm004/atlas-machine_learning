@@ -58,5 +58,6 @@ def expectation(X, pi, m, S):
 
         return g, l
 
-    except Exception:
+    except Exception as e:
+        print(e)
         return None, None
