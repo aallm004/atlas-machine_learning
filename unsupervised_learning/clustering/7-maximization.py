@@ -18,6 +18,9 @@ def maximization(X, g, verbose=False):
         covariance matrices for each cluster"""
     if verbose:
         print(f'{X}, {g}')
+    if not isinstance(g, np.ndarray) or len(g.shape) != 2:
+        return None, None, None
+    
     try:
 
         # Num of clusters and data points
