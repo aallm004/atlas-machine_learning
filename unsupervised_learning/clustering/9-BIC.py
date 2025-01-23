@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """module for BIC"""
 import numpy as np
+expectation = __import__('6-expectation').expectation
 
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
@@ -57,27 +58,24 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     expectation_maximization = __import__('8-EM').expectation_maximization
 
     k_range = range(kmin, kmax + 1)
-    l = np.zeros(kmax - kmin + 1)
-    b = np.zeros(kmax - kmin + 1)
+    l = []
+    b = []
+    results = []
     
-    best_bic = float('inf')
-    best_k = None
-    best_result = None
-
-    for i, k in enumerate(k_range):
-        p = (k * d) + (k * d * (d + 1) / 2) + (k - 1)
-        
-        pi, m, S, g, l[i] = expectation_maximization(
-            X, k, iterations, tol, verbose)
-        
+    for k in k_range:
+        pi, m, S, g, ll = expectation_maximization(X, k, iterations, tol, verbose)
         if pi is None:
             return None, None, None, None
+            
+        l.append(ll)
+        p = (k * d) + (k * d * (d + 1) / 2) + (k - 1)
+        bic = p * np.log(n) - 2 * ll
+        b.append(bic)
+        results.append((pi, m, S))
 
-        b[i] = p * np.log(n) - 2 * l[i]
-
-        if b[i] < best_bic:
-            best_bic = b[i]
-            best_k = k
-            best_result = (pi, m, S)
+    l = np.array(l)
+    b = np.array(b)
+    best_k = np.argmin(b) + kmin
+    best_result = results[best_k - kmin]
 
     return best_k, best_result, l, b
