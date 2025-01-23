@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def maximization(X, g):
+def maximization(X, g, verbose=False):
     """function that calculates the maximization step in the EM algorithm for a
     GMM
         X is a numpy.ndarray of shape (n, d) containing the data set
@@ -16,6 +16,8 @@ def maximization(X, g):
         means for each cluster
         S is a numpy.ndarray of shape (k, d, d) containing the updated
         covariance matrices for each cluster"""
+    if verbose:
+        print(f'{X}, {g}')
     try:
 
         # Num of clusters and data points
@@ -27,6 +29,8 @@ def maximization(X, g):
 
 
         if np.any(resp == 0):
+            if verbose:
+                print('if resp is 0')
             return None, None, None
             
         # Prior probs (weight/cluster)
@@ -43,7 +47,9 @@ def maximization(X, g):
 
             # weighted covariance calc
             S[j] = np.dot(g[j] * X_centered.T, X_centered) / resp[j]
-
+        
+        if verbose:
+            print(f'{pi}, {m}, {S}')
         return pi, m, S
 
     except Exception:

@@ -15,7 +15,7 @@ if __name__ == '__main__':
     np.random.shuffle(X)
     pi, m, S = initialize(X, 4)
     g, _ = expectation(X, pi, m, S)
-    pi, m, S = maximization(X, g)
+    pi, m, S = maximization(X, g, True)
     print(pi)
     print(m)
     print(S)
