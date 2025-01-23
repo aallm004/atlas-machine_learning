@@ -56,7 +56,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         kmax = n
 
     k_range = range(kmin, kmax + 1)
-    ll = []
+    l = []
     b = []
     results = []
 
@@ -72,7 +72,10 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         b.append(bic)
         results.append((pi, m, S))
 
-    ll = np.array(ll)
+        if k > kmin and b[-1] > b[-2]:
+            break
+
+    l = np.array(l)
     b = np.array(b)
     best_k = np.argmin(b) + kmin
     best_result = results[best_k - kmin]
