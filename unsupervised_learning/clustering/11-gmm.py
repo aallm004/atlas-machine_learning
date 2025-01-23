@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""module for gmm"""
 import sklearn.mixture
 
 
@@ -18,11 +19,11 @@ def gmm(X, k):
     """
     gmm = sklearn.mixture.GaussianMixture(n_components=k, random_state=None)
     clss = gmm.fit_predict(X)
-   
+
     # Get model parameters
     pi = gmm.weights_
-    m = gmm.means_ 
+    m = gmm.means_
     S = gmm.covariances_
     bic = gmm.bic(X)
-   
+
     return pi, m, S, clss, bic
