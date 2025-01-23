@@ -32,9 +32,13 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None, None
     if not isinstance(tol, float) or tol < 0:
         return None, None, None, None, None
+    if not isinstance(verbose, bool):
+        return None, None, None, None, None
     
     try:
         pi, m, S = initialize(X, k)
+        if pi is None or m is None or S is None:
+            return None, None, None, None, None
         prev_l = 0
 
         for i in range(iterations):
