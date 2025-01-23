@@ -33,7 +33,7 @@ def expecation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         for i in range(iterations):
             g, l = expectation(X, pi, m, S)
 
-            if np.abs(1 - prev_l) <= tol:
+            if np.abs(l - prev_l) <= tol:
                 break
 
             if verbose and (i % 10 == 0 or i == iterations - 1):
