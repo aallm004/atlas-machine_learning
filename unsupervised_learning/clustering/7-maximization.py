@@ -16,10 +16,9 @@ def maximization(X, g, verbose=False):
         means for each cluster
         S is a numpy.ndarray of shape (k, d, d) containing the updated
         covariance matrices for each cluster"""
-    if verbose:
+    if not isinstance(g, np.ndarray):
         print(f'g: {g}')
-    if (not isinstance(X, np.ndarray) or len(X.shape) != 2 or
-            not isinstance(g, np.ndarray) or len(g.shape) != 2):
+    if not np.allclose(g.sum(axis=0), np.ones(n)):
         return None, None, None
     
     try:
