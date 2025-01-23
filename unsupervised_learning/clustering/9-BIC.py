@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """module for BIC"""
 import numpy as np
-expectation = __import__('6-expectation').expectation
-
+expectation_maximization = __import__('8-EM').expectation_maximization
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """Function that finds the best number of clusters for a GMM using the
@@ -54,8 +53,6 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     n, d = X.shape
     if kmax is None:
         kmax = n
-
-    expectation_maximization = __import__('8-EM').expectation_maximization
 
     k_range = range(kmin, kmax + 1)
     l = []
