@@ -18,9 +18,9 @@ def maximization(X, g, verbose=False):
         covariance matrices for each cluster"""
     if verbose:
         print(f'g: {g}')
-    if  not isinstance(g, np.ndarray) or len(g.shape) != 2:
+    if not isinstance(g, np.ndarray) or len(g.shape) != 2:
         return None, None, None
-    
+
     try:
 
         # Num of clusters and data points
@@ -33,12 +33,11 @@ def maximization(X, g, verbose=False):
         # Calculate cluster responsibilities (sum of posterior probs)
         resp = np.sum(g, axis=1)
 
-
         if np.any(resp == 0):
             if verbose:
                 print('if resp is 0')
             return None, None, None
-            
+
         # Prior probs (weight/cluster)
         pi = resp / n
 
@@ -53,7 +52,7 @@ def maximization(X, g, verbose=False):
 
             # weighted covariance calc
             S[j] = np.dot(g[j] * X_centered.T, X_centered) / resp[j]
-        
+
         if verbose:
             print(f'{pi}, {m}, {S}')
         return pi, m, S
