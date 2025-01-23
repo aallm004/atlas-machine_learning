@@ -4,7 +4,7 @@ import numpy as np
 pdf = __import__('5-pdf').pdf
 
 
-def expectation(X, pi, m, S):
+def expectation(X, pi, m, S, verbose=False):
     """Function that calculates the expectation step in the EM algorithm For a
     GMM:
         X is a numpy.ndarray of shape (n, d) containing the data set
@@ -20,7 +20,8 @@ def expectation(X, pi, m, S):
             l is the total log likelihood"
     
     """
-    print(f'{X}, {pi}, {m}, {S}')
+    if verbose:
+        print(f'{X}, {pi}, {m}, {S}')
     try:
 
         # Get dimensions
@@ -29,11 +30,17 @@ def expectation(X, pi, m, S):
         # Number of clusters 
         k = pi.shape[0]
        
-        if len(pi.shape) != 1 or pi.shape[0] != k:
+        if len(pi.shape) != 1:
+            if verbose:
+                print('len of pie not equal to one')
             return None, None
         if m.shape != (k, d):
+            if verbose:
+                print('mshape not equal to k, d')
             return None, None
         if S.shape != (k, d, d):
+            if verbose:
+                print('S.shape not equal to k,d,d')
             return None, None
         
         # Initialization of array to store posterior probabilities
@@ -43,22 +50,27 @@ def expectation(X, pi, m, S):
         for i in range(k):
             PDF = pdf(X, m[i], S[i])
             if PDF is None:
+                if verbose:
+                    print('PDF is None')
                 return None, None
             g[i] = p[i] * PDF
 
+        
+        tops = pi[..., np.newaxis] * g
         # Calculate total probability For normalization
         total_prob = np.sum(g, axis=0, keepdims=True)
 
-        total_prob = np.maximum(total_prob, np.finfo(float).eps)
+        
 
         # Normalization to get posterior probabilities
-        g = g / total_prob
+        g = tops / total_prob
 
         # Calculate log likelihood
-        l = np.sum(np.log(total_prob))
+        L = np.sum(np.log(total_prob))
 
-        return g, l
+        return g, L
 
     except Exception as e:
-        print(f'error: {e}')
+        if verbose:
+            print(f'error: {e}')
         return None, None
