@@ -52,7 +52,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None
 
     n, d = X.shape
-    if kmax is None:
+    if kmax is None or kmax >= kmin:
         kmax = n
 
     k_range = range(kmin, kmax + 1)
