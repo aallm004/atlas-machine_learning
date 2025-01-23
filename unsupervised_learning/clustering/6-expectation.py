@@ -29,11 +29,8 @@ def expectation(X, pi, m, S, verbose=False):
         n, d = X.shape
         # Number of clusters 
         k = pi.shape[0]
-       
-        if len(pi.shape) != 1:
-            if verbose:
-                print('len of pie not equal to one')
-            return None, None
+
+
         if m.shape != (k, d):
             if verbose:
                 print('mshape not equal to k, d')
@@ -55,15 +52,15 @@ def expectation(X, pi, m, S, verbose=False):
                 return None, None
             g[i] = p[i] * PDF
 
-        
-        tops = pi[..., np.newaxis] * g
+
         # Calculate total probability For normalization
         total_prob = np.sum(g, axis=0, keepdims=True)
 
-        
+        # Ensure numerical stability
+        total_prob = np.maximum(total_prob, 1e-300)
 
         # Normalization to get posterior probabilities
-        g = tops / total_prob
+        g = g / total_prob
 
         # Calculate log likelihood
         L = np.sum(np.log(total_prob))
