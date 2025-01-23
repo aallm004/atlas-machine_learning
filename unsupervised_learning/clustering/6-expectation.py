@@ -18,7 +18,7 @@ def expectation(X, pi, m, S, verbose=False):
             g is a numpy.ndarray of shape (k, n) containing the posterior
             probabilities For each data point in each cluster
             l is the total log likelihood"
-    
+
     """
     if verbose:
         print(f'{X}, {pi}, {m}, {S}')
@@ -27,9 +27,8 @@ def expectation(X, pi, m, S, verbose=False):
         # Get dimensions
         # Number of data points
         n, d = X.shape
-        # Number of clusters 
+        # Number of clusters
         k = pi.shape[0]
-
 
         if m.shape != (k, d):
             if verbose:
@@ -39,7 +38,7 @@ def expectation(X, pi, m, S, verbose=False):
             if verbose:
                 print('S.shape not equal to k,d,d')
             return None, None
-        
+
         # Initialization of array to store posterior probabilities
         g = np.zeros((k, n))
 
@@ -50,8 +49,7 @@ def expectation(X, pi, m, S, verbose=False):
                 if verbose:
                     print('PDF is None')
                 return None, None
-            g[i] = p[i] * PDF
-
+            g[i] = pi[i] * PDF
 
         # Calculate total probability For normalization
         total_prob = np.sum(g, axis=0, keepdims=True)
@@ -70,4 +68,5 @@ def expectation(X, pi, m, S, verbose=False):
     except Exception as e:
         if verbose:
             print(f'error: {e}')
+            print(f'linenumber:{e.__traceback__.tb_lineno}')
         return None, None
