@@ -18,7 +18,7 @@ def maximization(X, g, verbose=False):
         covariance matrices for each cluster"""
     if not isinstance(g, np.ndarray):
         print(f'g: {g}')
-    if not np.allclose(g.sum(axis=0), np.ones(n)):
+    if len(g.shape) != 2:
         return None, None, None
     
     try:
@@ -26,6 +26,9 @@ def maximization(X, g, verbose=False):
         # Num of clusters and data points
         k, n = g.shape
         d = X.shape[1]
+
+        if not np.allclose(g.sum(axis=0), np.ones(n)):
+            return None, None, None
 
         # Calculate cluster responsibilities (sum of posterior probs)
         resp = np.sum(g, axis=1)
