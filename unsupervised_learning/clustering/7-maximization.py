@@ -25,11 +25,12 @@ def maximization(X, g):
         # Calculate cluster responsibilities (sum of posterior probs)
         resp = np.sum(g, axis=1)
 
+
+        if np.any(resp < 1e-8):
+            return None, None, None
+            
         # Prior probs (weight/cluster)
         pi = resp / n
-
-        if np.any(resp == 0):
-            return None, None, None
 
         # Calculate cluster means
         m = np.dot(g, X) / resp[:, np.newaxis]
