@@ -41,28 +41,35 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
             return None, None, None, None, None
         prev_l = 0
 
-        for i in range(1, iterations + 1):
-            g, l = expectation(X, pi, m, S)
-            if g is None:
-                return None, None, None, None, None
-
-            if verbose and (i % 10 == 0):
-                print('Log Likelihood after {} iterations: {:.5f}'.format(i, l))
-
-            if np.abs(l - prev_l) <= tol:
-                if verbose and (i % 10 != 0):
-                    print('Log Likelihood after {} iterations: {:.5f}'.format(i, l))
-                break
-            
-            pi, m, S = maximization(X, g)
-            if pi is None:
-                return None, None, None, None, None
-
-            prev_l = l
-
-        g, l = expectation(X, pi, m, S)
+        g, prev_l = expectation(X, pi, m, S)
         if g is None:
             return None, None, None, None, None
+
+        if verbose:
+            print('Log Likelihood after {0} iterations: {:.5f}'.format(i, l))
+
+        for i in range(1, iterations + 1):
+
+            pi, m, S = maximization(X, g)
+            if pi is None or m is None or S is None:
+                return None, None, None, None, None
+
+            g, current_l = expectation(X, pi, m, S)
+            if g is None or current_l is None:
+                return None, None, None, None, None
+
+            if np.abs(current_l - prev_l) <= tol:
+                if verbose:
+                    print('Log Likelihood after {} iterations: {:.5f}'.format(i, l_current))
+                return pi, m, S, g, current_l
+
+            if verbose and i % 10 == 0:
+                print('Log Likelihood after {} iterations: {:.5f}'.format(i, l_current))
+
+            prev_l = l_current
+
+        if verbose and not i % 10 == 0:
+            print('Log Likelihood after {} iterations: {:.5f}'.format(i, prev_l))
 
         return pi, m, S, g, l
 
