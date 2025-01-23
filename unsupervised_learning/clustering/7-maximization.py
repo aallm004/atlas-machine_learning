@@ -43,7 +43,7 @@ def maximization(X, g):
             # weighted covariance calc
             S[j] = np.dot(g[j] * X_centered.T, X_centered) / resp[j]
 
-            return pi, m, S
+        return pi, m, S
 
     except Exception:
         return None, None, None
