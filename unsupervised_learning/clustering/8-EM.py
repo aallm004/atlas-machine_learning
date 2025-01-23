@@ -5,7 +5,7 @@ initialize = __import__('4-initialize').initialize
 expectation = __import__('6-expectation').expectation
 maximization = __import__('7-maximization').maximization
 
-def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
+def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False, extended=False):
     """Write a function def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False): that performs the expectation maximization for a GMM:
 
         X is a numpy.ndarray of shape (n, d) containing the data set
@@ -25,37 +25,37 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
             l is the log likelihood of the model
         """
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
-        if verbose:
+        if extended:
             print('**a**')
         return None, None, None, None, None
     if not isinstance(k, int) or k <= 0:
-        if verbose:
+        if extended:
             print('**b**')
         return None, None, None, None, None
     if not isinstance(iterations, int) or iterations <= 0:
-        if verbose:
+        if extended:
             print('**c**')
         return None, None, None, None, None
     if not isinstance(tol, float) or tol < 0:
-        if verbose:
+        if extended:
             print('**d**')
         return None, None, None, None, None
     if not isinstance(verbose, bool):
-        if verbose:
+        if extended:
             print('**e**')
         return None, None, None, None, None
     
     try:
         pi, m, S = initialize(X, k)
         if pi is None or m is None or S is None:
-            if verbose:
+            if extended:
                 print('**f**')
             return None, None, None, None, None
         prev_l = 0
 
         g, prev_l = expectation(X, pi, m, S)
         if g is None:
-            if verbose:
+            if extended:
                 print('**g**')
             return None, None, None, None, None
 
@@ -66,13 +66,13 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
             pi, m, S = maximization(X, g)
             if pi is None or m is None or S is None:
-                if verbose:
+                if extended:
                     print('**h**')
                 return None, None, None, None, None
 
             g, current_l = expectation(X, pi, m, S)
             if g is None or current_l is None:
-                if verbose:
+                if extended:
                     print('**i**')
                 return None, None, None, None, None
 
@@ -89,10 +89,10 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         if verbose and not i % 10 == 0:
             print('Log Likelihood after {} iterations: {:.5f}'.format(i, prev_l))
 
-        return pi, m, S, g, l
+        return pi, m, S, g, prev_l
 
     except Exception as e:
-        if verbose:
+        if extended:
             print(f'error: {e}')
             print(f'linenumber:{e.__traceback__.tb_lineno}')
         return None, None, None, None, None
