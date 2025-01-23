@@ -26,7 +26,7 @@ def maximization(X, g):
         resp = np.sum(g, axis=1)
 
 
-        if np.any(resp < 1e-8):
+        if np.any(resp == 0):
             return None, None, None
             
         # Prior probs (weight/cluster)
