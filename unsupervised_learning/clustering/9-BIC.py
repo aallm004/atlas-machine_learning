@@ -60,7 +60,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     results = []
     
     for k in k_range:
-        pi, m, S, g, ll = expectation_maximization(X, k, iterations, tol, verbose)
+        pi, m, S, g, ll = expectation_maximization(X, k, iterations=iterations, tol=tol, verbose=verbose)
         if pi is None:
             return None, None, None, None
             
