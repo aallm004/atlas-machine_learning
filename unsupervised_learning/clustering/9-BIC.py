@@ -67,25 +67,18 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     for k in k_range:
         pi, m, S, g, ll = expectation_maximization(X, k, iterations=iterations,
                                                    tol=tol, verbose=verbose)
-        if (pi is None or m is None or S is None or
-            g is None or ll is None):
+        if pi is None:
             return None, None, None, None
 
         log_likelihoods.append(ll)
-        p = (k - 1) + (k * d) + (k * (d * (d + 1) / 2))
+        p = (k * d) + (k * d * (d + 1) / 2) + (k - 1)
         bic = p * np.log(n) - 2 * ll
-        log_likelihoods.append(ll)
         b.append(bic)
         results.append((pi, m, S))
 
     log_likelihoods = np.array(log_likelihoods)
     b = np.array(b)
-    
-    try:
-        index = np.argmin(b)
-        best_k = kmin + index
-        best_result = results[index]
-        return best_k, best_result, log_likelihoods, b
+    best_k = np.argmin(b) + kmin
+    best_result = results[best_k - kmin]
 
-    except Exception:
-        return None, None, None, None
+    return best_k, best_result, log_likelihoods, b
