@@ -59,26 +59,22 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     if kmin > kmax:
         return None, None, None, None
 
-    k_range = range(kmin, kmax + 1)
     log_likelihoods = []
     b = []
-    results = []
 
-    for k in k_range:
+    for k in range(kmin, kmax + 1):
         pi, m, S, g, ll = expectation_maximization(X, k, iterations=iterations,
                                                    tol=tol, verbose=verbose)
         if pi is None:
             return None, None, None, None
 
         log_likelihoods.append(ll)
-        p = (k * d) + (k * d * (d + 1) / 2) + (k - 1)
+        p = (k * d) + (k * d * (d + 1) // 2) + (k - 1)
         bic = p * np.log(n) - 2 * ll
         b.append(bic)
-        results.append((pi, m, S))
 
     log_likelihoods = np.array(log_likelihoods)
     b = np.array(b)
     best_k = np.argmin(b) + kmin
-    best_result = results[best_k - kmin]
 
-    return best_k, best_result, log_likelihoods, b
+    return best_k, (pi[best_k-kmin], m[best_k-kmin], S[best_k-kmin]), log_likelihoods, b
