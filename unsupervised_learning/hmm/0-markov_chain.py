@@ -15,4 +15,8 @@ def markov_chain(P, s, t=1):
         t is the number of iterations that the markob chain has been through
         Returns: a numpy.ndarray of shape (1, n) representing the probability
         of being in a specific state after t iterations, or None on failure"""
-
+    try:
+        result = np.matmul(s, np.linalg.matrix_power(P, t))
+        return result
+    except (ValueError, TypeError, np.linalg.LinAlgError):
+        return None
