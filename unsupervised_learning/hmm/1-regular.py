@@ -33,6 +33,6 @@ def regular(P):
         pi = pi / np.sum(pi)
 
         return pi.reshape(1, n)
-    
+
     except (np.linalg.LinAlgError, ValueError):
         return None
