@@ -34,16 +34,16 @@ def viterbi(Observation, Emission, Transition, Initial):
 
         viterbis[:, 0] = np.log(Initial.flatten()) + np.log(
             Emission[:, Observation[0]])
-        
+
         for x in range(1, obvs):
             for i in range(hidden_states):
-                probabilities = (viterbis[:, x-1] + 
-                               np.log(Transition[:, i]) + 
-                               np.log(Emission[i, Observation[x]]))
-                
+                probabilities = (viterbis[:, x-1] +
+                                 np.log(Transition[:, i]) +
+                                 np.log(Emission[i, Observation[x]]))
+
                 viterbis[i, x] = np.max(probabilities)
 
-                backpoint[i, x] =  np.argmax(probabilities)
+                backpoint[i, x] = np.argmax(probabilities)
 
         path = [np.argmax(viterbis[:, -1])]
 
