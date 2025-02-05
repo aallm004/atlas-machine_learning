@@ -76,15 +76,17 @@ def viterbi(Observation, Emission, Transition, Initial):
             backpointer[state, t] = np.argmax(temp)
 
     # Backtrack to find the most likely path
-    path = np.zeros(obvs, dtype=int)
+    path = []
     current_state = np.argmax(viterbi_path[:, -1])
 
     for t in range(obvs-1, -1, -1):
-        path[t] = current_state
+        path.append(int(current_state))
         if t > 0:
             current_state = backpointer[current_state, t]
 
+    path.reverse()
+    
         # Calculate prob of path
-    prob = np.exp(np.max(viterbi_path[:, -1]))
+    prob = np.max(viterbi_path[:, -1])
 
     return path, prob
