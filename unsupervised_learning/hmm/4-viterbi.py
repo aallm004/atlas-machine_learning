@@ -85,8 +85,8 @@ def viterbi(Observation, Emission, Transition, Initial):
             current_state = backpointer[current_state, t]
 
     path.reverse()
-    
-        # Calculate prob of path
+
+    # Calculate prob of path
     prob = np.max(viterbi_path[:, -1])
 
     return path, prob
