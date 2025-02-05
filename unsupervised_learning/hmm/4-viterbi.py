@@ -27,66 +27,32 @@ def viterbi(Observation, Emission, Transition, Initial):
             P is the probability of obtaining the path sequence"""
     try:
         obvs = Observation.shape[0]
-        hidden_states, possible = Emission.shape
+        hidden_states = Emission.shape[0]
 
-        if Transition.shape != (hidden_states, hidden_states):
-            return None, None
+        viterbis = np.zeros((hidden_states, obvs))
+        backpoint = np.zeros((hidden_states, obvs), dtype=int)
 
-        if Initial.ndim == 1:
-            Initial = Initial.reshape((-1, 1))
+        viterbis[:, 0] = np.log(Initial.flatten()) + np.log(
+            Emission[:, Observation[0]])
+        
+        for x in range(1, obvs):
+            for i in range(hidden_states):
+                probabilities = (viterbis[:, x-1] + 
+                               np.log(Transition[:, i]) + 
+                               np.log(Emission[i, Observation[x]]))
+                
+                viterbis[i, x] = np.max(probabilities)
 
-        if Initial.shape != (hidden_states, 1):
-            return None, None
+                backpoint[i, x] =  np.argmax(probabilities)
 
-        if not np.all(Observation < possible):
-            return None, None
+        path = [np.argmax(viterbis[:, -1])]
 
-        if not (np.allclose(np.sum(Emission, axis=1), 1) and
-                np.allclose(np.sum(Transition, axis=1), 1) and
-                np.allclose(np.sum(Initial), 1)):
+        for x in range(obvs-1, 0, -1):
+            path.insert(0, backpoint[path[0], x])
 
-            return None, None
+        P = np.exp(viterbis[path[-1], -1])
 
-        # Are there negative probabilities?
-        if np.any(Emission < 0) or np.any(Transition < 0) or \
-           np.any(Initial < 0):
-            return None, None
+        return path, P
 
-    except (AttributeError, IndexError, ValueError):
+    except (ValueError, IndexError, ZeroDivisionError):
         return None, None
-
-    # Initialize viterbi trellis and backpointer
-    viterbi_path = np.zeros((hidden_states, obvs))
-    backpointer = np.zeros((hidden_states, obvs), dtype=int)
-
-    # Initialization of first timestep
-    viterbi_path[:, 0] = np.log(Initial.flatten()) + \
-        np.log(Emission[:, Observation[0]])
-
-    # Viterbi algorithm
-    for t in range(1, obvs):
-        for state in range(hidden_states):
-            # Calculate probs for each previous state
-            temp = (viterbi_path[:, t-1] +
-                    np.log(Transition[:, state]) +
-                    np.log(Emission[state, Observation[t]]))
-
-            # Find most likely previous state and probability
-            viterbi_path[state, t] = np.max(temp)
-            backpointer[state, t] = np.argmax(temp)
-
-    # Backtrack to find the most likely path
-    path = []
-    current_state = np.argmax(viterbi_path[:, -1])
-
-    for t in range(obvs-1, -1, -1):
-        path.append(int(current_state))
-        if t > 0:
-            current_state = backpointer[current_state, t]
-
-    path.reverse()
-
-    # Calculate prob of path
-    prob = np.max(viterbi_path[:, -1])
-
-    return path, prob
