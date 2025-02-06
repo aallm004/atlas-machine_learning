@@ -26,3 +26,43 @@ def backward(Observation, Emission, Transition, Initial):
             probabilities
                 B[i, j] is the probability of generating the future
                 observations from hidden state i at time j"""
+    try:
+        obvs = Observation.shape[0]
+        hidden_states = Emission.shape[0]
+
+        if not isinstance(Observation, np.ndarray):
+            return None, None
+        if len(Observation.shape) != 1:
+            return None, None
+        if not isinstance(Emission, np.ndarray):
+            return None, None
+        if len(Emission.shape) != 2:
+            return None, None
+        if not isinstance(Transition, np.ndarray):
+            return None, None
+        if Transition.shape != (hidden_states, hidden_states):
+            return None, None
+        if not isinstance(Initial, np.ndarray):
+            return None, None
+        if Initial.shape != (hidden_states, 1):
+            return None, None
+
+        backwards = np.zeros((hidden_states, obvs))
+
+        backwards[:, obvs-1] = 1
+
+        for t in range(obvs-2, -1, -1):
+            for i in range(hidden_states):
+                backwards[i, t] = np.sum(
+                    Transition[i, :] *
+                    Emission[:, Observation[t+1]] *
+                    backwards[:, t+1]
+                )
+
+        P = np.sum(Initial[:, 0] * Emission[:, Observation[0]] * +
+                   backwards[:, 0])
+
+        return P, backwards
+
+    except (TypeError, ValueError):
+        return None, None
