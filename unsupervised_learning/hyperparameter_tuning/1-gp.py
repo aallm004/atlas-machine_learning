@@ -42,9 +42,9 @@ class GaussianProcess:
 
         sqdist = X1_sq + X2_sq - 2 * mult
 
-        self.K = self.sigma_f**2 * np.exp(-0.5 / self.l**2 * sqdist)
+        K = self.sigma_f**2 * np.exp(-0.5 / self.l**2 * sqdist)
 
-        return self.K
+        return K
 
     def predict(self, X_s):
         """predicts the mean and stdv of points is a Gaussin process:
