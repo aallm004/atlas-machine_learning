@@ -75,6 +75,6 @@ class GaussianProcess:
         # mean
         mu = K_train.T.dot(K_train_inverse).dot(self.Y).reshape(-1)
 
-        sigma =  np.diag(K_sample - K_train.T.dot(K_train_inverse).dot(K_train))
+        sigma = np.diag(K_sample - K_train.T.dot(K_train_inverse).dot(K_train))
 
         return mu, sigma
