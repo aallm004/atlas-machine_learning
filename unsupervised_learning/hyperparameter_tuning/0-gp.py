@@ -38,7 +38,7 @@ class GaussianProcess:
         X2_sq = np.sum(X2**2, 1)
         mult = np.dot(X1, X2.T)
 
-        sqdist = X1_sq + X2_sq * mult
+        sqdist = X1_sq + X2_sq - 2 * mult
 
         self.K = self.sigma_f**2 * np.exp(-0.5 / self.l**2 * sqdist)
 
