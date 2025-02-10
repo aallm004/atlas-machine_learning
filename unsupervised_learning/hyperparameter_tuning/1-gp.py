@@ -5,7 +5,7 @@ import numpy as np
 
 class GaussianProcess:
     """Class that represents a noiseless 1D Gaussian process"""
-    
+
     def __init__(self, X_init, Y_init, l=1, sigma_f=1):
         """a noiseless 1D Gaussian process:
         X_init: numpy.ndarray of shape (t, 1) representing the inputs already
@@ -62,7 +62,7 @@ class GaussianProcess:
             raise ValueError("X_s must have shape (s, 1)")
 
         if self.X.shape[0] == 0:
-            raise ValueError("No training data available")        
+            raise ValueError("No training data available")
         # covariance between sample points and training points
         K_train = self.kernel(self.X, X_s)
 
