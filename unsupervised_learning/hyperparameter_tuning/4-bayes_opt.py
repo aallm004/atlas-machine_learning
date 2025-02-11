@@ -64,17 +64,17 @@ class BayesianOptimization:
             else:
                 improve = posterior_mean - best_y - self.xsi
 
-        normalized_imp = np.zeros_like(posterior_std)
+        norm_imp = np.zeros_like(posterior_std)
         valid_std_mask = posterior_std > 0
-        normalized_imp[valid_std_mask] = (improve[valid_std_mask] /
-                                          posterior_std[valid_std_mask])
+        num = improve[valid_std_mask]
+        dem = posterior_std[valid_std_mask]
+        norm_imp[valid_std_mask] = num / dem
 
-        expected_improvement = np.zeros_like(normalized_imp)
-        expected_improvement[valid_std_mask] = (
-            improve[valid_std_mask] * norm.cdf(normalized_imp
-                                               [valid_std_mask]) +
-            posterior_std[valid_std_mask] * norm.pdf(normalized_imp
-                                                     [valid_std_mask]))
+        ll = num * norm.cdf(norm_imp[valid_std_mask])
+        rr = dem * norm.pdf(norm_imp[valid_std_mask])
+        expected_improvement = np.zeros_like(norm_imp)
+        expected_improvement[valid_std_mask] = ll + rr
+
         expected_improvement[posterior_std == 0.0] = 0
 
         next_sample_point = self.X_s[np.argmax(expected_improvement)]
