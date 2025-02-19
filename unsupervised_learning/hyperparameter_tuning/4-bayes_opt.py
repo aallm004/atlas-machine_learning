@@ -71,7 +71,7 @@ class BayesianOptimization:
         ei = np.zeros_like(Z)
         mask_ei = mask & (sigma > 0)
         ei[mask_ei] = (improve[mask_ei] * norm.cdf(Z[mask_ei]) +
-                       sigma[mask_ei] * norm.pdf(Z[mask_ei]))
+                       + sigma[mask_ei] * norm.pdf(Z[mask_ei]))
 
         ei[sigma == 0.0] = 0.0
 
