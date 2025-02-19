@@ -35,8 +35,8 @@ class BayesianOptimization:
         self.f = f
         self.gp = GP(X_init, Y_init, l, sigma_f)
 
-        min, max = bounds
-        self.X_s = np.linspace(min, max, ac_samples).reshape(-1, 1)
+        min_bound, max_bound = bounds
+        self.X_s = np.linspace(min_bound, max_bound, ac_samples).reshape(-1, 1)
 
         self.xsi = xsi
         self.minimize = minimize
@@ -51,7 +51,7 @@ class BayesianOptimization:
                     expected improvement of each potential sample"""
         from scipy.stats import norm
 
-        posterior_mean, posterior_std = self.gp.predict(self.X_s)
+        mu, sigma = self.gp.predict(self.X_s)
 
         if self.minimize:
             best_y = np.min(self.gp.Y)
@@ -59,24 +59,48 @@ class BayesianOptimization:
             best_y = np.max(self.gp.Y)
 
         with np.errstate(divide='warn'):
-            if self.minimize:
-                improve = best_y - posterior_mean - self.xsi
-            else:
-                improve = posterior_mean - best_y - self.xsi
+            improve = (best_y - mu - self.xsi) if self.minimize else (mu - best_y - self.xsi)
 
-        norm_imp = np.zeros_like(posterior_std)
-        valid_std_mask = posterior_std > 0
-        num = improve[valid_std_mask]
-        dem = posterior_std[valid_std_mask]
-        norm_imp[valid_std_mask] = num / dem
+        Z = np.zeros_like(sigma)
+        mask = sigma > 0
+        Z[mask] = improve[mask] / sigma[mask]
 
-        ll = num * norm.cdf(norm_imp[valid_std_mask])
-        rr = dem * norm.pdf(norm_imp[valid_std_mask])
-        expected_improvement = np.zeros_like(norm_imp)
-        expected_improvement[valid_std_mask] = ll + rr
+        ei = np.zeros_like(Z)
+        mask_ei = mask & (sigma > 0)
+        ei[mask_ei] = (improve[mask_ei] * norm.cdf(Z[mask_ei]) +
+                      sigma[mask_ei] * norm.pdf(Z[mask_ei]))
 
-        expected_improvement[posterior_std == 0.0] = 0
+        ei[sigma == 0.0] = 0.0
 
-        next_sample_point = self.X_s[np.argmax(expected_improvement)]
+        X_next = self.X_s[np.argmax(ei)]
+        return X_next, ei
+    
+    def optimize(self, iterations=100):
+        """method that optimizes the black-box function:
+            iterations is the maximum number of iterations to perform
+            If the next proposed point is one that has already been sampled,
+            optimization should be stopped early
+            
+            Returns: X_opt, Y_opt
+            X_opt is a numpy.ndarray of shape (1,) representing the optimal
+            point
+            Y_opt is a numpy.ndarray of shape (1,) representing the optimal
+            function value"""
+        
+        for _ in range(iterations):
+            X_next, _ = self.acquisition()
 
-        return next_sample_point, expected_improvement
+            if any(np.allclose(X_next, x_existing) for x_existing in
+                   self.gp.X):
+                break
+
+            Y_next = self.f(X_next)
+
+            self.gp.update(X_next.reshape(-1, 1), Y_next.reshape(-1, 1))
+
+        if self.minimize:
+            best_idx = np.argmin(self.gp.Y)
+        else:
+            best_idx = np.argmax(self.gp.Y)
+
+        return self.gp.X[best_idx], self.gp.Y[best_idx]
