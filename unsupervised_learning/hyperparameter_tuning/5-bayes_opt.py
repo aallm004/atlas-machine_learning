@@ -1,56 +1,50 @@
 #!/usr/bin/env python3
-"""Module for initialize bayesian optimization"""
+"""Module for Bayesian optimization with multiple acquisition functions"""
 import numpy as np
+from scipy.stats import norm
 GP = __import__('2-gp').GaussianProcess
 
 
 class BayesianOptimization:
-    """Class constructor def __init__(self, f, X_init, Y_init, bounds,
-    ac_samples, l=1, sigma_f=1, xsi=0.01, minimize=True):
-        f is the black-box function to be optimized
-        X_init is a numpy.ndarray of shape (t, 1) representing the inputs
-        already sampled with the black-box function
-        Y_init is a numpy.ndarray of shape (t, 1) representing the outputs
-        of the black-box function for each input in X_init
-        t is the number of initial samples
-        bounds is a tuple of (min, max) representing the bounds of the space
-        in which to look for the optimal point
-        ac_samples is the number of samples that should be analyzed
-        during acquisition
-        l is the lnegth parameter for the kernel
-        sigma_f is the standard deviation given to the output of the black-box
-        function
-        xsi is the exploration-exploitation factor for acquisition
-        minimize is a bool determining whether optimization should be performed
-        for minimization(True) or maximization(False)
-        Sets the following public instance attributes:
-            f: the black-box function
-            gp: an instance of the class GaussianProcess
-            X_s: a numpy.ndarray of shape (ac_samples, 1) containing all
-            acquisition sample points, evenly spaced between min and max
-            xsi: the exploration-exploitation factor
-            minimize: a bool for minimization versus maximisation"""
-    def __init__(self, f, X_init, Y_init, bounds, ac_samples, l=1, sigma_f=1,
-                 xsi=0.01, minimize=True):
+    """Bayesian optimization with customizable acquisition functions"""
+
+    def __init__(self, f, X_init, Y_init, bounds, ac_samples, ac_type='ei',
+                 length_param=1, sigma_f=1, xsi=0.01, minimize=True,
+                 xi=0.01, kappa=2.576):
+        """Initialize Bayesian optimization
+        Args:
+            f: black-box function to optimize
+            X_init: numpy.ndarray (t, 1) inputs already sampled
+            Y_init: numpy.ndarray (t, 1) outputs from f(X_init)
+            bounds: tuple (min, max) search space bounds
+            ac_samples: number of acquisition points to consider
+            ac_type: acquisition function type ('ei', 'ucb', or 'poi')
+            length_param: kernel length parameter
+            sigma_f: kernel signal variance
+            xsi: acquisition trade-off parameter
+            minimize: bool whether to minimize (True) or maximize (False)
+            xi: exploration parameter for PI acquisition
+            kappa: trade-off parameter for UCB acquisition
+        """
         self.f = f
-        self.gp = GP(X_init, Y_init, l, sigma_f)
+        self.gp = GP(X_init, Y_init, length_param, sigma_f)
+        self.bounds = bounds
+        self.ac_type = ac_type
+        self.minimize = minimize
+        self.xi = xi
+        self.kappa = kappa
 
         min_bound, max_bound = bounds
-        self.X_s = np.linspace(min_bound, max_bound, ac_samples).reshape(-1, 1)
+        self.X_s = np.linspace(min_bound, max_bound,
+                              ac_samples).reshape(-1, 1)
 
         self.xsi = xsi
-        self.minimize = minimize
+        self.best_y = None
+        self.iteration = 0
+        self.history = []
 
     def acquisition(self):
-        """Method that calculates the next best sample location:
-            Uses the Expected Improvement acquisition function
-                Returns: X_next, EI
-                    X_next is a numpy.ndarray of shape (1,) representing the
-                    next best sample point
-                    EI is a numpy.ndarray of shape (ac_samples,) containing the
-                    expected improvement of each potential sample"""
-        from scipy.stats import norm
-
+        """Calculate next best sample location using chosen acquisition function"""
         mu, sigma = self.gp.predict(self.X_s)
 
         if self.minimize:
@@ -60,56 +54,69 @@ class BayesianOptimization:
 
         with np.errstate(divide='warn'):
             if self.minimize:
-                improve = (best_y - mu - self.xsi)
+                improve = best_y - mu - self.xsi
             else:
                 improve = mu - best_y - self.xsi
 
-        Z = np.zeros_like(sigma)
-        mask = sigma > 0
-        Z[mask] = improve[mask] / sigma[mask]
+            Z = improve / (sigma + 1e-9)
+            ei = improve * norm.cdf(Z) + sigma * norm.pdf(Z)
 
-        ei = np.zeros_like(Z)
-        mask_ei = mask & (sigma > 0)
-        ei[mask_ei] = (improve[mask_ei] * norm.cdf(Z[mask_ei]) +
-                       + sigma[mask_ei] * norm.pdf(Z[mask_ei]))
+            ei[sigma < 1e-9] = 0
 
-        ei[sigma == 0.0] = 0.0
-
-        X_next = self.X_s[np.argmax(ei)]
-        return X_next, ei
+        return self.X_s[np.argmax(ei)], ei
 
     def optimize(self, iterations=100):
-        """method that optimizes the black-box function:
-            iterations is the maximum number of iterations to perform
-            If the next proposed point is one that has already been sampled,
-            optimization should be stopped early
+        """Optimize the black-box function"""
+        for i in range(iterations):
+            X_next, ei = self.acquisition()
 
-            Returns: X_opt, Y_opt
-            X_opt is a numpy.ndarray of shape (1,) representing the optimal
-            point
-            Y_opt is a numpy.ndarray of shape (1,) representing the optimal
-            function value"""
-
-        for _ in range(iterations):
-            X_next, _ = self.acquisition()
-
-            if any(np.allclose(X_next, x_existing) for x_existing in
-                   self.gp.X):
+            if any(np.allclose(X_next, x_existing)
+                  for x_existing in self.gp.X):
                 break
 
             Y_next = self.f(X_next)
-
             if not isinstance(Y_next, np.ndarray):
                 Y_next = np.array(Y_next)
+
+            # Store iteration history
+            self.history.append({
+                'iteration': i + 1,
+                'X': X_next,
+                'Y': Y_next,
+                'EI': np.max(ei)
+            })
 
             self.gp.update(X_next.reshape(-1, 1), Y_next.reshape(-1, 1))
 
         if self.minimize:
-            best_idx = np.argmin(self.gp.Y)
+            idx_opt = np.argmin(self.gp.Y)
         else:
-            best_idx = np.argmax(self.gp.Y)
+            idx_opt = np.argmax(self.gp.Y)
 
-        X_opt = self.gp.X[best_idx].flatten()
-        Y_opt = self.gp.Y[best_idx].flatten()
+        X_opt = self.gp.X[idx_opt].flatten()
+        Y_opt = self.gp.Y[idx_opt].flatten()
+
+        # Save optimization report
+        with open('bayes_opt.txt', 'w') as f:
+            f.write("Bayesian Optimization Report\n")
+            f.write("===========================\n\n")
+            
+            f.write("Configuration:\n")
+            f.write(f"Optimization Type: {'Minimization' if self.minimize else 'Maximization'}\n")
+            f.write(f"Search Space Bounds: {self.bounds}\n")
+            f.write(f"Number of Samples: {len(self.X_s)}\n\n")
+            
+            f.write("Results:\n")
+            f.write(f"Optimal X: {X_opt}\n")
+            f.write(f"Optimal Y: {Y_opt}\n")
+            f.write(f"Total Iterations: {len(self.history)}\n\n")
+            
+            f.write("Optimization History:\n")
+            f.write("-----------------------\n")
+            for entry in self.history:
+                f.write(f"\nIteration {entry['iteration']}:\n")
+                f.write(f"X = {entry['X'][0]:.6f}\n")
+                f.write(f"Y = {entry['Y'][0]:.6f}\n")
+                f.write(f"Expected Improvement = {entry['EI']:.6f}\n")
 
         return X_opt, Y_opt
