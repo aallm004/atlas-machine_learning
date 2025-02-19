@@ -59,7 +59,10 @@ class BayesianOptimization:
             best_y = np.max(self.gp.Y)
 
         with np.errstate(divide='warn'):
-            improve = (best_y - mu - self.xsi) if self.minimize else (mu - best_y - self.xsi)
+            if self.minimize:
+                improve = (best_y - mu - self.xsi)
+            else:
+                improve = mu - best_y - self.xsi
 
         Z = np.zeros_like(sigma)
         mask = sigma > 0
@@ -68,25 +71,25 @@ class BayesianOptimization:
         ei = np.zeros_like(Z)
         mask_ei = mask & (sigma > 0)
         ei[mask_ei] = (improve[mask_ei] * norm.cdf(Z[mask_ei]) +
-                      sigma[mask_ei] * norm.pdf(Z[mask_ei]))
+                       sigma[mask_ei] * norm.pdf(Z[mask_ei]))
 
         ei[sigma == 0.0] = 0.0
 
         X_next = self.X_s[np.argmax(ei)]
         return X_next, ei
-    
+
     def optimize(self, iterations=100):
         """method that optimizes the black-box function:
             iterations is the maximum number of iterations to perform
             If the next proposed point is one that has already been sampled,
             optimization should be stopped early
-            
+
             Returns: X_opt, Y_opt
             X_opt is a numpy.ndarray of shape (1,) representing the optimal
             point
             Y_opt is a numpy.ndarray of shape (1,) representing the optimal
             function value"""
-        
+
         for _ in range(iterations):
             X_next, _ = self.acquisition()
 
