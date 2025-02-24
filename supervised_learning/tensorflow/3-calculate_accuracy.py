@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """tensorflow for beginners"""
-import tensorflow.compat.v1 as tf
+import tensorflow.keras as keras
 
 
 def calculate_accuracy(y, y_pred):

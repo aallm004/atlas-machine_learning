@@ -2,6 +2,7 @@
 """Module for Bayesian optimization with multiple acquisition functions"""
 import numpy as np
 from scipy.stats import norm
+import os
 GP = __import__('2-gp').GaussianProcess
 
 
@@ -22,18 +23,21 @@ class BayesianOptimization:
 
         min_bound, max_bound = bounds
         self.X_s = np.linspace(min_bound, max_bound,
-                               ac_samples).reshape(-1, 1)
+                              ac_samples).reshape(-1, 1)
 
         self.xsi = xsi
         self.best_y = None
         self.iteration = 0
-        self.optimization_history = []  # List to store optimization history
+        self.optimization_history = []
+
+        if not os.path.exists('checkpoints'):
+            os.makedirs('checkpoints')
 
     def _expected_improvement(self, mu, sigma):
         """Calculate Expected Improvement acquisition function"""
         if self.best_y is None:
             self.best_y = (np.min(self.gp.Y) if self.minimize
-                           else np.max(self.gp.Y))
+                          else np.max(self.gp.Y))
 
         if self.minimize:
             improve = self.best_y - mu - self.xsi
@@ -47,7 +51,7 @@ class BayesianOptimization:
         """Calculate Probability of Improvement acquisition function"""
         if self.best_y is None:
             self.best_y = (np.min(self.gp.Y) if self.minimize
-                           else np.max(self.gp.Y))
+                          else np.max(self.gp.Y))
 
         if self.minimize:
             improve = self.best_y - mu - self.xi
@@ -84,6 +88,19 @@ class BayesianOptimization:
 
         return X_next, acq_val
 
+    def _save_checkpoint(self, X, Y, acquisition_value):
+        """Save checkpoint with hyperparameter values in filename"""
+        filename = (f'model_X{X[0]:.6f}_Y{Y[0]:.6f}_'
+                   f'acq{acquisition_value:.6f}.npz')
+        filepath = os.path.join('checkpoints', filename)
+        np.savez(filepath,
+                 X=self.gp.X,
+                 Y=self.gp.Y,
+                 l=self.gp.l,
+                 sigma_f=self.gp.sigma_f,
+                 K=self.gp.K)
+        return filepath
+
     def optimize(self, iterations=100, tolerance=1e-10):
         """Optimize the black-box function"""
         self.optimization_history = []
@@ -92,20 +109,23 @@ class BayesianOptimization:
             self.iteration += 1
             X_next, acq_val = self.acquisition()
 
-            # Check if point was already sampled
             if any(np.abs(X_next - x_existing) <= tolerance
-                   for x_existing in self.gp.X):
+                  for x_existing in self.gp.X):
                 break
 
             Y_next = self.f(X_next)
             if not isinstance(Y_next, np.ndarray):
                 Y_next = np.array(Y_next)
 
+            checkpoint_path = self._save_checkpoint(X_next, Y_next,
+                                                 np.max(acq_val))
+
             self.optimization_history.append({
                 'iteration': self.iteration,
                 'X': X_next,
                 'Y': Y_next,
-                'acquisition_value': np.max(acq_val)
+                'acquisition_value': np.max(acq_val),
+                'checkpoint_path': checkpoint_path
             })
 
             self.gp.update(X_next.reshape(-1, 1), Y_next.reshape(-1, 1))
@@ -143,5 +163,6 @@ class BayesianOptimization:
                 f.write(f"Y = {entry['Y'][0]:.6f}\n")
                 val = entry['acquisition_value']
                 f.write(f"Acquisition Value = {val:.6f}\n")
+                f.write(f"Checkpoint: {entry['checkpoint_path']}\n")
 
         return X_opt, Y_opt
