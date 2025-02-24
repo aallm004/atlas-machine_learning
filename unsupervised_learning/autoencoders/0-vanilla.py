@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
+"""vanilla ice cream"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
     """autoencoder
         input_dims: an integer containing the dimensions of the model input
-        hidden_layers: a list containing the number of nodes for each hidden layer in the encoder
-        latent_dims: an integer containing the dimensions of the latent space representation
+        hidden_layers: a list containing the number of nodes for each hidden
+        layer in the encoder
+        latent_dims: an integer containing the dimensions of the latent space
+        representation
     Returns: encoder, decoder, auto
         encoder: encoder model
         decoder: decoder model
