@@ -16,7 +16,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         representation, the mean, and the log variance
         decoder: the decoder model
         auto: the full autoencoder model
-    
+
         The autoencoder model should be compiled using adam optimization and
         binary cross-entropy loss
         All layers should use a relu activation except for the mean and log
@@ -32,8 +32,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     mean = keras.layers.Dense(units=latent_dims, activation=None)(x)
     log_var = keras.layers.Dense(units=latent_dims, activation=None)(x)
 
-    z =  keras.layers.Lambda(sampling)([mean, log_var])
-    encoder_model = keras.models.Model(inputs=input_layer, outputs=[z, mean, log_var])
+    z = keras.layers.Lambda(sampling)([mean, log_var])
+    encoder_model = keras.models.Model(inputs=input_layer,
+                                       outputs=[z, mean, log_var])
 
     decoder_input = keras.layers.Input(shape=(latent_dims,))
     x = decoder_input
@@ -49,13 +50,15 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
 
     auto = keras.Model(input_layer, decoder_model(z))
 
-    kl_loss = -0.5 * keras.backend.sum(1 + log_var - keras.backend.square(mean) - keras.backend.exp(log_var), axis=-1)
+    kl_loss = -0.5 * keras.backend.sum(1 + log_var - keras.backend.square(mean)
+                                       - keras.backend.exp(log_var), axis=-1)
 
     auto.add_loss(keras.backend.mean(kl_loss))
 
     auto.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder_model, decoder_model, auto
+
 
 def sampling(args):
     """sampling"""
