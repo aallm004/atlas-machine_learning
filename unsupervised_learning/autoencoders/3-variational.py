@@ -44,6 +44,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
 
     encoded_outputs = encoder_model(input_layer)
     z = encoded_outputs[0]
+    mean = encoded_outputs[1]
+    log_var = encoded_outputs[2]
+
     auto = keras.Model(input_layer, decoder_model(z))
 
     kl_loss = -0.5 * keras.backend.sum(1 + log_var - keras.backend.square(mean) - keras.backend.exp(log_var), axis=-1)
