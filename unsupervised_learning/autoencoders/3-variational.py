@@ -1,20 +1,28 @@
 #!/usr/bin/env python3
-"""vanilla ice cream"""
+"""convolutional"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
-    """autoencoder
-        input_dims: an integer containing the dimensions of the model input
-        hidden_layers: a list containing the number of nodes for each hidden
-        layer in the encoder
-        latent_dims: an integer containing the dimensions of the latent space
-        representation
+    """
+    input_dims: an integer containing the dimenstions of the model input
+    hidden_layers: a list containing the number of nodes for each hidden layer
+    in the encoder, respectively
+        hidden_layers should be reversed for the decoder
+    latent_dims: an integer containing the dimensions of the latent space
+    representation
     Returns: encoder, decoder, auto
-        encoder: encoder model
-        decoder: decoder model
-        auto: full autoencoder model"""
-
+        encoder: the encoder model, which should output the latent
+        representation, the mean, and the log variance
+        decoder: the decoder model
+        auto: the full autoencoder model
+    
+        The autoencoder model should be compiled using adam optimization and
+        binary cross-entropy loss
+        All layers should use a relu activation except for the mean and log
+        variance layers in the encoder, which should use None, and the last
+        layer in the decoder, whouch should use sigmoid
+    """
     input_layer = keras.layers.Input(shape=(input_dims,))
     x = input_layer
     for units in hidden_layers:
@@ -24,7 +32,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     mean = keras.layers.Dense(units=latent_dims, activation=None)(x)
     log_var = keras.layers.Dense(units=latent_dims, activation=None)(x)
 
-    z =  keras.layers.Lambda(sampling)
+    z =  keras.layers.Lambda(sampling)([mean, log_var])
     encoder_model = keras.models.Model(inputs=input_layer, outputs=[z, mean, log_var])
 
     decoder_input = keras.layers.Input(shape=(latent_dims,))
@@ -34,7 +42,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     decoded = keras.layers.Dense(units=input_dims, activation='sigmoid')(x)
     decoder_model = keras.models.Model(inputs=decoder_input, outputs=decoded)
 
-    auto = keras.Model(input_layer, decoder_model(encoder_model(input_layer)))
+    encoded_outputs = encoder_model(input_layer)
+    z = encoded_outputs[0]
+    auto = keras.Model(input_layer, decoder_model(z))
 
     auto.compile(optimizer='adam', loss='binary_crossentropy')
 
@@ -43,7 +53,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
 def sampling(args):
     """sampling"""
     mean, log_var = args
-    batch_size = keras.backend.shape(mean)
+    batch_size = keras.backend.shape(mean)[0]
     dim = keras.backend.shape(mean)[1]
     epsilon = keras.backend.random_normal(shape=(batch_size, dim))
 
