@@ -46,6 +46,10 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     z = encoded_outputs[0]
     auto = keras.Model(input_layer, decoder_model(z))
 
+    kl_loss = -0.5 * keras.backend.sum(1 + log_var - keras.backend.square(mean) - keras.backend.exp(log_var), axis=-1)
+
+    auto.add_loss(keras.backend.mean(kl_loss))
+
     auto.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder_model, decoder_model, auto
