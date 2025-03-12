@@ -48,6 +48,6 @@ def rnn(rnn_cell, X, h_0):
 
         # Store new hidden state and output
         H[step + 1] = h_next
-        Y[step] = Y
+        Y[step] = y
 
     return H, Y
