@@ -42,7 +42,7 @@ class GRUCell:
         z = sigmoid(np.dot(concat, self.Wz) + self.bz)
 
         # Gate Reset
-        r = sigmoid(np.dot(concat, self.Wr) + self.bf)
+        r = sigmoid(np.dot(concat, self.Wr) + self.br)
 
         # Intermed hidden state
         reset_concat = np.concatenate((r * h_prev, x_t), axis=1)
