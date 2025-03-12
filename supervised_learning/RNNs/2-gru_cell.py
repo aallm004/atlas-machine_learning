@@ -26,7 +26,7 @@ class GRUCell:
         # Biases for the update gate
         self.bz = np.zeros((1, h))
         # Biases for the reset gate
-        self.bf = np.zeros((1, h))
+        self.br = np.zeros((1, h))
         # Biases for the intermediate hidden state
         self.bh = np.zeros((1, h))
         # Biases for the output
