@@ -32,7 +32,7 @@ class GRUCell:
         # Biases for the output
         self.by = np.zeros((1, o))
 
-    def forward(self.h_prev, x_t):
+    def forward(self, h_prev, x_t):
         """Function that performs forward prop for simple RNN"""
 
         # concat input and prev hidden state
