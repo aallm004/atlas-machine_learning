@@ -38,7 +38,6 @@ def bi_rnn(bi_cell, X, h_0, h_t):
         h_prev = bi_cell.forward(h_prev, X[time_step])
         h_forward[time_step] = h_prev
 
-
     # Back prop
     h_next = h_t
     for time_step in range(t-1, -1, -1):
