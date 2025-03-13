@@ -42,7 +42,7 @@ class BidirectionalCell:
         # concatenates h_prev and x_t
         concat = np.concatenate((h_prev, x_t), axis=1)
 
-        # Calculates next hidden state using tahn
+        # Calculates next hidden state using tanh
         h_next = np.tanh(np.dot(concat, self.Whf) + self.bhf)
 
         return h_next
@@ -82,14 +82,14 @@ class BidirectionalCell:
         # Output calculation for each time step
         for time_step in range(t):
             # Use softmax to get output here
-            Y[time_step] = self.softmax(np.dot(H[time_step], self.Wy) + \
-                                        self.by)
+            Y[time_step] = self.softmax(np.dot(H[time_step], self.Wy) 
+                                        + self.by)
 
         return Y
 
 
-def softmax(x):
-    """Softmax activation function"""
-    # For numerical stability, subtract the maximum value
-    e_x = np.exp(x - np.max(x, axis=1, keepdims=True))
-    return e_x / np.sum(e_x, axis=1, keepdims=True)
+    def softmax(self, x):
+        """Softmax activation function"""
+        # For numerical stability, subtract the maximum value
+        e_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return e_x / np.sum(e_x, axis=1, keepdims=True)
