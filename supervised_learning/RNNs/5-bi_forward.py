@@ -13,7 +13,7 @@ class BidirectionalCell:
 
         Creates the public instance attributes that represent
         the weights and biases of the cell"""
-        ## WEIGHTS
+        # WEIGHTS
         # Weights forward for the hidden state
         self.Whf = np.random.normal(size=(i + h, h))
         # Weights backward for the hidden state
@@ -21,14 +21,13 @@ class BidirectionalCell:
         # Weights for outputs
         self.Wy = np.random.normal(size=(2 * h, o))
 
-        ##BIAS
+        # BIAS
         # Bias forward for hidden state
         self.bhf = np.zeros((1, h))
         # Bian backward for hidden state
         self.bhb = np.zeros((1, h))
         # Bias for outputs
         self.by = np.zeros((1, o))
-
 
     def forward(self, h_prev, x_t):
         """calculates the hidden state in forward direction for one time
