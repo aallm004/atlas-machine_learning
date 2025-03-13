@@ -29,29 +29,24 @@ def bi_rnn(bi_cell, X, h_0, h_t):
     _, h = h_0.shape
 
     # array initialization
-    h_forward = np.zeros((t + 1, m, h))
-    h_backward = np.zeros((t + 1, m, h))
-
-    # Set hidden states
-    h_forward[0] = h_0
-    h_backward[t] = h_t
+    h_forward = np.zeros((t, m, h))
+    h_backward = np.zeros((t, m, h))
 
     # Forward prop
+    h_prev = h_0
     for time_step in range(t):
-        h_forward[time_step + 1] = bi_cell.forward(
-            h_forward[time_step],
-            X[time_step]
-        )
+        h_prev = bi_cell.forward(h_prev, X[time_step])
+        h_forward[time_step] = h_prev
+
 
     # Back prop
-    for time_step in range(t):
-        h_backward[time_step] = bi_cell.backward(
-            h_backward[time_step + 1],
-            X[time_step]
-        )
+    h_next = h_t
+    for time_step in range(t-1, -1, -1):
+        h_next = bi_cell.backward(h_next, X[time_step])
+        h_backward[time_step] = h_next
 
     # Concat hidden states, initial state inclusive
-    H = np.concatenate((h_forward[1:], h_backward[:-1]), axis=2)
+    H = np.concatenate((h_forward, h_backward), axis=2)
 
     # Output calculation using hidden states
     Y = bi_cell.output(H)
