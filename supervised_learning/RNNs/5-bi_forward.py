@@ -44,6 +44,6 @@ class BidirectionalCell:
         concat = np.concatenate((h_prev, x_t), axis=1)
 
         # Calculates next hidden state using tahn
-        h_next = np.tahn(np.dot(concat, self.Whf) + self.bhf)
+        h_next = np.tanh(np.dot(concat, self.Whf) + self.bhf)
 
         return h_next
