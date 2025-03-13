@@ -82,11 +82,10 @@ class BidirectionalCell:
         # Output calculation for each time step
         for time_step in range(t):
             # Use softmax to get output here
-            Y[time_step] = self.softmax(np.dot(H[time_step], self.Wy) 
+            Y[time_step] = self.softmax(np.dot(H[time_step], self.Wy)
                                         + self.by)
 
         return Y
-
 
     def softmax(self, x):
         """Softmax activation function"""
