@@ -44,7 +44,7 @@ def bi_rnn(bi_cell, X, h_0, h_t):
         )
 
     # Back prop
-    for time_step in range(t, -1, -1, -1):
+    for time_step in range(t):
         h_backward[time_step] = bi_cell.backward(
             h_backward[time_step + 1],
             X[time_step]
