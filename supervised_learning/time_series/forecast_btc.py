@@ -116,5 +116,5 @@ def main():
     model.save(model_path)
     print(f"Model saved to {model_path}")
 
-if name == "main":
+if __name__ == "main":
     main()
