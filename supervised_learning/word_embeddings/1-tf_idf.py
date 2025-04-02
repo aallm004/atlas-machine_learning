@@ -20,44 +20,32 @@ def tf_idf(sentences, vocab=None):
 
     if vocab is None:
         # Create an empty set because set removes duplicates
-        unique_words = set()
-        for tokens in sentence_tokenized:
-            unique_words.update(tokens)
-        vocab = list(unique_words)
+        vocab = sorted(set(word for tokens in sentence_tokenized for word in tokens))
 
-    document_frequency = {}
-    for word in vocab:
-        count = 0
-        for tokens in sentence_tokenized:
-            if word in tokens:
-                count += 1
-            document_frequency[word] = count
+        vocab = np.array(vocab)
 
+    # Document frequency for each word
+    document_frequency = {word: sum(1 for tokens in sentence_tokenized if word in tokens) for word in vocab}
+    
     embeddings = np.zeros((len(sentences), len(vocab)))
 
     for i, tokens in enumerate(sentence_tokenized):
-        frequency = {}
-        for token in tokens:
-            if token in vocab:
-                frequency = {}
-                for token in tokens:
-                    if token in vocab:
-                        frequency[token] = frequency.get(token, 0) + 1
+        # Skip empty sentences
+        if not tokens:
+            continue
+
+        frequency = {token: tokens.count(token) / len(tokens) for token in tokens if token in vocab}
 
         for j, word in enumerate(vocab):
-            if word in frequency and document_frequency[word] > 0:
-                tf = frequency[word] / len(tokens)
-
-                # Inverse doc freq
-                idf = np.log(len(sentences) / document_frequency[word])
-
-                # TF - IDF score
+            if word in frequency:
+                tf = frequency[word]
+                idf = np.log(1 + len(sentences) / document_frequency[word])
                 embeddings[i, j] = tf * idf
 
-        # Normalize the vector with L2 normalization
-        norm = np.linalg.norm(embeddings[i])
-        if norm > 0:
-            embeddings[i] = embeddings[i] / norm
+    # Normalize using L2 normalization
+    norm = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    norm[norm == 0] = 1
+    embeddings /= norm
 
     return embeddings, np.array(vocab)
 
