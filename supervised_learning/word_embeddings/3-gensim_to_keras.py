@@ -21,5 +21,5 @@ def gensim_to_keras(model):
         weights=[weights],
         trainable=True
     )
-
+ 
     return embedding
