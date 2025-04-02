@@ -9,7 +9,7 @@ def bag_of_words(sentences, vocab=None):
         sentences: a list of sentences to analyze
         vocab: a list of the vocabulary words to use for the analysis
             If None, all words within sentences should be used
-        
+
         Returns: embeddings, features
             embeddings is a numpy.ndarray of shape(s, f) containing the
             embeddings
@@ -58,6 +58,7 @@ def bag_of_words(sentences, vocab=None):
 
 
 def tokenize(sentence):
+    """tokenization of sentence in to words"""
     # Convert all capital letters to lowercase so they match
     sentence = sentence.lower()
     sentence = sentence.replace("'s", "")
