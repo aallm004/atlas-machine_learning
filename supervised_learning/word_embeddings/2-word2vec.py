@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """module for word2vec"""
-import numpy as np
-import tensorflow.keras as keras
 from gensim.models import Word2Vec
 
 
@@ -21,8 +19,6 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
         seed: seed for the random number generator
         workers: number of worker threads to train the model
     Returns: the trained model"""
-
-    np.random.seed(seed)
 
     # Set training algorithm for cbow
     # Because it's CBOW sg = 0, otherwise it would be sg = 1
