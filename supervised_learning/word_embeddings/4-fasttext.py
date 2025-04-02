@@ -3,6 +3,7 @@
 import tensorflow as tf
 from gensim.models import FastText
 
+
 def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
                    window=5, cbow=True, epochs=5, seed=0, workers=1):
     """Function that creates, builds and trains a genism fastText model
@@ -37,7 +38,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
 
     # Build the vocab from sentences
     model.build_vocab(sentences)
-    
+
     # Train model on the input sentences
     model.train(
         sentences,
