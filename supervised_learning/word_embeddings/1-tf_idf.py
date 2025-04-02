@@ -15,18 +15,20 @@ def tf_idf(sentences, vocab=None):
                 s is the number of sentences in sentences
                 f is the number of features analyzed
             features is a list of the features used for embeddings"""
-    
+
     sentence_tokenized = [tokenize(sentence) for sentence in sentences]
 
     if vocab is None:
         # Create an empty set because set removes duplicates
-        vocab = sorted(set(word for tokens in sentence_tokenized for word in tokens))
+        vocab = sorted(set(word for tokens in sentence_tokenized for word in
+                           tokens))
 
         vocab = np.array(vocab)
 
     # Document frequency for each word
-    document_frequency = {word: sum(1 for tokens in sentence_tokenized if word in tokens) for word in vocab}
-    
+    document_frequency = {word: sum(1 for tokens in sentence_tokenized if word
+                                    in tokens) for word in vocab}
+
     embeddings = np.zeros((len(sentences), len(vocab)))
 
     for i, tokens in enumerate(sentence_tokenized):
@@ -34,7 +36,8 @@ def tf_idf(sentences, vocab=None):
         if not tokens:
             continue
 
-        frequency = {token: tokens.count(token) / len(tokens) for token in tokens if token in vocab}
+        frequency = {token: tokens.count(token) / len(tokens) for token in
+                     tokens if token in vocab}
 
         for j, word in enumerate(vocab):
             if word in frequency:
@@ -51,6 +54,8 @@ def tf_idf(sentences, vocab=None):
 
 
 def tokenize(sentence):
+    """tokenization of sentence in to words"""
+
     # Convert all capital letters to lowercase so they match
     sentence = sentence.lower()
     sentence = sentence.replace("'s", "")
