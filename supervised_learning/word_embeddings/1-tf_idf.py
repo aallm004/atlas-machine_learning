@@ -42,13 +42,14 @@ def tf_idf(sentences, vocab=None):
         for j, word in enumerate(vocab):
             if word in frequency:
                 tf = frequency[word]
-                idf = np.log((1 + len(sentences)) / (1 + document_frequency[word])) + 1
+                idf = np.log((1 + len(sentences)) /
+                             (1 + document_frequency[word])) + 1
                 embeddings[i, j] = tf * idf
 
     # Normalize using L2 normalization
     norm = np.linalg.norm(embeddings, axis=1, keepdims=True)
     embeddings = np.divide(embeddings, norm, where=norm != 0)
-    
+
     return embeddings, np.array(vocab)
 
 
