@@ -26,11 +26,13 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
 
     # fastText model with specific parameters
     model = FastText(
+        sentences=None,
         vector_size=vector_size,
         window=window,
         min_count=min_count,
         negative=negative,
         sg=sg,
+        hs=0,
         seed=seed,
         workers=workers,
         epochs=epochs
