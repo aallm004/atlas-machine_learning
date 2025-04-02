@@ -16,10 +16,12 @@ def tf_idf(sentences, vocab=None):
                 f is the number of features analyzed
             features is a list of the features used for embeddings"""
 
+    # tokenize sentences
     sentence_tokenized = [tokenize(sentence) for sentence in sentences]
 
+    # if no vocab is provided, create one from all unique words
     if vocab is None:
-        # Create an empty set because set removes duplicates
+        # Take out all unique words and sort
         vocab = sorted(set(word for tokens in sentence_tokenized for word in
                            tokens))
 
@@ -29,24 +31,37 @@ def tf_idf(sentences, vocab=None):
     document_frequency = {word: sum(1 for tokens in sentence_tokenized if word
                                     in tokens) for word in vocab}
 
+    # Initialize the embeddings matrix
     embeddings = np.zeros((len(sentences), len(vocab)))
 
+    # Calculate TF - IDF for each word in sentence
     for i, tokens in enumerate(sentence_tokenized):
         # Skip empty sentences
         if not tokens:
             continue
 
+        # Calculation of term freq for each word in current sentence
+        # TF = (occurences of term) / (total terms in doc)
         frequency = {token: tokens.count(token) / len(tokens) for token in
                      tokens if token in vocab}
 
+        # Calculate TF - IDF for each word in vocab
         for j, word in enumerate(vocab):
             if word in frequency:
+                # Term frequency
                 tf = frequency[word]
+                
+                # Inverse document frequency (with smoothing)
+                # Adding 1 to numerator and denominator to prevent division by
+                # zero and reduce impact of rare terms
                 idf = np.log((1 + len(sentences)) /
                              (1 + document_frequency[word])) + 1
+                
+                # TF - IDF score
                 embeddings[i, j] = tf * idf
 
     # Normalize using L2 normalization
+    # Ensures all documents are comarable regardless of length
     norm = np.linalg.norm(embeddings, axis=1, keepdims=True)
     embeddings = np.divide(embeddings, norm, where=norm != 0)
 
