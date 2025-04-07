@@ -13,10 +13,10 @@ def ngram_bleu(references, sentence, n):
     Returns: the n-gram BLEU score"""
 
     # Extract n-grams from the sentence
-    current_ngram = extract_ngrams(sentence, n)
+    sentence_ngram = extract_ngrams(sentence, n)
 
     # Count number of n-grams that appear in sentence
-    candidate_count = len(current_ngram)
+    candidate_count = len(sentence_ngram)
 
     # Dictionary to keep tack of max counts across all
     max_counts = {}
@@ -49,7 +49,7 @@ def ngram_bleu(references, sentence, n):
     # Count each n-gram as a match if it appears before
     # Take away from the count to avoid counting the same reference n-gram
     # multiple times
-    for ngram in current_ngram:
+    for ngram in sentence_ngram:
         if ngram in clipped_counts and clipped_counts[ngram] > 0:
             matches += 1
             clipped_counts[ngram] -= 1
@@ -65,7 +65,10 @@ def ngram_bleu(references, sentence, n):
     closest_ref_len = min(ref_lengths, key=lambda x: abs(x - candidate_len))
 
     # Apply brevity penalty if candidate is shorter than the closest ref
-    brevity_penalty = np.exp(1 - closest_ref_len / candidate_len)
+    if candidate_len > closest_ref_len:
+        brevity_penalty = 1.0
+    else:
+        brevity_penalty = np.exp(1 - closest_ref_len / candidate_len)
 
     # Calculate final BLEU score
     bleu_score = brevity_penalty * precision
