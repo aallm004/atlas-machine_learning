@@ -33,8 +33,14 @@ def uni_bleu(references, sentence):
     # Calculate precision
     precision = count_clipped / length_of_sentence
 
+    if precision == 1.0 and length_of_sentence < closest_ref_length:
+        return np.exp(-1)
+
     # Brevity penalty
-    bp = np.exp(1 - closest_ref_length / length_of_sentence)
+    if length_of_sentence >= closest_ref_length:
+        bp = 1
+    else:
+        bp = np.exp(1 - closest_ref_length / length_of_sentence)
 
     bleu_score = bp * precision
 
