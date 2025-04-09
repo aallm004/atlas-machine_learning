@@ -22,6 +22,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
 
     # fastText model with specific parameters
     model = gensim.models.FastText(
+        sentences,
         vector_size=vector_size,
         window=window,
         min_count=min_count,
