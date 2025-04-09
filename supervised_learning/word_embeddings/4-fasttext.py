@@ -19,8 +19,9 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
         workers: number of worker threads to train the model
 
     Returns: the trained model"""
-    # Ensure deterministic behavior by using seed
-    gensim.utils.RANDOM_STATE = seed
+    # Ensure repeatablility
+    old_state = gensim.utils.get_random_state()
+    gensim.utils.set_random_state(seed)
     
     # Set training algorithm for cbow
     # Because it's CBOW sg = 0, otherwise it would be sg = 1
@@ -47,5 +48,8 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
         total_examples=model.corpus_count,
         epochs=model.epochs
     )
+
+    # Restore random state
+    gensim.utils.set_random_state(old_state)
 
     return model
