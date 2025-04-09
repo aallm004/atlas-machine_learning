@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """module for fastext"""
-from gensim.models import FastText
+import gensim
 
 
 def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
@@ -24,7 +24,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
     sg = 0 if cbow else 1
 
     # fastText model with specific parameters
-    model = FastText(
+    model = gensim.models.FastText(
         vector_size=vector_size,
         window=window,
         min_count=min_count,
