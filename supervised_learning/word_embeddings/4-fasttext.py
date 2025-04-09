@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """module for fastext"""
-import tensorflow as tf
 from gensim.models import FastText
 
 
