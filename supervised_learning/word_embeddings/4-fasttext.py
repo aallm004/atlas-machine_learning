@@ -21,7 +21,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
     Returns: the trained model"""
     # Ensure repeatablility
     gensim.utils.RANDOM_STATE = seed
-    
+
     # Set training algorithm for cbow
     # Because it's CBOW sg = 0, otherwise it would be sg = 1
     sg = 0 if cbow else 1
