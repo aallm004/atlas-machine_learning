@@ -20,10 +20,6 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
 
     Returns: the trained model"""
 
-    # Set training algorithm for cbow
-    # Because it's CBOW sg = 0, otherwise it would be sg = 1
-    sg = 1 if cbow else 0
-
     # fastText model with specific parameters
     model = gensim.models.FastText(
         vector_size=vector_size,
@@ -32,7 +28,8 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
         negative=negative,
         seed=seed,
         workers=workers,
-        epochs=epochs
+        epochs=epochs,
+        sg=not cbow
     )
 
     # Build the vocab from sentences
