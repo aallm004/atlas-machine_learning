@@ -34,7 +34,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
         negative=negative,
         sg=sg,
         seed=seed,
-        workers=workers,
+        workers=1,
         epochs=epochs
     )
 
