@@ -10,7 +10,7 @@ def cumulative_bleu(references, sentence, n):
             sentence: list containing the model proposed sentence
             n: the size of the n-gram to use for evaluation
         Returns: the n-gram BLEU score"""
-    
+
     # Calculating precision
     precisions = []
     for i in range(1, n+1):
@@ -43,7 +43,7 @@ def cumulative_bleu(references, sentence, n):
                     max_counts[ngram] = max(max_counts[ngram], count_val)
                 else:
                     max_counts[ngram] = count_val
-            
+
         # Calculate matches
         matches = 0
         # Copy of max_counts so not to change the original
@@ -64,7 +64,7 @@ def cumulative_bleu(references, sentence, n):
     # If precision is 0, BLEU score is 0
     if 0 in precisions:
         return 0
-    
+
     # Calculate geometric mean with equal weights
     weights = np.ones(n) / n
     score = np.exp(np.sum(weights * np.log(precisions)))
@@ -79,7 +79,8 @@ def cumulative_bleu(references, sentence, n):
     # Apply brevity penalty if candidate is shorder than the closest ref
     if candidate_len >= closest_ref_len:
         brevity_penalty = 1.0
-    else: brevity_penalty = np.exp(1 - closest_ref_len / candidate_len)
+    else:
+        brevity_penalty = np.exp(1 - closest_ref_len / candidate_len)
 
     # Calculate final BLEU score
     bleu_score = brevity_penalty * score
