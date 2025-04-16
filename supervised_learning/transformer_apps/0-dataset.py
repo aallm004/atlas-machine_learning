@@ -15,7 +15,7 @@ class Dataset:
         self.data_valid = tfds.load("ted_hrlr_translate/pt_to_en", split="validation", as_supervised=True)
 
         # Initialize tokenizers
-        self.tokenizer_pt, self.tokenize_en = self.tokenizer_en = self.tokenize_dataset(self.data_train)
+        self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(self.data_train)
 
     def tokenize_dataset(self, data):
         """Word breakdown for dataset"""
