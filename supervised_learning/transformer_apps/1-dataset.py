@@ -1,4 +1,4 @@
-#!/usr/env/bin python3
+#!/usr/bin/env python3
 """class for dataset"""
 import numpy as np
 import tensorflow as tf
