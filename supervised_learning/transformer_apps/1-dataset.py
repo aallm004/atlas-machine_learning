@@ -11,14 +11,16 @@ class Dataset:
 
     def __init__(self):
         """creates instance attributes"""
-        
+
         # Load training and valildation datasets
-        self.data_train = tfds.load("ted_hrlr_translate/pt_to_en", split="train", as_supervised=True )
-        self.data_valid = tfds.load("ted_hrlr_translate/pt_to_en", split="validation", as_supervised=True)
+        self.data_train = tfds.load("ted_hrlr_translate/pt_to_en",
+                                    split="train", as_supervised=True)
+        self.data_valid = tfds.load("ted_hrlr_translate/pt_to_en",
+                                    split="validation", as_supervised=True)
 
         # Initialize tokenizers
-        self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(self.data_train)
-
+        self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(
+            self.data_train)
 
     def tokenize_dataset(self, data):
         """Word breakdown for dataset"""
@@ -35,25 +37,28 @@ class Dataset:
         # Create iterators
         en_iterator = iter(en_sentences)
         pt_iterator = iter(pt_sentences)
-        
+
         # tokenizer initializer
-        tokenizer_pt = transformers.BertTokenizerFast.from_pretrained('neuralmind/bert-base-portuguese-cased')
-        tokenizer_en = transformers.BertTokenizerFast.from_pretrained('bert-base-uncased')
+        tokenizer_pt = transformers.BertTokenizerFast.from_pretrained(
+            'neuralmind/bert-base-portuguese-cased')
+        tokenizer_en = transformers.BertTokenizerFast.from_pretrained(
+            'bert-base-uncased')
 
         # Set vocab size for both en and pt
         vocab_size = 2**13
 
         # Train tokenizer with vocab_size
-        tokenizer_en = tokenizer_en.train_new_from_iterator(en_iterator, vocab_size=vocab_size)
-        tokenizer_pt = tokenizer_pt.train_new_from_iterator(pt_iterator, vocab_size=vocab_size)
+        tokenizer_en = tokenizer_en.train_new_from_iterator(
+            en_iterator, vocab_size=vocab_size)
+        tokenizer_pt = tokenizer_pt.train_new_from_iterator(
+            pt_iterator, vocab_size=vocab_size)
 
         return tokenizer_pt, tokenizer_en
-
 
     def encode(self, pt, en):
         """encodes a translation into tokens"""
         vocab_size = 2**13
-        
+
         en_text = en.numpy().decode('utf-8')
         pt_text = pt.numpy().decode('utf-8')
 
