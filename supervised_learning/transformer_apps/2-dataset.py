@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """class for dataset"""
-import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import transformers
@@ -72,8 +71,10 @@ class Dataset:
         en_tokens_with_added = [vocab_size] + en_tokens + [vocab_size + 1]
         pt_tokens_with_added = [vocab_size] + pt_tokens + [vocab_size + 1]
 
-        en_tokens_array = np.array(en_tokens_with_added)
-        pt_tokens_array = np.array(pt_tokens_with_added)
+        en_tokens_array = tf.convert_to_tensor(en_tokens_with_added,
+                                               dtype=tf.int64)
+        pt_tokens_array = tf.convert_to_tensor(pt_tokens_with_added,
+                                               dtype=tf.int64)
 
         return en_tokens_array, pt_tokens_array
 
