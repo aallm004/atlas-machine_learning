@@ -62,13 +62,13 @@ class Dataset:
         en_text = en.numpy().decode('utf-8')
         pt_text = pt.numpy().decode('utf-8')
 
-        en_tokens = self.tokenizer_en.encode(en_text)
-        pt_tokens = self.tokenizer_pt.encode(pt_text)
+        en_tokens = self.tokenizer_en.encode(en_text, add_special_tokens=False)
+        pt_tokens = self.tokenizer_pt.encode(pt_text, add_special_tokens=False)
 
-        en_tokens_with_added = [vocab_size] + en_tokens + [vocab_size + 1]
-        pt_tokens_with_added = [vocab_size] + pt_tokens + [vocab_size + 1]
+        en_tokens = [vocab_size] + en_tokens + [vocab_size + 1]
+        pt_tokens = [vocab_size] + pt_tokens + [vocab_size + 1]
 
-        en_tokens_array = np.array(en_tokens_with_added)
-        pt_tokens_array = np.array(pt_tokens_with_added)
+        en_tokens_array = np.array(en_tokens)
+        pt_tokens_array = np.array(pt_tokens)
 
         return pt_tokens_array, en_tokens_array
