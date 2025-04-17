@@ -12,7 +12,7 @@ import transformers
 class Dataset:
     """
     Dataset class for machine translation (Portuguese to English)
-    
+
     Handles loading training and validation splits, creating and training
     custon tokenizers based on BERT models, and storing tokenizers for later
     use in the translation pipeline"""
@@ -20,7 +20,7 @@ class Dataset:
     def __init__(self, batch_size, max_len):
         """Initializes the Dataset instance by loading data and creating
         tokenizers
-        
+
         Loads the Portuguese to English dataset
         Calls tokenize_dataset to create and train tokenizers for both
         languages"""
@@ -61,7 +61,7 @@ class Dataset:
                                 padding_values=padding_values)
                            # Prefetch nxt batches while processing current ones
                            .prefetch(tf.data.AUTOTUNE))
-        
+
         # Build validation pipeline (similar but w/o shuffle/cache/prefetch)
         self.data_valid = (raw_valid
                            .map(self.tf_encode,
@@ -145,9 +145,9 @@ class Dataset:
         # Convert token lists to TensorFlow tensors with int64 data type
         # This is needed for compatibility with TensorFlow operations
         en_tokens_array = tf.convert_to_tensor(en_tokens_with_added,
-                                              dtype=tf.int64)
+                                               dtype=tf.int64)
         pt_tokens_array = tf.convert_to_tensor(pt_tokens_with_added,
-                                              dtype=tf.int64)
+                                               dtype=tf.int64)
 
         return en_tokens_array, pt_tokens_array
 
