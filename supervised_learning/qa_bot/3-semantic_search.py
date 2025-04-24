@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, numpy as np
 from typing import Optional, List
 import tensorflow_hub as hub
