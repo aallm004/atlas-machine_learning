@@ -32,20 +32,20 @@ def semantic_search(corpus_path, sentence):
             try:
                 with open(full_path, 'r', encoding='latin-1') as f:
                     texts.append(f.read())
-            except Exception as e:
+            except Exception as error:
                 # Skip file if it can't be read with Latin-1 encoding
                 continue
-        except Exception as e:
+        except Exception as error:
             # Skip file on any other exception
             continue
     # Return None if no valid docs
     if not texts:
         return None
 
-    # Load the Universal Sentence Encoder (USE)
+    # Load USE
     try:
         encoder = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    except Exception as e:
+    except Exception as error:
         sys.exit(f"Error loading USE model: {e}")
 
     # Encode sentence and documents
