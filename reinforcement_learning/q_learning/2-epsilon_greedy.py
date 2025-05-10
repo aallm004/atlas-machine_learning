@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import gymnasium as gym
+"""module to use epsilon-greedy"""
 import numpy as np
 
 
@@ -8,7 +8,7 @@ def epsilon_greedy(Q, state, epsilon):
     Q is a numpy.ndarray containing the q-table
     state is the current state
     epsilon is the epsilon to use for the calculation
-    
+
     Returns: the next action index"""
 
     # Sample random value between 0 and 1
