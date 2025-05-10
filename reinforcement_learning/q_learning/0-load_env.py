@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import gymnasium as gym
-import numpy as np
 
 
 def load_frozen_lake(desc=None, map_name=None, is_slippery=False):
