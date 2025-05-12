@@ -61,4 +61,4 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
         # update epsilon using decay rate
         epsilon = max(min_epsilon, epsilon - epsilon_decay)
 
-        return Q, rewards
+    return Q, rewards
