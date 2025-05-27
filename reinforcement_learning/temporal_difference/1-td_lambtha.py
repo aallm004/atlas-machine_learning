@@ -15,7 +15,7 @@ def td_lambtha(env, V, policy, lambtha, episodes=5000, max_steps=100,
         max_steps: maximum number of steps per episode
         alpha: learning rate
         gamma: discount rate
-        
+
         Returns: V, the updated value estimate"""
 
     # Train for the given number of episodes
@@ -39,9 +39,9 @@ def td_lambtha(env, V, policy, lambtha, episodes=5000, max_steps=100,
             # Update eligibility trace for current state
             E[state] += 1.0
 
-            #Update value function and eligibility traces for all states
+            # Update value function and eligibility traces for all states
             V += alpha * delta * E
-            
+
             # Decay eligibility traces
             E *= gamma * lambtha
 
@@ -51,5 +51,5 @@ def td_lambtha(env, V, policy, lambtha, episodes=5000, max_steps=100,
             # See if episode is finished
             if terminated or truncated:
                 break
-        
+
     return V

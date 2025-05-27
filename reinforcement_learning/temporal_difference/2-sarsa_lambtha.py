@@ -16,40 +16,42 @@ def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
         epsilon: initial threshold for epsilon greedy
         min_epsilon: min value that epsilon should decay to
         epsilon_decay: decay rate for updating epsilon between episodes
-        
+
         Returns: Q, the update Q table"""
     n_actions = env.action_space.n
-    
+
     for episode in range(episodes):
         E = np.zeros_like(Q)
         state, _ = env.reset()
         action = epsilon_greedy(Q, state, epsilon, n_actions)
-        
+
         for _ in range(max_steps):
             next_state, reward, terminated, truncated, _ = env.step(action)
             done = terminated or truncated
             next_action = epsilon_greedy(Q, next_state, epsilon, n_actions)
-            
+
             # TD Error
-            td_error = reward + gamma * Q[next_state, next_action] * (not done) - Q[state, action]
-            
+            td_error = reward + gamma * Q[next_state, next_action] * \
+                (not done) - Q[state, action]
+
             # Replacing traces
             E[state, :] = 0
             E[state, action] = 1
-            
+
             # Update Q and traces
             Q += alpha * td_error * E
             E *= gamma * lambtha
-            
+
             state, action = next_state, next_action
-            
+
             if done:
                 break
-        
+
         # Decay epsilon
         epsilon = max(min_epsilon, epsilon * (1 - epsilon_decay))
-    
+
     return Q
+
 
 def epsilon_greedy(Q, state, epsilon, n_actions):
     """Epsilon-greedy action selection"""
