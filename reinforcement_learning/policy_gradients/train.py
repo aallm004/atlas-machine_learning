@@ -9,7 +9,7 @@ def train(env, np_episodes, alpha=0.000045, gamma=0.98, show_result=False):
         nb_episodes: number of episodes used for training
         alpha: the learning rate
         gamma: the discount factor
-        
+
         Return: all values of the score (sum of all rewards during one
         episode loop)"""
     policy_gradient = __import__('policy_gradient').policy_gradient
@@ -49,7 +49,7 @@ def train(env, np_episodes, alpha=0.000045, gamma=0.98, show_result=False):
             gradients.append(gradient)
 
             state = next_state
-        
+
         # Calculation of discounted return
         returns = []
         G = 0

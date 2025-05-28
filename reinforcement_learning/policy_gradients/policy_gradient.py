@@ -7,11 +7,11 @@ def policy(matrix, weight):
     """Function that computes the policy with a weight of a matrix
         matrix is the state matrix of shape (batch_size, state_dim)
         weight is the weight matrix of shape (state_dim, action_dim)"""
-    
+
     # See if matrix is 2D
     if matrix.ndim == 1:
         matrix = matrix.reshape(1, -1)
-    
+
     # Find logits by matrix multiplication
     logits = np.dot(matrix, weight)
 
@@ -23,13 +23,14 @@ def policy(matrix, weight):
 
     return policy_probs
 
+
 def policy_gradient(state, weight):
     """Function that computes the Monte-Carlo policy gradient based on a state
     and a weight matrix
         state is a matrix representing the current observation of the
         environment
         weight is a matrix of random weight
-        
+
         Return: the action and the gradient (in this order)"""
 
     # Get policy probabilities
