@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Module to crop image"""
 import tensorflow as tf
-import numpy as np
 
 
 def change_brightness(image, max_delta):

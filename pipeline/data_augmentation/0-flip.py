@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Module to flip image"""
 import tensorflow as tf
-import numpy as np
 
 
 def flip_image(image):
