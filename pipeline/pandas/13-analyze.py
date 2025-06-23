@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Module for analyze function"""
-import pandas as pd
 
 
 def analyze(df):
