@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """module for array function"""
-import numpy as np
-import pandas as pd
 
 
 def array(df):
