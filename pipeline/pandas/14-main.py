@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from_file = __import__('2-from_file').from_file
 
@@ -29,10 +30,10 @@ df['Open'] = df['Open'].fillna(df['Close'])
 df['Volume_(BTC)'] = df['Volume_(BTC)'].fillna(0)
 df['Volume_(Currency)'] = df['Volume_(Currency)'].fillna(0)
 
-# Filter data from 2017 and beyond
+# Filter data from 2017 on
 df_2017 = df[df.index >= '2017-01-01']
 
-# Group by date and aggregate according to specifications
+# Group by date and aggregate
 df_daily = df_2017.groupby(df_2017.index.date).agg({
     'High': 'max',
     'Low': 'min',
@@ -42,7 +43,11 @@ df_daily = df_2017.groupby(df_2017.index.date).agg({
     'Volume_(Currency)': 'sum'
 })
 
-# Convert index back to datetime for proper date handling
+# Convert index back to datetime for date handling
 df_daily.index = pd.to_datetime(df_daily.index)
 
 print(df_daily)
+
+# Plot the data
+df_daily.plot()
+plt.show()

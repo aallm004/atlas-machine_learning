@@ -30,7 +30,7 @@ df['Open'] = df['Open'].fillna(df['Close'])
 df['Volume_(BTC)'] = df['Volume_(BTC)'].fillna(0)
 df['Volume_(Currency)'] = df['Volume_(Currency)'].fillna(0)
 
-# Filter data from 2017 and on
+# Filter data from 2017 on
 df_2017 = df[df.index >= '2017-01-01']
 
 # Group by date and aggregate
