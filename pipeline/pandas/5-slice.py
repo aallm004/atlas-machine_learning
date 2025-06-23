@@ -7,6 +7,6 @@ def slice(df):
         Extracts the columns High, Low, Close, and Volume_BTC
         Selects every 60th row from these columns
         Returns: the sliced pd.DataFrame"""
-    columns = df[['High', 'Low', 'Close', 'Volume_BTC']]
+    columns = df[['High', 'Low', 'Close', 'Volume_(BTC)']]
 
     return columns[::60]
