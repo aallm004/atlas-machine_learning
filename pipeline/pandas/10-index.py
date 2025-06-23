@@ -1,6 +1,5 @@
 #!/usr/env/bin python3
 """Module for index function"""
-import pandas as pd
 
 
 def index(df):
