@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """module for sorting by high price"""
-import pandas as pd
 
 
 def high(df):
