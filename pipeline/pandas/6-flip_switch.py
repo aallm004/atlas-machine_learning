@@ -9,4 +9,4 @@ def flip_switch(df):
         Returns: the transformed pd.DataFrae"""
     sort = df.sort_index(ascending=False)
 
-    return sort
+    return sort.T
