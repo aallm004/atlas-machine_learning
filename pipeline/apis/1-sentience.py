@@ -8,60 +8,49 @@ def sentientPlanets():
     sentient species
         sentient type is either in the classification or designation attributes
     """
-    planet_names = []
-    next_page = "https://swapi-api.hbtn.io/api/species/"
+    planets = []
+    page = 1
+    base_url = "https://swapi-api.hbtn.io/api/species/"
 
-    # Loop through pages of species
-    while next_page:
-        # Get current page
-        response = requests.get(next_page)
-        if response.status_code != 200:
+    while True:
+        # Build URL with page parameter
+        url = f"{base_url}?page={page}" if page > 1 else base_url
+
+        try:
+            resp = requests.get(url)
+            if resp.status_code != 200:
+                break
+        except:
             break
 
-        page_data = response.json()
+        data = resp.json()
+        species_list = data['results']
 
-        # Check each species on page
-        for species in page_data['results', []]:
-            classification = species.get('classification', '').lower()
-            designation = species.get('designation', '').lower()
+        # Process each species in current batch
+        for item in species_list:
+            class_type = item.get('classification', '')
+            design_type = item.get('designation', '')
 
-            # Check if species is sentient
-            is_sentient = ('sentient' in classification or
-                           'sentient' in designation or
-                           classification == 'sentient' or
-                           designation == 'sentient')
+            if 'sentient' in class_type.lower() or 'sentient' in design_type.lower():
+                world_link = item.get('homeworld')
 
-            # Check if species is sentient
-            if is_sentient:
-                homeworld_url = species.get('homeworld')
+                if world_link:
+                    try:
+                        world_resp = requests.get(world_link)
+                        if world_resp.status_code == 200:
+                            world_info = world_resp.json()
+                            world_name = world_info.get('name')
+                            if world_name and world_name not in planets:
+                                planets.append(world_name)
+                    except:
+                        continue
+                else:
+                    if 'unknown' not in planets:
+                        planets.append('unknown')
 
-                # Skip if no homeworld URL
-                if not homeworld_url or homeworld_url == 'null':
-                    if 'unknown' not in planet_names:
-                            planet_names.append('unknown')
-                    continue
+        # See if more pages
+        if not data.get('next'):
+            break
+        page += 1
 
-                # Get planet data
-                try:
-                    planet_response = requests.get(homeworld_url)
-                    if planet_response.status_code == 200:
-                        planet_data = planet_response.json()
-                        planet_name = planet_data.get('name')
-
-                        # Add planet name if it was able to be retrieved
-                        if planet_name and planet_name not in planet_names:
-                            planet_names.append(planet_name)
-
-                    else:
-                        # If unable to fetch planet data, add as unknown
-                        if 'unknown' not in planet_names:
-                            planet_names.append('unknown')
-                except:
-                    # Network error or other
-                    if 'unknown' not in planet_names:
-                        planet_names.append('unknown')
-            # Go to next page
-            next_page = page_data.get('next')
-
-        return planet_names
-
+    return planets
