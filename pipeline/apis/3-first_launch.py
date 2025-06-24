@@ -49,14 +49,12 @@ def get_first_upcoming_launch():
         launch_date = first_launch.get('date_local', 'Unknown')
 
         # Format output
-        print(f"{launch_name} ({launch_date}) {rocket_name} - \
-              {launchpad_name} ({launchpad_locality})")
+        print(f"{launch_name} ({launch_date}) {rocket_name} - {launchpad_name} ({launchpad_locality})")
 
     except requests.RequestException:
         pass
     except Exception:
         pass
-
 
 if __name__ == '__main__':
     get_first_upcoming_launch()
