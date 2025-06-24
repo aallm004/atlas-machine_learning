@@ -44,6 +44,7 @@ def get_rocket_launch_frequency():
     except requests.RequestException:
         pass
     except Exception:
+        pass
         
 if __name__ == '__main__':
     get_rocket_launch_frequency()
