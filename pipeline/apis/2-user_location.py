@@ -18,22 +18,22 @@ def get_user_location(api_url):
             print(f"Reset in {minutes_left} min")
 
 
-            # User not found (404)
-            if response.status_code == 404:
-                print("Not found")
-                return
-            
-            # Handle successful response (200)
-            if response.status_code == 200:
-                user_data = response.json()
-                location = user_data.get('location')
+        # User not found (404)
+        if response.status_code == 404:
+            print("Not found")
+            return
+        
+        # Handle successful response (200)
+        if response.status_code == 200:
+            user_data = response.json()
+            location = user_data.get('location')
 
-                if location:
-                    print(location)
-                else:
-                    print ("Not found")
+            if location:
+                print(location)
             else:
-                print("Not Found")
+                print ("Not found")
+        else:
+            print("Not Found")
     except requests.RequestException:
         print("Not found")
 

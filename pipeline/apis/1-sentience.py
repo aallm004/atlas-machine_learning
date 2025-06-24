@@ -43,7 +43,7 @@ def sentientPlanets():
                             world_name = world_info.get('name')
                             if world_name and world_name not in planets:
                                 planets.append(world_name)
-                    except requests.RequestException:
+                    except requests:
                         continue
                 else:
                     if 'unknown' not in planets:
