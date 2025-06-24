@@ -21,20 +21,22 @@ def sentientPlanets():
         page_data = response.json()
 
         # Check each species on page
-        for species in page_data['results']:
-            classification = species.get('classification', '')
-            designation = species.get('designation', '')
+        for species in page_data['results', []]:
+            classification = species.get('classification', '').lower()
+            designation = species.get('designation', '').lower()
 
             # Check if species is sentient
-            is_sentient = ('sentient' in classification.lower() or
-                           'sentient' in designation.lower())
+            is_sentient = ('sentient' in classification or
+                           'sentient' in designation or
+                           classification == 'sentient' or
+                           designation == 'sentient')
 
             # Check if species is sentient
             if is_sentient:
                 homeworld_url = species.get('homeworld')
 
                 # Skip if no homeworld URL
-                if not homeworld_url:
+                if not homeworld_url or homeworld_url == 'null':
                     if 'unknown' not in planet_names:
                             planet_names.append('unknown')
                     continue
