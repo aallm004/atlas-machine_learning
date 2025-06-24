@@ -36,11 +36,3 @@ def get_user_location(api_url):
             print("Not Found")
     except requests.RequestException:
         print("Not found")
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: ./2-user_location.py <github_api_url>")
-        sys.exit(1)
-    
-    api_url = sys.argv[1]
-    get_user_location(api_url)
