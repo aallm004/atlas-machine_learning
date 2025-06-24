@@ -20,7 +20,7 @@ def sentientPlanets():
             resp = requests.get(url)
             if resp.status_code != 200:
                 break
-        except:
+        except requests.RequestException:
             break
 
         data = resp.json()
@@ -31,7 +31,8 @@ def sentientPlanets():
             class_type = item.get('classification', '')
             design_type = item.get('designation', '')
 
-            if 'sentient' in class_type.lower() or 'sentient' in design_type.lower():
+            if 'sentient' in class_type.lower() or \
+               'sentient' in design_type.lower():
                 world_link = item.get('homeworld')
 
                 if world_link:
@@ -42,7 +43,7 @@ def sentientPlanets():
                             world_name = world_info.get('name')
                             if world_name and world_name not in planets:
                                 planets.append(world_name)
-                    except:
+                    except requests.RequestException:
                         continue
                 else:
                     if 'unknown' not in planets:
