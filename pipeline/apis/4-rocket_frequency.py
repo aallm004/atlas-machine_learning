@@ -7,10 +7,11 @@ def get_rocket_launch_frequency():
     """Script that displays the number of launches per rocket"""
     try:
         # Get launches
-        launches_response = requests.get("https://api.spacexdata.com/v4/launches")
+        launches_response = requests.get(
+            "https://api.spacexdata.com/v4/launches")
         if launches_response.status_code != 200:
             return
-        
+
         launches = launches_response.json()
 
         # Count rocket IDs
@@ -23,7 +24,8 @@ def get_rocket_launch_frequency():
         # Rocket names
         rocket_names = {}
         for rocket_id in rocket_counts:
-            rocket_response = requests.get(f"https://api.spacexdata.com/v4/rockets/{rocket_id}")
+            rocket_response = requests.get(
+                f"https://api.spacexdata.com/v4/rockets/{rocket_id}")
             if rocket_response.status_code == 200:
                 rocket_data = rocket_response.json()
                 rocket_names[rocket_id] = rocket_data.get('name', 'Unknown')
@@ -45,6 +47,7 @@ def get_rocket_launch_frequency():
         pass
     except Exception:
         pass
-        
+
+
 if __name__ == '__main__':
     get_rocket_launch_frequency()
