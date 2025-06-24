@@ -12,8 +12,7 @@ def get_first_upcoming_launch():
         The name (with the locality) of the launchpad"""
     try:
         # Get upcoming launches
-        launch_response = requests.get(
-            "https://api.spacexdata.com/v4/launches/upcoming")
+        launch_response = requests.get("https://api.spacexdata.com/v4/launches/upcoming")
         if launch_response.status_code != 200:
             return
 
@@ -37,8 +36,7 @@ def get_first_upcoming_launch():
 
         # Get launchpad data
         launchpad_id = first_launch.get('launchpad')
-        launchpad_response = requests.get(
-            f"https://api.spacexdata.com/v4/launchpads/{launchpad_id}")
+        launchpad_response = requests.get(f"https://api.spacexdata.com/v4/launchpads/{launchpad_id}")
         if launchpad_response.status_code != 200:
             return
 
