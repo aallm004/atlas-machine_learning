@@ -1,4 +1,4 @@
--- Adds new attribute to a doc in the collection school
+// Adds new attribute to a doc in the collection school
 
 db.school.updateMany(
     { "name": "Holberton school" },
