@@ -1,5 +1,7 @@
 -- Create SafeDiv function that safely divides two integers
 
+DELIMITER //
+
 CREATE FUNCTION SafeDiv(a INT, b INT)
 RETURNS INT
 DETERMINISTIC
@@ -10,3 +12,6 @@ BEGIN
         RETURN a / b;
     END IF;
 END;
+//
+
+DELIMITER ;
