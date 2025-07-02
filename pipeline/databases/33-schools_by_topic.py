@@ -9,4 +9,4 @@ def schools_by_topic(mongo_collection, topic):
     schools = []
     for school in mongo_collection.find({"topics": topic}):
         schools.append(school)
-    return school
+    return schools
