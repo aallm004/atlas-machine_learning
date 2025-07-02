@@ -8,7 +8,7 @@ def log_stats():
         Database: logs
         Collection: nginx"""
     # Connect to MongoDB
-    client = MongoClient('mongodb://127.0.0.1:27017')
+    client = pymongo.MongoClient('mongodb://127.0.0.1:27017')
     collection = client.logs.nginx
 
     # Get number of logs
