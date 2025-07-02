@@ -9,8 +9,7 @@ def log_stats():
         Collection: nginx"""
     # Connect to MongoDB
     client = pymongo.MongoClient('mongodb://127.0.0.1:27017')
-    collection = client.logs
-    nginx = collection.nginx
+    collection = client.logs.nginx
 
     # Get number of logs
     total_logs = collection.count_documents({})
@@ -25,8 +24,8 @@ def log_stats():
         print(f"\tmethod {method}: {count}")
 
     # Get status check count
-    status_check = nginx.count_documents({"method": "GET", "path": "/status"})
+    status_check = collection.count_documents({"method": "GET", "path": "/status"})
     print(f"{status_check} status check")
 
-if __name__ == "__main__":
-    log_stats()
+    if __name__ == "__main__":
+        log_stats()
