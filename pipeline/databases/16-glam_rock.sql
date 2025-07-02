@@ -1,6 +1,11 @@
 -- Lists all bands with Glam rock as their main style
 
-SELECT origin, SUM(fans) AS nb_fans 
+SELECT 
+    band_name,
+    CASE 
+        WHEN split IS NULL THEN (2020 - formed)
+        ELSE (split - formed)
+    END AS lifespan
 FROM metal_bands 
-GROUP BY origin 
-ORDER BY nb_fans DESC;
+WHERE style LIKE '%Glam rock%'
+ORDER BY lifespan DESC;
